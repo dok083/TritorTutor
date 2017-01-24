@@ -23,3 +23,5 @@ require('./app/loadRoutes.js')(app);
 
 // Listen on the desired port.
 app.listen(serverConfig.port);
+
+console.log("Tritor API server started on port " + serverConfig.port);

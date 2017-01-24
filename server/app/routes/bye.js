@@ -1,7 +1,7 @@
 module.exports = {
     '/': {
         get: function(req, res) {
-            res.json({response: 'ok bye'});
+            res.json({response: 'Good bye!!!'});
         }
     }
 };

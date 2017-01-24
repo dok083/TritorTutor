@@ -7,6 +7,7 @@
 
 var express = require('express');
 var fs = require('fs');
+var path = require('path');
 
 // Length of the .js file extension.
 const JS_EXTENSION = ('.js').length;
@@ -36,8 +37,15 @@ function bindRoute(routeInfo, router) {
  */
 function loadRoutes(app) {
     // Find each route file in the routes subfolder.
-    fs.readdir(__dirname + '/routes/', ['**.js'], function(err, routes) {
+    var routePath = path.join(__dirname, 'routes');
+
+    fs.readdir(routePath, function(err, routes) {
         routes.forEach(function(route) {
+            // Only load JavaScript files.
+            if (path.extname(route) !== '.js') {
+                return;
+            }
+
             // Set up middleware to handle our API routes.
             var router = express.Router();
 
