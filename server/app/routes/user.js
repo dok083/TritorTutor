@@ -6,7 +6,7 @@ module.exports = {
     '/': {
         get: function(req, res) {
             // TODO: Get user from session ID.
-            res.json({status: false, message: 'not implemented'})
+            res.status(500).json({status: false, message: 'not implemented'})
         }
     },
     '/:userid': {
@@ -14,7 +14,7 @@ module.exports = {
             var userID = parseInt(req.params.userid);
 
             if (!userID || userID < 0) {
-                res.json({status: false, message: 'invalid user ID'});
+                res.status(500).json({status: false, message: 'invalid user ID'});
                 
                 return;
             }
@@ -26,7 +26,7 @@ module.exports = {
                 if (results && results.length > 0) {
                     res.json(results[0]);
                 } else {
-                    res.json({status: false, message: 'user does not exist'});
+                    res.status(500).json({status: false, message: 'user does not exist'});
                 }
             });
         }
