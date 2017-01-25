@@ -6,7 +6,7 @@
 "use strict"
 
 // Load configuration for the API server.
-var serverConfig = require('./config/server.js');
+var serverConfig = require('./config/server.json');
 
 // Set up the API server.
 var express = require('express');
