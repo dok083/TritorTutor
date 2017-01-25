@@ -25,6 +25,8 @@ module.exports = {
             function(error, results, fields) {
                 if (results && results.length > 0) {
                     res.json(results[0]);
+                } else {
+                    res.json({status: false, message: 'user does not exist'});
                 }
             });
         }
