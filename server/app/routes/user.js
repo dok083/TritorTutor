@@ -22,7 +22,7 @@ module.exports = {
             if (!userID || userID < 1) {
                 res.status(500).json({
                     status: false,
-                    message: 'invalid user ID'
+                    message: 'user ID must be positive'
                 });
                 
                 return;
