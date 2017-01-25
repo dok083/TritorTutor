@@ -1,7 +1,9 @@
 "use strict"
 
+// Get the Tritor database.
 var db = require('../database.js');
 
+// Routes for /api/user
 module.exports = {
     '/': {
         get: function(req, res) {
@@ -9,26 +11,37 @@ module.exports = {
             res.status(500).json({status: false, message: 'not implemented'})
         }
     },
+
+    // GET request for a user with a certain ID.
     '/:userid': {
         get: function(req, res) {
-            var userID = parseInt(req.params.userid);
+            // Get the desired user ID as an integer.
+            var userID = parseInt(req.params.userid) / 1;
 
-            if (!userID || userID < 0) {
-                res.status(500).json({status: false, message: 'invalid user ID'});
+            // Only allow positive user ID.
+            if (!userID || userID < 1) {
+                res.status(500).json({
+                    status: false,
+                    message: 'invalid user ID'
+                });
                 
                 return;
             }
 
-            // Select the database for a user that matches the given ID.
-            db().query('SELECT email, username FROM tritor_users WHERE userID = ? LIMIT 1',
-            [req.params.userid],
+            // Select the email and username for the user with the matching ID.
+            db.select('tritor_users', ['email', 'username'], 'userID=' + userID,
             function(error, results, fields) {
+                // If found, show the email and username. Otherwise, indicate
+                // the user does not exist.
                 if (results && results.length > 0) {
                     res.json(results[0]);
                 } else {
-                    res.status(500).json({status: false, message: 'user does not exist'});
-                }
-            });
+                    res.status(500).json({
+                        status: false,
+                        message: 'user does not exist'
+                    });
+                }               
+            }, 1);
         }
     }
 }
