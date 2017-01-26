@@ -9,6 +9,32 @@ module.exports = {
         get: function(req, res) {
             // TODO: Get user from session ID.
             res.status(500).json({status: false, message: 'not implemented'})
+        },
+
+        post: function(req, res) {
+        	// TODO: Validate these values
+        	var emailInput = req.body.email;
+        	var usernameInput = req.body.username;
+        	var passwordInput = req.body.password;
+
+        	// Insert values to the tritor_users table
+			db.insert('tritor_users', {
+				email: emailInput,
+				username: usernameInput,
+				password: passwordInput,
+				salt: '' 
+			},  function(error, results, fields) {
+					if (error) {
+						res.status(500).json({
+							message: 'unable to create user (' + error + ')'
+						});
+
+						return;
+					}
+
+					res.json({id: results.insertId});
+			}); 			
+
         }
     },
 
@@ -43,5 +69,9 @@ module.exports = {
                 }               
             }, 1);
         }
+    },
+
+    '/login': {
+
     }
 }
