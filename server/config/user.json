@@ -1,0 +1,4 @@
+{
+    "minUsernameLength": 2,
+    "minPasswordLength": 5
+}

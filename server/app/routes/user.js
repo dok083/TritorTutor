@@ -1,7 +1,7 @@
 "use strict"
 
 // Get the Tritor database.
-var db = require('../database.js');
+var user = require('../lib/user.js');
 
 // Routes for /api/user
 module.exports = {
@@ -11,30 +11,54 @@ module.exports = {
             res.status(500).json({status: false, message: 'not implemented'})
         },
 
+        // POST /api/user
         post: function(req, res) {
-        	// TODO: Validate these values
-        	var emailInput = req.body.email;
-        	var usernameInput = req.body.username;
-        	var passwordInput = req.body.password;
+            // Get the desired user fields.
+            var email = req.body.email;
+            var username = req.body.username;
+            var password = req.body.password;
 
-        	// Insert values to the tritor_users table
-			db.insert('tritor_users', {
-				email: emailInput,
-				username: usernameInput,
-				password: passwordInput,
-				salt: '' 
-			},  function(error, results, fields) {
-					if (error) {
-						res.status(500).json({
-							message: 'unable to create user (' + error + ')'
-						});
+            // Check for validity of the username.
+            if (!user.isValidUsername(username)) {
+                res.status(422).json({message: "username is invalid"});
 
-						return;
-					}
+                return;
+            }
 
-					res.json({id: results.insertId});
-			}); 			
+            // Check for validity of the e-mail address.
+            if (!user.isValidEmail(email)) {
+                res.status(422).json({message: "email is invalid"});
 
+                return;
+            }
+
+            // Check for validity of the password.
+            if (!user.isValidPassword(password)) {
+                res.status(422).json({message: "password is invalid"});
+
+                return;
+            }
+
+            // Check if a user already exists with this e-mail.
+            user.findByEmail(email, function(otherUserID) {
+                // If so, then do not create a new user.
+                if (otherUserID) {
+                    res.status(409).json({message: "email already in use"});
+
+                    return;
+                }
+
+                // Otherwise, create the user.
+                user.create(email, username, password, function(newUserID) {
+                    if (newUserID) {
+                        res.json({id: newUserID});
+
+                        return;
+                    }
+                    
+                    res.status(500).json({message: "unable to create user"});
+                })
+            });
         }
     },
 

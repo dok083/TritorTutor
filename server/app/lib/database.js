@@ -1,5 +1,5 @@
 // Get configuration for database connection.
-var config = require('../config/database.json');
+var config = require('../../config/database.json');
 var mysql = require('mysql');
 
 // Create a query pool for our queries.
@@ -101,7 +101,7 @@ module.exports = {
         if (limit) {
             query += ' LIMIT ' + limit;
         }
-
+        console.log(query);
         pool.query(query, callback);
     },
 
