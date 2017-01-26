@@ -101,7 +101,7 @@ module.exports = {
         if (limit) {
             query += ' LIMIT ' + limit;
         }
-        console.log(query);
+
         pool.query(query, callback);
     },
 

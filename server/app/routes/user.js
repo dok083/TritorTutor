@@ -63,13 +63,14 @@ module.exports = {
     },
 
     // GET request for a user with a certain ID.
+    // FOR DEVELOPMENT USE ONLY!
     '/:userid': {
         get: function(req, res) {
             // Get the desired user ID as an integer.
             var userID = parseInt(req.params.userid) / 1;
 
             // Only allow positive user ID.
-            if (!userID || userID < 1) {
+            if (!user.isValidID(userID)) {
                 res.status(500).json({
                     status: false,
                     message: 'user ID must be positive'
@@ -79,19 +80,16 @@ module.exports = {
             }
 
             // Select the email and username for the user with the matching ID.
-            db.select('tritor_users', ['email', 'username'], 'userID=' + userID,
-            function(error, results, fields) {
-                // If found, show the email and username. Otherwise, indicate
-                // the user does not exist.
-                if (results && results.length > 0) {
-                    res.json(results[0]);
+            user.findByID(userID, function(email, username) {
+                if (email) {
+                    res.json({email: email, username: username});
                 } else {
                     res.status(500).json({
                         status: false,
                         message: 'user does not exist'
                     });
-                }               
-            }, 1);
+                }
+            });
         }
     },
 

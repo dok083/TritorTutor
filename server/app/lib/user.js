@@ -70,7 +70,6 @@ user.findByEmail = function(email, callback) {
     // Find a user from the given e-mail.
     db.select('tritor_users', ['userID', 'username'], 'email=' + email,
     function(err, results) {
-        console.log(results);
         if (callback && results.length > 0) {
             callback(results[0].userID, results[0].username);
         } else if (callback) {
@@ -89,6 +88,23 @@ user.findByEmail = function(email, callback) {
  * @param callback A function that gets called after the lookup has results.
  */
 user.findByID = function(userID, callback) {
+    if (!user.isValidID(userID)) {
+        if (callback) {
+            callback();
+        }
+
+        return;
+    }
+
+    // Find a user from the given e-mail.
+    db.select('tritor_users', ['email', 'username'], 'userID=' + userID,
+    function(err, results) {
+        if (callback && results.length > 0) {
+            callback(results[0].email, results[0].username);
+        } else if (callback) {
+            callback();
+        }
+    }, 1);
 }
 
 /**
