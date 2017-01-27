@@ -264,4 +264,25 @@ user.destroySession = function(token) {
 
 }
 
+/**
+ * Finds a user with the input credentials in the database. The callback 
+ * contains the user ID. 
+ *
+ * @param email The email inputed by user to be queried
+ * @param password The password inputed by user to be queried
+ * @param callback A function that gets called after it has been removed
+ */
+ user.findByCredentials = function(email, password, callback){
+    email = db.escape(email.toLowerCase());
+    password = db.escape(password);
+
+    db.select('tritor_users', [userID], 'email=' + email + ' AND password=' + password, function (error, results) {
+        if (callback && results.length() > 0) {
+            callback(results[0].userID);
+        } else if (callback) {
+            callback();
+        }
+    }, 1); 
+ }
+
 module.exports = user;
