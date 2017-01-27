@@ -173,15 +173,21 @@ user.create = function(email, username, password, callback) {
             console.log('Unable to create user!')
             console.log(error);
 
-            callback();
+            if (callback) {
+                callback();
+            }
         } else {
-            callback(results.insertId);
+            // Send the verification e-mail after creating an account.
+            user.sendVerification(results.insertId);
+
+            if (callback) {
+                callback(results.insertId);
+            }
         }
-    });             
+    });
 
     // TODO: Generate a random salt.
     // TODO: Encrypt the password using hash + salt.
-    // TODO: Send verification email using user.sendVerification().
 }
 
 /**
@@ -202,10 +208,37 @@ user.verify = function(code, callback) {
  * @param callback A function that gets called after the verification e-mail
  *        has been sent.
  */
-user.sendVerification = function(userID) {
-    // TODO: Look up user's e-mail.
-    // TODO: Generate verification code.
-    // TODO: Send verification e-mail.
+user.sendVerification = function(userID, callback) {
+    // Clear the last verification code.
+    db.query('DELETE FROM tritor_verify WHERE userID = ' + userID);
+
+    // Find the e-mail to send to.
+    db.select('tritor_users', ['email'], 'userID=' + userID,
+    function(err, results) {
+        if (err || results.length == 0) {
+            console.log('Cannot create verification for user ' + userID);
+
+            return;
+        }
+
+        // Get the e-mail to send to.
+        var email = results[0].email;
+
+        // Generate a verification code.
+        var crypto = require('crypto');
+        var seed = email + Date.now();
+        var code = crypto.createHash('sha256').update(seed).digest('hex');
+
+        // Store the verification code in the database.
+        db.insert('tritor_verify', {userID: userID, code: code});
+
+        // Send the e-mail containing the verification code.
+        var message = '<b>Welcome to Tritor!</b>'
+                      + '<p>Verification code: ' + code + '</p>';
+
+        require('../lib/mail.js')(email, 'Tritor Account Verification',
+                                  message);
+    }, 1);
 }
 
 /**
