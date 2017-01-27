@@ -94,6 +94,39 @@ module.exports = {
     },
 
     '/login': {
+        // Logs in to an existing account
+        post: function(req, res) {
+            var inputEmail = req.body.email;
+            var inputPass = req.body.password;
 
+
+            // Check if user input is valid
+            if (!user.isValidEmail(inputEmail) || !user.isValidPassword(inputPass)) {
+                res.status(404).json({
+                    message: 'invalid email or password'
+                });
+
+                return;
+            }
+
+            // TODO: Hash and salt password. Yiming plox
+
+            // Check if a user with this email and password combination exists in the database
+            user.findByCredentials(inputEmail, inputPass function(userID){
+                if (!userID) {
+                    res.status(404).json({
+                        message: 'invalid email or password'
+                    });
+                } else {
+                    // Create session id
+                    user.createSession(userID, , function(sessionID) {
+                        res.json({sessionID: sessionID});
+
+                    });
+                }
+
+            }); 
+
+        }
     }
 }
