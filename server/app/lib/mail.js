@@ -11,10 +11,13 @@ var password = config.gmailPassword;
 
 // Set up nodemailer.
 var nodemailer = require('nodemailer')
-var transporter = nodemailer.createTransport('smtps://'
-                                             + username + '%40gmail.com:'
-                                             + password
-                                             + '@smtp.gmail.com');
+var transporter = nodemailer.createTransport('SMTP', {
+    service: 'GMail',
+    auth: {
+        user: username,
+        pass: password
+    }
+});
 
 /**
  * Sends an e-mail from the Tritor mail account to the given e-mail address.
@@ -31,7 +34,7 @@ var transporter = nodemailer.createTransport('smtps://'
 module.exports = function(email, subject, message, callback) {
     // Get options for the e-mail being sent.
     var options = {
-        from: '"Tritor" <' + username + '@gmail.com>',
+        from: '"Tritor" <' + username + '>',
         to: email,
         subject: subject,
         html: message
