@@ -99,10 +99,9 @@ module.exports = {
             var inputEmail = req.body.email;
             var inputPass = req.body.password;
 
-
-            // Check if user input is valid
+            // Check if user input is valid.
             if (!user.isValidEmail(inputEmail) || !user.isValidPassword(inputPass)) {
-                res.status(404).json({
+                res.status(401).json({
                     message: 'invalid email or password'
                 });
 
@@ -111,22 +110,21 @@ module.exports = {
 
             // TODO: Hash and salt password. Yiming plox
 
-            // Check if a user with this email and password combination exists in the database
-            user.findByCredentials(inputEmail, inputPass function(userID){
-                if (!userID) {
-                    res.status(404).json({
-                        message: 'invalid email or password'
+            // Check if a user with this email and password combination exists.
+            user.findByCredentials(inputEmail, inputPass, function(userID) {
+                if (userID) {
+                    // If so, create a session to sign in with.
+                    user.createSession(userID, 0, function(sessionID) {
+                        if (sessionID) {
+                            res.json({sessionID: sessionID});
+                        } else {
+                            res.status(500).json({message: 'failed to create session'});
+                        }
                     });
                 } else {
-                    // Create session id
-                    user.createSession(userID, , function(sessionID) {
-                        res.json({sessionID: sessionID});
-
-                    });
+                    res.status(401).json({message: 'invalid email or password'});
                 }
-
             }); 
-
         }
     }
 }
