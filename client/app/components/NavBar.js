@@ -6,8 +6,9 @@ var NavBar = React.createClass({
     var navLinks = pages.map(function(page){
       return (
         <a href={'/' + page}>
-          {page}
+          {page} <br />
         </a>
+
       );
     });
 
