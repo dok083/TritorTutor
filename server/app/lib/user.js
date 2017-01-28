@@ -31,7 +31,7 @@ user.isValidEmail = function(email) {
     // Regular expression for matching e-mail addresses.
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    return re.test(email)
+    return re.test(email);
 }
 
 /**
@@ -133,18 +133,6 @@ user.checkVerifiedByID = function(userID, callback) {
 }
 
 /**
- * Checks whether or not a user has been verified from a given user email. Once
- * the verified status is received, the callback is called with a boolean. The
- * boolean is true if the user is verified, false otherwise.
- *
- * @param userID The user email to check for.
- * @param callback A function that gets called with the verification status.
- */
-user.checkVerifiedByID = function(userID, callback) {
-
-}
-
-/**
  * Creates a user by inserting them into the database. Once the user has been
  * created (or not), the callback is ran. If the user was created, then the
  * only parameter to the callback is an integer containing the user's ID.
@@ -173,15 +161,21 @@ user.create = function(email, username, password, callback) {
             console.log('Unable to create user!')
             console.log(error);
 
-            callback();
+            if (callback) {
+                callback();
+            }
         } else {
-            callback(results.insertId);
+            // Send the verification e-mail after creating an account.
+            user.sendVerification(results.insertId);
+
+            if (callback) {
+                callback(results.insertId);
+            }
         }
-    });             
+    });
 
     // TODO: Generate a random salt.
     // TODO: Encrypt the password using hash + salt.
-    // TODO: Send verification email using user.sendVerification().
 }
 
 /**
@@ -202,10 +196,37 @@ user.verify = function(code, callback) {
  * @param callback A function that gets called after the verification e-mail
  *        has been sent.
  */
-user.sendVerification = function(userID) {
-    // TODO: Look up user's e-mail.
-    // TODO: Generate verification code.
-    // TODO: Send verification e-mail.
+user.sendVerification = function(userID, callback) {
+    // Clear the last verification code.
+    db.query('DELETE FROM tritor_verify WHERE userID = ' + userID);
+
+    // Find the e-mail to send to.
+    db.select('tritor_users', ['email'], 'userID=' + userID,
+    function(err, results) {
+        if (err || results.length == 0) {
+            console.log('Cannot create verification for user ' + userID);
+
+            return;
+        }
+
+        // Get the e-mail to send to.
+        var email = results[0].email;
+
+        // Generate a verification code.
+        var crypto = require('crypto');
+        var seed = email + Date.now();
+        var code = crypto.createHash('sha256').update(seed).digest('hex');
+
+        // Store the verification code in the database.
+        db.insert('tritor_verify', {userID: userID, code: code});
+
+        // Send the e-mail containing the verification code.
+        var message = '<b>Welcome to Tritor!</b>'
+                      + '<p>Verification code: ' + code + '</p>';
+
+        require('../lib/mail.js')(email, 'Tritor Account Verification',
+                                  message);
+    }, 1);
 }
 
 /**
@@ -227,8 +248,38 @@ user.createSession = function(userID, expire, callback) {
  * @param token The ID of the session that should be removed.
  * @param callback A function that gets called after it has been removed.
  */
-user.destroySession = function(token) {
+user.destroySession = function(token, callback) {
 
 }
+
+/**
+ * Finds the ID of a user whose login credentials matches the given
+ * credentials. After the ID has been found, the callback is ran with
+ * the ID passed in. If the user could not be found, the callback is ran
+ * with no parameters.
+ *
+ * @param email The e-mail address (login name) of the user.
+ * @param password The password that corresponds the e-mail address.
+ * @param callback A function that gets called after the search for a
+ *        user finished.
+ */
+user.findByCredentials = function(email, password, callback) {
+    // Prepare the login information for a query.
+    email = db.escape(email.toLowerCase());
+    password = db.escape(password);
+
+    // Look for a user with a matching e-mail and password combination.
+    var conditions = 'email=' + email + ' AND password=' + password;
+    
+    db.select('tritor_users', ['userID'], conditions,
+    function (error, results) {
+        // Run the callback with the results from the search.
+        if (callback && results.length > 0) {
+            callback(results[0].userID);
+        } else if (callback) {
+            callback();
+        }
+    }, 1); 
+ }
 
 module.exports = user;
