@@ -31,7 +31,7 @@ user.isValidEmail = function(email) {
     // Regular expression for matching e-mail addresses.
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    return re.test(email)
+    return re.test(email);
 }
 
 /**
@@ -126,18 +126,6 @@ user.findBySession = function(token, callback) {
  * boolean is true if the user is verified, false otherwise.
  *
  * @param userID The user ID to check for.
- * @param callback A function that gets called with the verification status.
- */
-user.checkVerifiedByID = function(userID, callback) {
-
-}
-
-/**
- * Checks whether or not a user has been verified from a given user email. Once
- * the verified status is received, the callback is called with a boolean. The
- * boolean is true if the user is verified, false otherwise.
- *
- * @param userID The user email to check for.
  * @param callback A function that gets called with the verification status.
  */
 user.checkVerifiedByID = function(userID, callback) {
@@ -260,24 +248,33 @@ user.createSession = function(userID, expire, callback) {
  * @param token The ID of the session that should be removed.
  * @param callback A function that gets called after it has been removed.
  */
-user.destroySession = function(token) {
+user.destroySession = function(token, callback) {
 
 }
 
 /**
- * Finds a user with the input credentials in the database. The callback 
- * contains the user ID. 
+ * Finds the ID of a user whose login credentials matches the given
+ * credentials. After the ID has been found, the callback is ran with
+ * the ID passed in. If the user could not be found, the callback is ran
+ * with no parameters.
  *
- * @param email The email inputed by user to be queried
- * @param password The password inputed by user to be queried
- * @param callback A function that gets called after it has been removed
+ * @param email The e-mail address (login name) of the user.
+ * @param password The password that corresponds the e-mail address.
+ * @param callback A function that gets called after the search for a
+ *        user finished.
  */
- user.findByCredentials = function(email, password, callback){
+user.findByCredentials = function(email, password, callback) {
+    // Prepare the login information for a query.
     email = db.escape(email.toLowerCase());
     password = db.escape(password);
 
-    db.select('tritor_users', [userID], 'email=' + email + ' AND password=' + password, function (error, results) {
-        if (callback && results.length() > 0) {
+    // Look for a user with a matching e-mail and password combination.
+    var conditions = 'email=' + email + ' AND password=' + password;
+    
+    db.select('tritor_users', ['userID'], conditions,
+    function (error, results) {
+        // Run the callback with the results from the search.
+        if (callback && results.length > 0) {
             callback(results[0].userID);
         } else if (callback) {
             callback();
