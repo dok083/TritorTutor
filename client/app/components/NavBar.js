@@ -7,6 +7,7 @@ var MenuItem = require('react-bootstrap/lib/MenuItem');
 var NavBar = React.createClass({
   render: function() {
     var pages = ["Sign Up", "Log In"] ;
+    /* Maybe want to add Settings page... After logging in */
     var navLinks = pages.map(function(page){ 
     return <Button>{page}</Button>;
   }) ;
