@@ -13,10 +13,12 @@ var NavBar = React.createClass({
   },
 
   render: function() {
-    /* TODO: removed map because it broke things, fix that
-    var pages = ["Sign Up", "Log In"] ;
     /* Maybe want to add Settings page... After logging in */
+
+    /*
+    TODO: fix buttons
     var navLinks = pages.map(function(page){ 
+      var pages = ["Sign Up", "Log In"] ;
       return <Button onClick={this.handleClick}>{page}</Button>;
     }) ;
     */
