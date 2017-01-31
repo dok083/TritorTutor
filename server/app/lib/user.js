@@ -61,21 +61,28 @@ user.isValidPassword = function(password) {
  * no parameters.
  *
  * @param email The email to look up.
- * @param callback A function that gets called after the lookup has results.
+ * @return A promise for the user being retrieved. If the user is found, then
+ *         the promise is resolved with the userID and username. Otherwise,
+ *         the promise is rejected with the associated error.
  */
-user.findByEmail = function(email, callback) {
-    // Make the e-mail safe for a query.
+user.findByEmail = function(email) {
     email = db.escape(email.toLowerCase());
 
+    // Only find matching users.
+    var conditions = 'email=' + email;
+
     // Find a user from the given e-mail.
-    db.select('tritor_users', ['userID', 'username'], 'email=' + email,
-    function(err, results) {
-        if (callback && results.length > 0) {
-            callback(results[0].userID, results[0].username);
-        } else if (callback) {
-            callback();
-        }
-    }, 1);
+    return db.select('tritor_users', ['userID', 'username'], conditions, 1)
+        .then((results) => {
+            if (results && results.length > 0) {
+                return {
+                    userID: results[0].userID,
+                    username: results[0].username
+                };
+            }
+
+            return null;
+        });
 }
 
 /**
@@ -85,26 +92,33 @@ user.findByEmail = function(email, callback) {
  * with no parameters.
  *
  * @param userID The user ID to look up.
- * @param callback A function that gets called after the lookup has results.
+ * @return A promise for the user being retrieved from the given ID. If the user
+ *         is found, then the promise is resolved with the user's email and
+ *         username. Otherwise, the promise is rejected with the associated
+ *         error.
  */
-user.findByID = function(userID, callback) {
+user.findByID = function(userID) {
+    // Validate the user's ID.
     if (!user.isValidID(userID)) {
-        if (callback) {
-            callback();
-        }
-
-        return;
+        return new Promise(function(resolve, reject) {
+            reject('invalid user ID');
+        });
     }
 
-    // Find a user from the given e-mail.
-    db.select('tritor_users', ['email', 'username'], 'userID=' + userID,
-    function(err, results) {
-        if (callback && results.length > 0) {
-            callback(results[0].email, results[0].username);
-        } else if (callback) {
-            callback();
-        }
-    }, 1);
+    // Only find users with the matching ID.
+    var condition = 'userID = ' + userID;
+
+    return db.select('tritor_users', ['email', 'username'], condition, 1)
+        .then((results) => {
+            if (results && results.length > 0) {
+                return {
+                    email: results[0].email,
+                    username: results[0].username
+                };
+            }
+
+            return null;
+        });
 }
 
 /**
@@ -141,37 +155,20 @@ user.checkVerifiedByID = function(userID, callback) {
  * @param email The e-mail address of the user.
  * @param username The desired display name for the user.
  * @param password The desired password for the user.
- * @param callback The callback function that is ran after attempting to create
- *        the user.
  */
-user.create = function(email, username, password, callback) {
+user.create = function(email, username, password) {
     // PLACEHOLDER CODE!!!
     // Insert values to the tritor_users table
-    db.insert('tritor_users', {
+    return db.insert('tritor_users', {
         email: email,
         username: username,
         password: password,
         salt: '' 
-    },  function(error, results, fields) {
-        if (!callback) {
-            return;
-        }
+    }).then((results) => {
+        // Send the verification e-mail after creating an account.
+        user.sendVerification(results.insertId);
 
-        if (error) {
-            console.log('Unable to create user!')
-            console.log(error);
-
-            if (callback) {
-                callback();
-            }
-        } else {
-            // Send the verification e-mail after creating an account.
-            user.sendVerification(results.insertId);
-
-            if (callback) {
-                callback(results.insertId);
-            }
-        }
+        return results.insertId;
     });
 
     // TODO: Generate a random salt.
@@ -201,32 +198,32 @@ user.sendVerification = function(userID, callback) {
     db.query('DELETE FROM tritor_verify WHERE userID = ' + userID);
 
     // Find the e-mail to send to.
-    db.select('tritor_users', ['email'], 'userID=' + userID,
-    function(err, results) {
-        if (err || results.length == 0) {
-            console.log('Cannot create verification for user ' + userID);
+    return db.select('tritor_users', ['email'], 'userID=' + userID, 1)
+        .then((results) => {
+            if (results.length == 0) {
+                console.log('Cannot create verification for user ' + userID);
 
-            return;
-        }
+                return;
+            }
 
-        // Get the e-mail to send to.
-        var email = results[0].email;
+            // Get the e-mail to send to.
+            var email = results[0].email;
 
-        // Generate a verification code.
-        var crypto = require('crypto');
-        var seed = email + Date.now();
-        var code = crypto.createHash('sha256').update(seed).digest('hex');
+            // Generate a verification code.
+            var crypto = require('crypto');
+            var seed = email + Date.now();
+            var code = crypto.createHash('sha256').update(seed).digest('hex');
 
-        // Store the verification code in the database.
-        db.insert('tritor_verify', {userID: userID, code: code});
+            // Send the e-mail containing the verification code.
+            var message = '<b>Welcome to Tritor!</b>'
+                          + '<p>Verification code: ' + code + '</p>';
 
-        // Send the e-mail containing the verification code.
-        var message = '<b>Welcome to Tritor!</b>'
-                      + '<p>Verification code: ' + code + '</p>';
+            require('../lib/mail.js')(email, 'Tritor Account Verification',
+                                      message);
 
-        require('../lib/mail.js')(email, 'Tritor Account Verification',
-                                  message);
-    }, 1);
+            // Store the verification code in the database.
+            return db.insert('tritor_verify', {userID: userID, code: code});
+        });
 }
 
 /**
@@ -238,8 +235,10 @@ user.sendVerification = function(userID, callback) {
  *        30 days.
  * @param callback A function that gets called after the session has been made.
  */
-user.createSession = function(userID, expire, callback) {
-
+user.createSession = function(userID, expire) {
+    return new Promise(function(resolve, reject) {
+        resolve();
+    })
 }
 
 /**
@@ -263,7 +262,7 @@ user.destroySession = function(token, callback) {
  * @param callback A function that gets called after the search for a
  *        user finished.
  */
-user.findByCredentials = function(email, password, callback) {
+user.findByCredentials = function(email, password) {
     // Prepare the login information for a query.
     email = db.escape(email.toLowerCase());
     password = db.escape(password);
@@ -271,15 +270,14 @@ user.findByCredentials = function(email, password, callback) {
     // Look for a user with a matching e-mail and password combination.
     var conditions = 'email=' + email + ' AND password=' + password;
     
-    db.select('tritor_users', ['userID'], conditions,
-    function (error, results) {
-        // Run the callback with the results from the search.
-        if (callback && results.length > 0) {
-            callback(results[0].userID);
-        } else if (callback) {
-            callback();
-        }
-    }, 1); 
+    return db.select('tritor_users', ['userID'], conditions, 1)
+        .then((results) => {
+            if (results && results.length > 0) {
+                return results[0].userID;
+            }
+
+            return null;
+        });
  }
 
 module.exports = user;

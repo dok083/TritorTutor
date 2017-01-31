@@ -40,25 +40,23 @@ module.exports = {
             }
 
             // Check if a user already exists with this e-mail.
-            user.findByEmail(email, function(otherUserID) {
-                // If so, then do not create a new user.
-                if (otherUserID) {
-                    res.status(409).json({message: "email already in use"});
-
-                    return;
-                }
-
-                // Otherwise, create the user.
-                user.create(email, username, password, function(newUserID) {
-                    if (newUserID) {
-                        res.json({id: newUserID});
+            user.findByEmail(email)
+                .then((otherUser) => {
+                    // If so, then do not create a new user.
+                    if (otherUser) {
+                        res.status(409).json({message: "email already in use"});
 
                         return;
                     }
-                    
-                    res.status(500).json({message: "unable to create user"});
-                })
-            });
+
+                    // Otherwise, create the user.
+                    user.create(email, username, password)
+                        .then((newUserID) => {
+                            res.json({id: newUserID});
+                        }, (error) => {
+                            res.json({message: error});
+                        });
+                });
         }
     },
 
@@ -80,16 +78,17 @@ module.exports = {
             }
 
             // Select the email and username for the user with the matching ID.
-            user.findByID(userID, function(email, username) {
-                if (email) {
-                    res.json({email: email, username: username});
-                } else {
-                    res.status(500).json({
-                        status: false,
-                        message: 'user does not exist'
-                    });
-                }
-            });
+            user.findByID(userID)
+                .then((user) => {
+                    if (user) {
+                        res.json(user);
+                    } else {
+                        res.status(500).json({
+                            status: false,
+                            message: 'user does not exist'
+                        });
+                    }
+                });
         }
     },
 
@@ -100,7 +99,8 @@ module.exports = {
             var inputPass = req.body.password;
 
             // Check if user input is valid.
-            if (!user.isValidEmail(inputEmail) || !user.isValidPassword(inputPass)) {
+            if (!user.isValidEmail(inputEmail) ||
+                !user.isValidPassword(inputPass)) {
                 res.status(401).json({
                     message: 'invalid email or password'
                 });
@@ -111,20 +111,26 @@ module.exports = {
             // TODO: Hash and salt password. Yiming plox
 
             // Check if a user with this email and password combination exists.
-            user.findByCredentials(inputEmail, inputPass, function(userID) {
-                if (userID) {
-                    // If so, create a session to sign in with.
-                    user.createSession(userID, 0, function(sessionID) {
-                        if (sessionID) {
-                            res.json({sessionID: sessionID});
-                        } else {
-                            res.status(500).json({message: 'failed to create session'});
-                        }
-                    });
-                } else {
-                    res.status(401).json({message: 'invalid email or password'});
-                }
-            }); 
+            user.findByCredentials(inputEmail, inputPass)
+                .then((userID) => {
+                    if (userID) {
+                        // If so, create a session to sign in with.
+                        user.createSession(userID, 0)
+                            .then((sessionID) => {
+                                if (sessionID) {
+                                    res.json({sessionID: sessionID});
+                                } else {
+                                    res.status(500).json({
+                                        message: 'failed to create session'
+                                    });
+                                }
+                            });
+                    } else {
+                        res.status(401).json({
+                            message: 'invalid email or password'
+                        });
+                    }
+                })
         }
     }
 }
