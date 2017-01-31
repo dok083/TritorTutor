@@ -5,9 +5,6 @@ var mysql = require('mysql');
 // Create a query pool for our queries.
 var pool = mysql.createPool(config);
 
-// Store the database library functions here.
-var lib = {};
-
 /**
  * Queries the database using an SQL query. Once the query has results, the
  * callback is called with those results. 
@@ -20,20 +17,17 @@ var lib = {};
  *         database as an array and the associated fields. Otherwise, the
  *         promise is rejected with the associated error.
  */
-lib.query = function(query, values) {
+function query(query, values) {
     return new Promise(function(resolve, reject) {
         pool.query(query, values, function(error, results, fields) {
             if (error) {
                 reject(error);
             } else {
-                resolve(results, fields);
+                resolve(results);
             }
         });
     });
 }
-
-// Alias to mysql.escape()
-lib.escape = mysql.escape;
 
 /**
  * Inserts values using an object where the keys are the column names and
@@ -47,7 +41,7 @@ lib.escape = mysql.escape;
  *         database as an array and the associated fields. Otherwise, the
  *         promise is rejected with the associated error.
  */
-lib.insert = function(table, data) {
+function insert(table, data) {
     // Split the data into keys and values.
     var index = 0;
     var columns = [];
@@ -72,7 +66,7 @@ lib.insert = function(table, data) {
                    + ') VALUES ('
                    + tempValues.join() + ')';
 
-    return query(queyStr, values);
+    return query(queryStr, values);
 }
 
 /**
@@ -90,7 +84,7 @@ lib.insert = function(table, data) {
  *         database as an array and the associated fields. Otherwise, the
  *         promise is rejected with the associated error.
  */
-select: function(table, columns, condition, limit, order) {
+function select(table, columns, condition, limit, order) {
     // Convert keys in to a string list of keys.
     if (columns instanceof Array) {
         if (columns.length == 0) {
@@ -141,7 +135,7 @@ select: function(table, columns, condition, limit, order) {
  *         database as an array and the associated fields. Otherwise, the
  *         promise is rejected with the associated error.
  */
-update: function(table, data, condition, limit) {
+function update(table, data, condition, limit) {
     // Set up the assignments for the update query.
     var updates = [];
     var values = [];
@@ -173,4 +167,10 @@ update: function(table, data, condition, limit) {
 }
 
 // Expose the database library to the public.
-module.exports = lib;
+module.exports = {
+    query: query,
+    escape: mysql.escape,
+    insert: insert,
+    select: select,
+    update: update
+};
