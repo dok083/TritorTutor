@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --host 0.0.0.0",
     "build": "webpack -p",
+    "test": "npm run build && npm run start",
     "deploy": "npm run build && npm run git-commit && npm run git-push"
   },
   "author": "",
