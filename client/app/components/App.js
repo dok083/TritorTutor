@@ -1,11 +1,11 @@
 var React = require("react");
-var NavBar = require("./NavBar");
+var NavBarContainer = require("../containers/NavBarContainer");
 
 var App = React.createClass({
   render: function() {
     return (
       <div>
-        <NavBar />
+        <NavBarContainer />
         <h1>TritonTutor - Test 3</h1>
       </div>
     );
