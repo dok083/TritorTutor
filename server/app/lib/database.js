@@ -18,13 +18,13 @@ var lib = {};
  * @return A promise which contains results from the database. If the query was
  *         successful, then the promise is fulfilled with results from the
  *         database as an array and the associated fields. Otherwise, the
- *         promise is rejected and the associated error is thrown.
+ *         promise is rejected with the associated error.
  */
 lib.query = function(query, values) {
     return new Promise(function(resolve, reject) {
         pool.query(query, values, function(error, results, fields) {
             if (error) {
-                throw error;
+                reject(error);
             } else {
                 resolve(results, fields);
             }
@@ -45,7 +45,7 @@ lib.escape = mysql.escape;
  * @return A promise which contains results from the database. If the query was
  *         successful, then the promise is fulfilled with results from the
  *         database as an array and the associated fields. Otherwise, the
- *         promise is rejected and the associated error is thrown.
+ *         promise is rejected with the associated error.
  */
 lib.insert = function(table, data) {
     // Split the data into keys and values.
@@ -88,7 +88,7 @@ lib.insert = function(table, data) {
  * @return A promise which contains results from the database. If the query was
  *         successful, then the promise is fulfilled with results from the
  *         database as an array and the associated fields. Otherwise, the
- *         promise is rejected and the associated error is thrown.
+ *         promise is rejected with the associated error.
  */
 select: function(table, columns, condition, limit, order) {
     // Convert keys in to a string list of keys.
@@ -139,7 +139,7 @@ select: function(table, columns, condition, limit, order) {
  * @return A promise which contains results from the database. If the query was
  *         successful, then the promise is fulfilled with results from the
  *         database as an array and the associated fields. Otherwise, the
- *         promise is rejected and the associated error is thrown.
+ *         promise is rejected with the associated error.
  */
 update: function(table, data, condition, limit) {
     // Set up the assignments for the update query.
