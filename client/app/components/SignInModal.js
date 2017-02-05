@@ -25,31 +25,31 @@ var SignInModal = React.createClass( {
       */
 
     return (
-      <div>
+      <div style={{display: 'inline'}}>
 
-      <Button onClick={this.open}><Glyphicon glyph="user" /> Login </Button>
+        <Button onClick={this.open}><Glyphicon glyph="user" /> Login </Button>
 
-      <Modal show={this.state.showModal} onHide = {this.close}>
-        <Modal.Header closeButton>
-            <Modal.Title> Create an account! </Modal.Title>
-        </Modal.Header>
+        <Modal show={this.state.showModal} onHide = {this.close}>
+          <Modal.Header closeButton>
+              <Modal.Title> Create an account! </Modal.Title>
+          </Modal.Header>
 
-        <Modal.Body>
-            <h4> User Name / Email </h4>
-            <p>ID TEXTBOX SHOULD GO IN HERE.</p>
+          <Modal.Body>
+              <h4> User Name / Email </h4>
+              <p>ID TEXTBOX SHOULD GO IN HERE.</p>
 
-            <h4> Password  </h4>
-            <p>PASSWORD TEXTBOX SHOULD GO IN HERE. </p>
+              <h4> Password  </h4>
+              <p>PASSWORD TEXTBOX SHOULD GO IN HERE. </p>
 
-            <h4> Are you a not member? Create an account! </h4>
+              <h4> Are you a not member? Create an account! </h4>
 
 
-        </Modal.Body>
-        
-        <Modal.Footer>
-          <Button onClick={this.close}>Close</Button>
-        </Modal.Footer>
-        
+          </Modal.Body>
+          
+          <Modal.Footer>
+            <Button onClick={this.close}>Close</Button>
+          </Modal.Footer>
+          
         </Modal>
       </div>
     );
