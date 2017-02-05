@@ -4,6 +4,7 @@ var ButtonToolbar = require('react-bootstrap/lib/ButtonToolbar');
 var DropdownButton = require('react-bootstrap/lib/DropdownButton');
 var MenuItem = require('react-bootstrap/lib/MenuItem');
 var Navbar = require('react-bootstrap/lib/Navbar');
+var Nav = require('react-bootstrap/lib/Nav');
 var FormGroup = require('react-bootstrap/lib/FormGroup');
 var InputGroup = require('react-bootstrap/lib/InputGroup');
 var FormControl = require('react-bootstrap/lib/FormControl');
@@ -55,19 +56,21 @@ var NavBar = React.createClass({
     // Determine what to display in the top right "user" area.
     if (this.state.isLoggedIn) {
       loggedIn = (
-        <DropdownButton title="Welcome back!" id="bg-nested-dropdown">
-          <MenuItem eventKey="1">Settings</MenuItem>
-          <MenuItem eventKey="2" onClick={this.doLogOut}>Log Out</MenuItem>
-        </DropdownButton>
+        <Nav pullRight>
+          <DropdownButton title="Welcome back!" id="bg-nested-dropdown">
+            <MenuItem eventKey="1">Settings</MenuItem>
+            <MenuItem eventKey="2" onClick={this.doLogOut}>Log Out</MenuItem>
+          </DropdownButton>
+        </Nav>
       );
     } else {
       loggedIn = (
-        <ButtonToolbar>
-          // alignment problem probably because a div is returned. could
-          // directly write modal here but seems kinda jank
-          <SignInModal />
-          <Button onClick={this.doSignUp}><Glyphicon glyph="globe" /> Sign Up</Button>
-        </ButtonToolbar>
+        <Nav pullRight>
+          <ButtonToolbar>
+            <SignInModal />
+            <Button onClick={this.doSignUp}><Glyphicon glyph="globe" /> Sign Up</Button>
+          </ButtonToolbar>
+        </Nav>
       );
     }
 
@@ -90,9 +93,9 @@ var NavBar = React.createClass({
               </InputGroup>
             </FormGroup>
           </Navbar.Form>
-          <Navbar.Form pullRight>
-            {loggedIn}
-          </Navbar.Form>
+          
+          {loggedIn}
+        
         </Navbar.Collapse>
       </Navbar>
     );
