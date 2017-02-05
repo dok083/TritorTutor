@@ -135,15 +135,23 @@ user.findBySession = function(token, callback) {
 }
 
 /**
-* Checks whether or not a user has been verified from a given user ID. Once
-* the verified status is received, the callback is called with a boolean. The
-* boolean is true if the user is verified, false otherwise.
-*
-* @param userID The user ID to check for.
-* @param callback A function that gets called with the verification status.
-*/
-user.checkVerifiedByID = function(userID, callback) {
-
+ * Checks whether or not a user has been verified from a given user ID. Once
+ * the verified status is received, the callback is called with a boolean. The
+ * boolean is true if the user is verified, false otherwise.
+ *
+ * @param userID The user ID to check for.
+ * @return A promise that resolves with true if the user has been verified,
+ *         false otherwise.
+ */
+user.checkVerifiedByID = function(userID) {
+    return db.select('tritor_verify', ['userID'], 'userID=' + userID, 1)
+        .then((results) => {
+            if (results && results.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        });
 }
 
 /**
