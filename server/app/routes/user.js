@@ -12,6 +12,7 @@ module.exports = {
         },
 
         // POST /api/user
+        // Account creation
         post: function(req, res) {
             // Get the desired user fields.
             var email = req.body.email;

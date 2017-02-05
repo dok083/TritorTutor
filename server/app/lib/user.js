@@ -130,8 +130,21 @@ user.findByID = function(userID) {
  * @param token The session ID of a user.
  * @param callback A function that gets called after the lookup has results.
  */
-user.findBySession = function(token, callback) {
+user.findBySession = function(token) {
+    // Check if the sessionID token is in the database
+    var condition = 'token = ' + token;
 
+    // Query the database for the token by using db.select 
+    // Modify the promise de.select returns
+    return db.select('tritor_session', ['token'], condition, 1)
+        .then((results) => {
+            if (results) {
+                return user.findByID(results[0].userID);
+            }
+
+            return null;
+
+        });
 }
 
 /**
