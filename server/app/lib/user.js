@@ -41,7 +41,7 @@ user.isValidEmail = function(email) {
     // Regular expression for matching e-mail addresses.
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    return re.test(email);
+        return re.test(email);
 }
 
 /**
@@ -111,8 +111,8 @@ user.findByID = function(userID) {
     // Validate the user's ID.
     if (!user.isValidID(userID)) {
         return new Promise(function(resolve, reject) {
-            reject('invalid user ID');
-        });
+                reject('invalid user ID');
+                });
     }
 
     // Only find users with the matching ID.
@@ -140,8 +140,17 @@ user.findByID = function(userID) {
  * @param token The session ID of a user.
  * @param callback A function that gets called after the lookup has results.
  */
-user.findBySession = function(token, callback) {
+user.findBySession = function(token) {
+    // Query the database for the token by using db.select 
+    // Modify the promise de.select returns
+    return db.select('tritor_session', ['token'], condition, 1)
+        .then((results) => {
+            if (results) {
+                return user.findByID(results[0].userID);
+            }
 
+            return null;
+        });
 }
 
 /**
@@ -178,8 +187,8 @@ user.create = function(email, username, password) {
     // PLACEHOLDER CODE!!!
     // Insert values to the tritor_users table
     return db.insert('tritor_users', {
-        email: email,
-        username: username,
+            email: email,
+            username: username,
         password: password,
         salt: '' 
     }).then((results) => {
@@ -198,10 +207,13 @@ user.create = function(email, username, password) {
  * code.
  *
  * @param code The verification code for a user.
- * @param callback The function to run after a user has been verified.
  */
-user.verify = function(code, callback) {
+user.verify = function(code) {
+    // Create the delete query
+    var queryStr = 'DELETE FROM tritor_verify WHERE code = ? LIMIT 1';
 
+    // Delete the row with matching code
+    return query(queryStr, code);
 }
 
 /**
@@ -234,10 +246,10 @@ user.sendVerification = function(userID, callback) {
 
             // Send the e-mail containing the verification code.
             var message = '<b>Welcome to Tritor!</b>'
-                          + '<p>Verification code: ' + code + '</p>';
+            + '<p>Verification code: ' + code + '</p>';
 
             require('../lib/mail.js')(email, 'Tritor Account Verification',
-                                      message);
+                    message);
 
             // Store the verification code in the database.
             return db.insert('tritor_verify', {userID: userID, code: code});
@@ -302,7 +314,7 @@ user.findByCredentials = function(email, password) {
 
     // Look for a user with a matching e-mail and password combination.
     var conditions = 'email=' + email + ' AND password=' + password;
-    
+
     return db.select('tritor_users', ['userID'], conditions, 1)
         .then((results) => {
             if (results && results.length > 0) {
@@ -311,6 +323,6 @@ user.findByCredentials = function(email, password) {
 
             return null;
         });
- }
+}
 
 module.exports = user;
