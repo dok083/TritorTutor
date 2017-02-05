@@ -1,6 +1,7 @@
 var React = require("react");
 var Modal = require("react-bootstrap/lib/Modal");
 var Button = require('react-bootstrap/lib/Button');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
 
 var SignInModal = React.createClass( {
   displayName:'SignInModal',
@@ -26,12 +27,7 @@ var SignInModal = React.createClass( {
     return (
       <div>
 
-      <Button
-       
-        onClick={this.open}
-      >
-        Sign-In
-      </Button>
+      <Button onClick={this.open}><Glyphicon glyph="user" /> Login </Button>
 
       <Modal show={this.state.showModal} onHide = {this.close}>
         <Modal.Header closeButton>

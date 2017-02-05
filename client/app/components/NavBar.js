@@ -63,9 +63,10 @@ var NavBar = React.createClass({
     } else {
       loggedIn = (
         <ButtonToolbar>
-          <Button onClick={this.doLogIn}><Glyphicon glyph="user" /> Login </Button>
+          // alignment problem probably because a div is returned. could
+          // directly write modal here but seems kinda jank
+          <SignInModal />
           <Button onClick={this.doSignUp}><Glyphicon glyph="globe" /> Sign Up</Button>
-          <SignInModal> Sign-in popup </SignInModal>
         </ButtonToolbar>
       );
     }
