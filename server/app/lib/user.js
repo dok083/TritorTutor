@@ -2,6 +2,14 @@
  * This file contains a utility library that provides many helper functions
  * relating to users in the database.
  */
+
+// Constants for times in seconds.
+var SECOND = 1000
+var MINUTE = 60 * SECOND;
+var HOUR = 60 * MINUTE;
+var DAY = 24 * HOUR;
+var MONTH = 30 * DAY;
+
 var user = {};
 
 // Configurations for user accounts.
@@ -17,7 +25,9 @@ var db = require('./database.js');
  * @return True if it is a valid ID, false otherwise.
  */
 user.isValidID = function(userID) {
-    return userID > 0 && Number.isSafeInteger(userID);
+    userID = parseInt(userID);
+
+    return userID && userID > 0 && Number.isSafeInteger(userID);
 }
 
 /**
@@ -241,12 +251,27 @@ user.sendVerification = function(userID, callback) {
  * @param userID The ID of the user that the session is being made for.
  * @param expire When the session should expire in seconds. By default this is
  *        30 days.
- * @param callback A function that gets called after the session has been made.
+ * @return A promise containing the ID of a newly generated session for a user.
  */
 user.createSession = function(userID, expire) {
-    return new Promise(function(resolve, reject) {
-        resolve();
-    })
+    // Generate a verification code.
+    var crypto = require('crypto');
+    var curTime = Date.now();
+    var seed = userID + curTime;
+    var token = crypto.createHash('sha256').update(seed).digest('hex');
+
+    // Default the expiration date to a month from now.
+    if (!expire) {
+        expire = curTime + MONTH;
+    }
+
+    return db.insert('tritor_sessions', {
+        token: token,
+        userID: userID,
+        expiration: new Date(expire)
+    }).then((results) => {
+        return token;
+    });
 }
 
 /**
