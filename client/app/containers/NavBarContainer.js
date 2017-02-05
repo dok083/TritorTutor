@@ -19,6 +19,7 @@ var NavBarContainer = React.createClass({
   render: function(){
     return (
       <NavBar loggedIn={this.state.loggedIn} onLog={this.changeLogIn} />
+      
     ) ;
   }
 }) ;

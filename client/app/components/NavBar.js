@@ -8,6 +8,8 @@ var FormGroup = require('react-bootstrap/lib/FormGroup');
 var InputGroup = require('react-bootstrap/lib/InputGroup');
 var FormControl = require('react-bootstrap/lib/FormControl');
 var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var SignInModal = require("../components/SignInModal")
+
 
 // for debugging lol
 var Alert = require('react-bootstrap/lib/Alert') ;
@@ -61,8 +63,9 @@ var NavBar = React.createClass({
     } else {
       loggedIn = (
         <ButtonToolbar>
-          <Button onClick={this.doLogIn}><Glyphicon glyph="user" /> Log In</Button>
+          <Button onClick={this.doLogIn}><Glyphicon glyph="user" /> Login </Button>
           <Button onClick={this.doSignUp}><Glyphicon glyph="globe" /> Sign Up</Button>
+          <SignInModal> Sign-in popup </SignInModal>
         </ButtonToolbar>
       );
     }
