@@ -12,6 +12,14 @@ var serverConfig = require('./config/server.json');
 var express = require('express');
 var app = express();
 
+// Set up use of sessions.
+var cookieSession = require('cookie-session');
+
+app.use(cookieSession({
+    name: 'tritor-session',
+    secret: 'ZeCahU4cn7jaHKHG3cJwBBUz'
+}));
+
 // Set up JSON parsing on the server.
 var bodyParser = require('body-parser');
 

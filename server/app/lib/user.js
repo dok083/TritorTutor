@@ -87,6 +87,7 @@ user.findByEmail = function(email) {
             if (results && results.length > 0) {
                 return {
                     userID: results[0].userID,
+                    email: email,
                     username: results[0].username
                 };
             }
@@ -111,8 +112,8 @@ user.findByID = function(userID) {
     // Validate the user's ID.
     if (!user.isValidID(userID)) {
         return new Promise(function(resolve, reject) {
-                reject('invalid user ID');
-                });
+            reject('invalid user ID');
+        });
     }
 
     // Only find users with the matching ID.
@@ -122,6 +123,7 @@ user.findByID = function(userID) {
         .then((results) => {
             if (results && results.length > 0) {
                 return {
+                    userID: userID,
                     email: results[0].email,
                     username: results[0].username
                 };
@@ -141,14 +143,19 @@ user.findByID = function(userID) {
  * @param callback A function that gets called after the lookup has results.
  */
 user.findBySession = function(token) {
-    // Query the database for the token by using db.select 
-    // Modify the promise de.select returns
-    return db.select('tritor_session', ['token'], condition, 1)
+    // User's token must match the stored token.
+    var condition = 'token = ' + db.escape(token);
+
+    // Get the user from the matching session ID.
+    return db.select('tritor_sessions', ['userID'], condition, 1)
         .then((results) => {
             if (results) {
                 return user.findByID(results[0].userID);
             }
 
+            return null;
+        })
+        .catch((error) => {
             return null;
         });
 }
@@ -189,8 +196,8 @@ user.create = function(email, username, password) {
     return db.insert('tritor_users', {
             email: email,
             username: username,
-        password: password,
-        salt: '' 
+            password: password,
+            salt: '' 
     }).then((results) => {
         // Send the verification e-mail after creating an account.
         user.sendVerification(results.insertId);
@@ -269,7 +276,7 @@ user.createSession = function(userID, expire) {
     // Generate a verification code.
     var crypto = require('crypto');
     var curTime = Date.now();
-    var seed = userID + curTime;
+    var seed = (userID + curTime).toString();
     var token = crypto.createHash('sha256').update(seed).digest('hex');
 
     // Default the expiration date to a month from now.
@@ -323,7 +330,7 @@ user.findByCredentials = function(email, password) {
             }
 
             return null;
-        });
+        })
 }
 
 module.exports = user;

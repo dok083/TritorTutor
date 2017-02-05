@@ -26,6 +26,10 @@ function query(query, values) {
                 resolve(results);
             }
         });
+    }).catch((error) => {
+        console.log('Query Errored!');
+        console.log('Query: ' + query);
+        console.log('Error: ' + error);
     });
 }
 

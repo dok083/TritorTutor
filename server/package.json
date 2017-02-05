@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.16.0",
+    "cookie-session": "^2.0.0-alpha.2",
     "express": "^4.14.0",
     "mysql": "^2.13.0",
     "nodemailer": "^0.7.1",

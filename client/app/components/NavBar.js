@@ -16,25 +16,6 @@ var SignInModal = require("../components/SignInModal")
 var Alert = require('react-bootstrap/lib/Alert') ;
 
 var NavBar = React.createClass({
-  getInitialState: function(props) {
-    return {isLoggedIn: false};
-  },
-
-  doLogIn: function() {
-    // calls NavBarContainer's login flip function
-
-    // TODO: Make component for log in box and render here.
-    this.setState({isLoggedIn: true});
-  },
-
-  doLogOut: function() {
-    this.setState({isLoggedIn: false});
-  },
-
-  doSignUp: function() {
-
-  },
-
   render: function() {
     /* Maybe want to add Settings page... After logging in */
 
@@ -51,24 +32,24 @@ var NavBar = React.createClass({
     // TODO: nest these inside Navs a react-bootstrap Navbar type
 
     // displays dropdown menu if logged in
-    var loggedIn;
+    var userInfo;
 
     // Determine what to display in the top right "user" area.
-    if (this.state.isLoggedIn) {
-      loggedIn = (
+    if (this.props.loggedIn) {
+      userInfo = (
         <Nav pullRight>
-          <DropdownButton title="Welcome back!" id="bg-nested-dropdown">
+          <DropdownButton title={'Welcome back, ' + this.props.user.username + '!'} id="bg-nested-dropdown">
             <MenuItem eventKey="1">Settings</MenuItem>
-            <MenuItem eventKey="2" onClick={this.doLogOut}>Log Out</MenuItem>
+            <MenuItem eventKey="2">Log Out</MenuItem>
           </DropdownButton>
         </Nav>
       );
     } else {
-      loggedIn = (
+      userInfo = (
         <Nav pullRight>
           <ButtonToolbar>
             <SignInModal />
-            <Button onClick={this.doSignUp}><Glyphicon glyph="globe" /> Sign Up</Button>
+            <Button><Glyphicon glyph="globe" /> Sign Up</Button>
           </ButtonToolbar>
         </Nav>
       );
@@ -94,7 +75,7 @@ var NavBar = React.createClass({
             </FormGroup>
           </Navbar.Form>
           <Navbar.Form>
-            {loggedIn}
+            {userInfo}
           </Navbar.Form>
         </Navbar.Collapse>
       </Navbar>

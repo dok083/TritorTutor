@@ -7,8 +7,19 @@ var user = require('../lib/user.js');
 module.exports = {
     '/': {
         get: function(req, res) {
-            // TODO: Get user from session ID.
-            res.status(500).json({status: false, message: 'not implemented'})
+            if (!req.session.sessionID) {
+                res.status(401).json({message: 'not logged in'});
+
+                return;
+            }
+
+            user.findBySession(req.session.sessionID).then((user) => {
+                if (user) {
+                    res.json(user);
+                } else {
+                    res.status(401).json({message: 'not logged in'});
+                }
+            })
         },
 
         // POST /api/user
@@ -119,6 +130,7 @@ module.exports = {
                         user.createSession(userID, 0)
                             .then((sessionID) => {
                                 if (sessionID) {
+                                    req.session.sessionID = sessionID;
                                     res.json({sessionID: sessionID});
                                 } else {
                                     res.status(500).json({
@@ -132,6 +144,9 @@ module.exports = {
                         });
                     }
                 })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
     }
 }
