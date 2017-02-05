@@ -1,7 +1,7 @@
 /**
- * This file contains a utility library that provides many helper functions
- * relating to users in the database.
- */
+* This file contains a utility library that provides many helper functions
+* relating to users in the database.
+*/
 var user = {};
 
 // Configurations for user accounts.
@@ -11,168 +11,168 @@ var userConfig = require('../../config/user.json');
 var db = require('./database.js');
 
 /**
- * Checks whether or not the given user ID is a valid user ID in the database.
- *
- * @param userID The user ID to check.
- * @return True if it is a valid ID, false otherwise.
- */
+* Checks whether or not the given user ID is a valid user ID in the database.
+*
+* @param userID The user ID to check.
+* @return True if it is a valid ID, false otherwise.
+*/
 user.isValidID = function(userID) {
-    return userID > 0 && Number.isSafeInteger(userID);
+return userID > 0 && Number.isSafeInteger(userID);
 }
 
 /**
- * Checks whether or not a given e-mail address is a valid e-mail address. Note
- * that this is not completely perfect.
- *
- * @param email The e-mail address to check.
- * @return True if it is valid, false otherwise.
- */
+* Checks whether or not a given e-mail address is a valid e-mail address. Note
+* that this is not completely perfect.
+*
+* @param email The e-mail address to check.
+* @return True if it is valid, false otherwise.
+*/
 user.isValidEmail = function(email) {
-    // Regular expression for matching e-mail addresses.
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+// Regular expression for matching e-mail addresses.
+var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    return re.test(email);
+return re.test(email);
 }
 
 /**
- * Checks whether or not a username is a valid one.
- *
- * @param username The username for to check.
- * @return True if it is valid, false otherwise.
- */
+* Checks whether or not a username is a valid one.
+*
+* @param username The username for to check.
+* @return True if it is valid, false otherwise.
+*/
 user.isValidUsername = function(username) {
-    return username.length >= userConfig.minUsernameLength;
+return username.length >= userConfig.minUsernameLength;
 }
 
 /**
- * Checks whether or not a user's password is a valid one.
- *
- * @param password The password to check.
- * @return True if it is valid, false otherwise.
- */
+* Checks whether or not a user's password is a valid one.
+*
+* @param password The password to check.
+* @return True if it is valid, false otherwise.
+*/
 user.isValidPassword = function(password) {
-    return password.length >= userConfig.minPasswordLength;
+return password.length >= userConfig.minPasswordLength;
 }
 
 /**
- * Finds a user from a given e-mail address. Once a user has been found, then
- * the given callback is called with the parameters being the user's ID and the
- * user's name. If a user could not be found, then the callback is called with
- * no parameters.
- *
- * @param email The email to look up.
- * @return A promise for the user being retrieved. If the user is found, then
- *         the promise is resolved with the userID and username. Otherwise,
- *         the promise is rejected with the associated error.
- */
+* Finds a user from a given e-mail address. Once a user has been found, then
+* the given callback is called with the parameters being the user's ID and the
+* user's name. If a user could not be found, then the callback is called with
+* no parameters.
+*
+* @param email The email to look up.
+* @return A promise for the user being retrieved. If the user is found, then
+*         the promise is resolved with the userID and username. Otherwise,
+*         the promise is rejected with the associated error.
+*/
 user.findByEmail = function(email) {
-    email = db.escape(email.toLowerCase());
+email = db.escape(email.toLowerCase());
 
-    // Only find matching users.
-    var conditions = 'email=' + email;
+// Only find matching users.
+var conditions = 'email=' + email;
 
-    // Find a user from the given e-mail.
-    return db.select('tritor_users', ['userID', 'username'], conditions, 1)
-        .then((results) => {
-            if (results && results.length > 0) {
-                return {
-                    userID: results[0].userID,
-                    username: results[0].username
-                };
-            }
+// Find a user from the given e-mail.
+return db.select('tritor_users', ['userID', 'username'], conditions, 1)
+    .then((results) => {
+        if (results && results.length > 0) {
+            return {
+                userID: results[0].userID,
+                username: results[0].username
+            };
+        }
 
-            return null;
-        });
+        return null;
+    });
 }
 
 /**
- * Finds a user from a given user ID. Once a user has been found, then
- * the given callback is called with the parameters being the user's email and
- * the user's name. If a user could not be found, then the callback is called
- * with no parameters.
- *
- * @param userID The user ID to look up.
- * @return A promise for the user being retrieved from the given ID. If the user
- *         is found, then the promise is resolved with the user's email and
- *         username. Otherwise, the promise is rejected with the associated
- *         error.
- */
+* Finds a user from a given user ID. Once a user has been found, then
+* the given callback is called with the parameters being the user's email and
+* the user's name. If a user could not be found, then the callback is called
+* with no parameters.
+*
+* @param userID The user ID to look up.
+* @return A promise for the user being retrieved from the given ID. If the user
+*         is found, then the promise is resolved with the user's email and
+*         username. Otherwise, the promise is rejected with the associated
+*         error.
+*/
 user.findByID = function(userID) {
-    // Validate the user's ID.
-    if (!user.isValidID(userID)) {
-        return new Promise(function(resolve, reject) {
-            reject('invalid user ID');
-        });
-    }
+// Validate the user's ID.
+if (!user.isValidID(userID)) {
+    return new Promise(function(resolve, reject) {
+        reject('invalid user ID');
+    });
+}
 
-    // Only find users with the matching ID.
-    var condition = 'userID = ' + userID;
+// Only find users with the matching ID.
+var condition = 'userID = ' + userID;
 
-    return db.select('tritor_users', ['email', 'username'], condition, 1)
-        .then((results) => {
-            if (results && results.length > 0) {
-                return {
-                    email: results[0].email,
-                    username: results[0].username
-                };
-            }
+return db.select('tritor_users', ['email', 'username'], condition, 1)
+    .then((results) => {
+        if (results && results.length > 0) {
+            return {
+                email: results[0].email,
+                username: results[0].username
+            };
+        }
 
-            return null;
-        });
+        return null;
+    });
 }
 
 /**
- * Finds a user from a given session ID. Once the user has been found, then
- * the given callback is called with the parameters being the user's ID, the
- * user's e-mail, and the user's name. If a user could not be found, then the
- * callback is called with no parameters.
- *
- * @param token The session ID of a user.
- * @param callback A function that gets called after the lookup has results.
- */
+* Finds a user from a given session ID. Once the user has been found, then
+* the given callback is called with the parameters being the user's ID, the
+* user's e-mail, and the user's name. If a user could not be found, then the
+* callback is called with no parameters.
+*
+* @param token The session ID of a user.
+* @param callback A function that gets called after the lookup has results.
+*/
 user.findBySession = function(token, callback) {
 
 }
 
 /**
- * Checks whether or not a user has been verified from a given user ID. Once
- * the verified status is received, the callback is called with a boolean. The
- * boolean is true if the user is verified, false otherwise.
- *
- * @param userID The user ID to check for.
- * @param callback A function that gets called with the verification status.
- */
+* Checks whether or not a user has been verified from a given user ID. Once
+* the verified status is received, the callback is called with a boolean. The
+* boolean is true if the user is verified, false otherwise.
+*
+* @param userID The user ID to check for.
+* @param callback A function that gets called with the verification status.
+*/
 user.checkVerifiedByID = function(userID, callback) {
 
 }
 
 /**
- * Creates a user by inserting them into the database. Once the user has been
- * created (or not), the callback is ran. If the user was created, then the
- * only parameter to the callback is an integer containing the user's ID.
- * Otherwise, there are no parameters.
- *
- * @param email The e-mail address of the user.
- * @param username The desired display name for the user.
- * @param password The desired password for the user.
- */
+* Creates a user by inserting them into the database. Once the user has been
+* created (or not), the callback is ran. If the user was created, then the
+* only parameter to the callback is an integer containing the user's ID.
+* Otherwise, there are no parameters.
+*
+* @param email The e-mail address of the user.
+* @param username The desired display name for the user.
+* @param password The desired password for the user.
+*/
 user.create = function(email, username, password) {
-    // PLACEHOLDER CODE!!!
-    // Insert values to the tritor_users table
-    return db.insert('tritor_users', {
-        email: email,
-        username: username,
-        password: password,
-        salt: '' 
-    }).then((results) => {
-        // Send the verification e-mail after creating an account.
-        user.sendVerification(results.insertId);
+// PLACEHOLDER CODE!!!
+// Insert values to the tritor_users table
+return db.insert('tritor_users', {
+    email: email,
+    username: username,
+    password: password,
+    salt: '' 
+}).then((results) => {
+    // Send the verification e-mail after creating an account.
+    user.sendVerification(results.insertId);
 
-        return results.insertId;
-    });
+    return results.insertId;
+});
 
-    // TODO: Generate a random salt.
-    // TODO: Encrypt the password using hash + salt.
+// TODO: Generate a random salt.
+// TODO: Encrypt the password using hash + salt.
 }
 
 /**
@@ -180,10 +180,13 @@ user.create = function(email, username, password) {
  * code.
  *
  * @param code The verification code for a user.
- * @param callback The function to run after a user has been verified.
  */
-user.verify = function(code, callback) {
+user.verify = function(code) {
+    // Create the delete query
+    var queryStr = 'DELETE FROM tritor_verify WHERE code = ? LIMIT 1';
 
+    // Delete the row with matching code
+    return query(queryStr, code);
 }
 
 /**
