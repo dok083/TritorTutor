@@ -93,9 +93,9 @@ var NavBar = React.createClass({
               </InputGroup>
             </FormGroup>
           </Navbar.Form>
-          
-          {loggedIn}
-        
+          <Navbar.Form>
+            {loggedIn}
+          </Navbar.Form>
         </Navbar.Collapse>
       </Navbar>
     );
