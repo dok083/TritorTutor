@@ -292,8 +292,9 @@ user.createSession = function(userID, expire) {
  * @param token The ID of the session that should be removed.
  * @param callback A function that gets called after it has been removed.
  */
-user.destroySession = function(token, callback) {
-
+user.destroySession = function(token) {
+    return db.query('DELETE FROM tritor_sessions WHERE token = ' + token);
+    //Do I specify then()? Do I specify "WHERE token = ?"
 }
 
 /**
