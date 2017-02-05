@@ -1,6 +1,9 @@
 var React = require("react");
 var Modal = require("react-bootstrap/lib/Modal");
 var Button = require('react-bootstrap/lib/Button');
+var FormControl = require('react-bootstrap/lib/FormControl');
+var FormGroup = require('react-bootstrap/lib/FormGroup');
+var ControlLabel = require('react-bootstrap/lib/ControlLabel');
 var Glyphicon = require('react-bootstrap/lib/Glyphicon');
 
 var SignInModal = React.createClass( {
@@ -29,27 +32,31 @@ var SignInModal = React.createClass( {
 
         <Button onClick={this.open}><Glyphicon glyph="user" /> Login </Button>
 
-        <Modal show={this.state.showModal} onHide = {this.close}>
+        <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
               <Modal.Title> Create an account! </Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-              <h4> User Name / Email </h4>
-              <p>ID TEXTBOX SHOULD GO IN HERE.</p>
+            <form>
+                <FormGroup>
+                  <ControlLabel>Username/Email</ControlLabel>
+                  <FormControl type="text" placeholder="Email address" />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>Password</ControlLabel>
+                  <FormControl type="password" placeholder="Password" />
+                </FormGroup>
 
-              <h4> Password  </h4>
-              <p>PASSWORD TEXTBOX SHOULD GO IN HERE. </p>
+                {/* <Button type="submit">Submit</Button> */}
+            </form>
 
-              <h4> Are you a not member? Create an account! </h4>
-
-
+            <h4>Are you a not member? Create an account!</h4>
           </Modal.Body>
           
           <Modal.Footer>
             <Button onClick={this.close}>Close</Button>
           </Modal.Footer>
-          
         </Modal>
       </div>
     );
