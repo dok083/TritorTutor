@@ -48,7 +48,7 @@ var NavBar = React.createClass({
       userInfo = (
         <Nav pullRight>
           <ButtonToolbar>
-            <SignInModal />
+            <SignInModal onLogin={this.props.onLogin} />
             <Button><Glyphicon glyph="globe" /> Sign Up</Button>
           </ButtonToolbar>
         </Nav>

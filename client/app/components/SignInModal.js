@@ -5,13 +5,22 @@ var FormControl = require('react-bootstrap/lib/FormControl');
 var FormGroup = require('react-bootstrap/lib/FormGroup');
 var ControlLabel = require('react-bootstrap/lib/ControlLabel');
 var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var Alert = require('react-bootstrap/lib/Alert');
 var axios = require('axios');
 
 var SignInModal = React.createClass( {
   displayName:'SignInModal',
 
   getInitialState: function(){
-    return {showModal: false, username: '', password: ''};
+    return {
+      showModal: false,
+      username: '',       // The current username.
+      password: '',       // The current password.
+      allowLogin: false,  // Whether or not the login button should be enabled.
+      isLoggingIn: false, // Whether or not we are currently logged in.
+      isLoggingIn: false, // Whether or not we are waiting for a login response.
+      error: ''           // The error message that should be displayed, if any.
+    };
   },
   
   close: function() {
@@ -22,27 +31,56 @@ var SignInModal = React.createClass( {
     this.setState({showModal: true});
   },
 
-  login: function() {
+  // Called when the login button has been pressed.
+  login: function(e) {
+    e.preventDefault();
+    this.setState({isLoggingIn: true, allowLogin: false});
+
+    // Send login information to the server.
     axios.post('/api/user/login', {
         email: this.state.email,
         password: this.state.password
     }).then(function (r) {
-      alert(r.data.sessionID);
-    }).catch(function (e) {
-      if (e.response) {
-        alert(e.response.status);
-      } else {
-        alert(e.message);
+      // If we succesfully logged in, then close this login window and pass on
+      // the login data to whatever needs it.
+      if (this.props.onLogin) {
+        this.props.onLogin(r.data);
       }
-    });
+      
+      this.close();
+    }.bind(this)).catch(function (e) {
+      // Otherwise, keep this window open and show the login error.
+      this.open();
+      
+      this.showError(e.response && e.response.data.message || e.error || "Unknown error!");
+      this.setState({allowLogin: true, isLoggingIn: false});
+    }.bind(this));
   },
 
   handleEmailChange: function(e) {
-    this.setState({email: e.target.value});
+    var allowLogin = !this.state.isLoggingIn
+                     && this.state.password.length > 0
+                     && e.target.value.length > 0;
+
+    this.setState({
+      email: e.target.value,
+      allowLogin: allowLogin
+    });
   },
 
   handlePasswordChange: function(e) {
-    this.setState({password: e.target.value});
+    var allowLogin = !this.state.isLoggingIn
+                     && this.state.email.length > 0
+                     && e.target.value.length > 0;
+
+    this.setState({
+      password: e.target.value,
+      allowLogin: allowLogin
+    });
+  },
+
+  showError: function(message) {
+    this.setState({error: message});
   },
 
   render: function() {
@@ -51,6 +89,17 @@ var SignInModal = React.createClass( {
       <Signin id="sign in" title="sign in")
       */
 
+    var errorPrompt;
+
+    if (this.state.error.length > 0) {
+      errorPrompt = (
+        <Alert bsStyle="danger">
+          <h4>Oh no!</h4>
+          <p>{this.state.error}</p>
+        </Alert>
+      );
+    }
+
     return (
       <div style={{display: 'inline'}}>
 
@@ -58,11 +107,12 @@ var SignInModal = React.createClass( {
 
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
-              <Modal.Title> Create an account! </Modal.Title>
+              <Modal.Title>Login</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            <form>
+            {errorPrompt}
+            <form onSubmit={this.state.allowLogin ? this.login : null}>
                 <FormGroup id="email">
                   <ControlLabel>Email Address</ControlLabel>
                   <FormControl type="email" placeholder="triton@ucsd.edu"
@@ -73,12 +123,12 @@ var SignInModal = React.createClass( {
                   <FormControl type="password" placeholder="Password"
                    onChange={this.handlePasswordChange} />
                 </FormGroup>
+                <Button bsStyle="primary" type="submit" disabled={!this.state.allowLogin}>Login</Button>
             </form>
-            <p>Are you a not member? Create an account!</p>
           </Modal.Body>
-          
+            
           <Modal.Footer>
-            <Button onClick={this.login}>Login</Button>
+            Not a member? Create an account!
           </Modal.Footer>
         </Modal>
       </div>
