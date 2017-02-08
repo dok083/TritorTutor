@@ -17,7 +17,8 @@ var cookieSession = require('cookie-session');
 
 app.use(cookieSession({
     name: 'tritor-session',
-    secret: 'ZeCahU4cn7jaHKHG3cJwBBUz'
+    secret: 'ZeCahU4cn7jaHKHG3cJwBBUz',
+    maxAge: 1000 * 60 * 60 * 24 * 30
 }));
 
 // Set up JSON parsing on the server.
