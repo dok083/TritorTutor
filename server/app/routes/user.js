@@ -148,5 +148,18 @@ module.exports = {
                     console.log(error);
                 });
         }
+    },
+
+    '/bye': {
+        get: function(req, res) {
+            var session = req.session.sessionID;
+
+            if (session && session.length == 64) {
+                user.destroySession(session);
+            }
+            console.log('Yello');
+            req.session = null;
+            res.status(200).json({});
+        }
     }
 }
