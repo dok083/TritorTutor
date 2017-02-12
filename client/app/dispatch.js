@@ -1,5 +1,4 @@
-var Action = require( 'Action.js' );
-
+var Action = require( './action.js' );
 var Dispatch = {};
 // list of listeners for certain actions
 Dispatch.listeners = {};
@@ -12,7 +11,7 @@ Dispatch.listeners = {};
  */
 Dispatch.createAction = function ( name )
 {
-    return Action( name );
+    return new Action( name );
 }
 
 /**
@@ -20,10 +19,10 @@ Dispatch.createAction = function ( name )
  *
  * @param action 
  */
-Dispatch.onActionCreated = function ( action )
+Dispatch.onActionDispatched = function ( action )
 {
     // go through all of the callbacks for a particular action 
-    listeners[ action.name ].forEach( function( callback )
+    this.listeners[ action.name ].forEach( function( callback )
     {
         callback( action.getData() );
     } );

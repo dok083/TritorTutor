@@ -1,4 +1,13 @@
-var Action = {};
+"use strict"
+
+/**
+ * Constructor for the Action class.
+ *
+ * @param name the name of the action
+ */
+function Action(name) {
+    this.name = name;
+}
 
 /**
  * Initialize this action.
@@ -6,7 +15,7 @@ var Action = {};
  * @param key the key to set
  * @param value the value to set the key to
  */
-Action.set = function ( key, value )
+Action.prototype.set = function ( key, value )
 {
     // initialize the data
     if ( !this.data )
@@ -18,20 +27,14 @@ Action.set = function ( key, value )
     this.data[ key ] = value;
 }
 
-Action.getData = function()
+Action.prototype.getData = function()
 {
     return this.data || {};
 }
 
-Action.dispatch = function()
+Action.prototype.dispatch = function()
 {
-    Dispatch.onActionCreated( this );
+    require('./dispatch.js').onActionDispatched( this );
 }
 
-module.exports = function ( name )
-{
-    var action = new Action();
-    action.name = name;
-
-    return action;
-}
+module.exports = Action;
