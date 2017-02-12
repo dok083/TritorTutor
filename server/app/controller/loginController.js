@@ -40,3 +40,5 @@ LoginController.logout = function(sessionID) {
 LoginController.getUser = function(sessionID) {
 
 }
+
+module.exports = LoginController;

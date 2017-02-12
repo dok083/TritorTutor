@@ -31,3 +31,5 @@ AccountController.create = function(email, username, password) {
 AccountController.delete = function(userID) {
 
 }
+
+module.exports = AccountController;
