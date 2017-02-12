@@ -5,11 +5,11 @@ var DropdownButton = require('react-bootstrap/lib/DropdownButton');
 var MenuItem = require('react-bootstrap/lib/MenuItem');
 var Navbar = require('react-bootstrap/lib/Navbar');
 var Nav = require('react-bootstrap/lib/Nav');
+var NavItem = require("react-bootstrap/lib/NavItem");
 var FormGroup = require('react-bootstrap/lib/FormGroup');
 var InputGroup = require('react-bootstrap/lib/InputGroup');
 var FormControl = require('react-bootstrap/lib/FormControl');
 var Glyphicon = require('react-bootstrap/lib/Glyphicon');
-var NavItem = require("react-bootstrap/lib/NavItem");
 var Modal = require("react-bootstrap/lib/Modal");
 var ControlLabel = require("react-bootstrap/lib/ControlLabel");
 var axios = require('axios');
@@ -125,8 +125,8 @@ var NavBar = React.createClass({
     } else {
       userInfo = (
         <Nav pullRight>
-          <NavItem onClick={this.openLogInModal} href="#">Log In</NavItem>
-          <NavItem onClick={this.openSignUpModal} href="#">Sign up</NavItem>
+          <NavItem onClick={this.openLogInModal} href="#"><Glyphicon glyph="user" /> Log In</NavItem>
+          <NavItem onClick={this.openSignUpModal} href="#"><Glyphicon glyph="globe" /> Sign up</NavItem>
           
           {/* Log in modal */}
           <Modal show={this.state.showLogInModal} onHide={this.closeLogInModal}>
