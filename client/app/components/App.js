@@ -1,6 +1,5 @@
 var React = require("react");
 var NavBarContainer = require("../containers/NavBarContainer");
-var SignInModal = require("../components/SignInModal");
 var Footer = require("../components/Footer.js")
 
 var App = React.createClass({
