@@ -1,14 +1,12 @@
-/*
- * This file contains functions in the business layer for User Accounts
- *
- *
+"use strict"
+
+/**
+ * This file contains the UserAccountModel which is responsible for access
+ * to users in the database. This allows for the searching and creating of
+ * users on the database.
  */
 
-// Databse functions
 var db = require('./database.js');
-var db = require('./userFormValidator.js');
-var db = require('./sessionMode.js');
-var db = require('./verificationModel.js');
 
 var UserAccountModel = {};
 
@@ -56,14 +54,7 @@ UserAccountModel.getByEmail = function(email) {
  *         username. Otherwise, the promise is rejected with the associated
  *         error.
  */
-UserAccountModel.getById = function(userID) {
-	 // Validate the user's ID.
-    if (!isValid.ID(userID)) {
-        return new Promise(function(resolve, reject) {
-            reject('invalid user ID');
-        });
-    }
-
+UserAccountModel.getByID = function(userID) {
     // Only find users with the matching ID.
     var condition = 'userID = ' + userID;
 
@@ -82,17 +73,17 @@ UserAccountModel.getById = function(userID) {
 }
 
 /**
- * Creates a user by inserting them into the database. Once the user has been
- * created (or not), the callback is ran. If the user was created, then the
- * only parameter to the callback is an integer containing the user's ID.
- * Otherwise, there are no parameters.
+ * Creates a user by inserting them into the database.
  *
  * @param email The e-mail address of the user.
  * @param username The desired display name for the user.
  * @param password The desired password for the user.
+ * @return A promise that contains the user after inserting is done.
  */
 UserAccountModel.create = function(email, username, password) {
-    // PLACEHOLDER CODE!!!
+    // TODO: Generate a random salt.
+    // TODO: Encrypt the password using hash + salt.
+
     // Insert values to the tritor_users table
     return db.insert('tritor_users', {
             email: email,
@@ -100,30 +91,21 @@ UserAccountModel.create = function(email, username, password) {
             password: password,
             salt: '' 
     }).then((results) => {
-        // Send the verification e-mail after creating an account.
-        VerificationModel.create(results.insertId);
-
         return {
         	userID: results.insertId,
         	email: email,
         	username: username
         };
     });
-
-    // TODO: Generate a random salt.
-    // TODO: Encrypt the password using hash + salt.
 }
 
 /**
  * Finds the ID of a user whose login credentials matches the given
- * credentials. After the ID has been found, the callback is ran with
- * the ID passed in. If the user could not be found, the callback is ran
- * with no parameters.
+ * credentials.
  *
  * @param email The e-mail address (login name) of the user.
  * @param password The password that corresponds the e-mail address.
- * @param callback A function that gets called after the search for a
- *        user finished.
+ * @return A promise containing the user if found, otherwise the user is null.
  */
 UserAccountModel.getByCredentials = function(email, password) {
 	// Prepare the login information for a query.
