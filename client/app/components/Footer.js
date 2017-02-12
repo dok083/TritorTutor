@@ -6,6 +6,7 @@ var Footer = React.createClass({
       <footer>
         <img
           src = "../../../assets/okaysoft.png"
+        />
       </footer>
     )
   }

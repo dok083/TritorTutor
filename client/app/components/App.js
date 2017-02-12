@@ -8,16 +8,17 @@ var App = React.createClass({
     return (
       <div>
 
-      /* HEAD */
+      {/* HEAD */}
       <NavBarContainer />
         
-      /*BODY*/
-      /*GIANTIC SEARCH BAR - auto complete from */
+      {/*BODY*/
+      /*GIANTIC SEARCH BAR - auto complete from */}
       <h1>TritonTutor - Test 3</h1>
 
-      /*LOGO*/
-      </div>
+      {/*LOGO*/}
       <Footer />
+      </div>
+
     );
   }
 });
