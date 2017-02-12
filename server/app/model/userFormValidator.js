@@ -4,6 +4,7 @@
 
 
 var UserFormValidator = {};
+// Configurations for user accounts
 var userConfig = require('../../config/user.json');
 
 /**
