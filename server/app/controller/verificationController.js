@@ -40,4 +40,18 @@ VerificationController.send = function(email, code) {
 
 }
 
+/**
+ * Begins the verification process for a user by generating a code and sending
+ * the code to the given user's email.
+ *
+ * @param user An unverified user that should be verified.
+ * @return A promise that is called after the verification code has been sent.
+ */
+VerificationController.begin = function(user) {
+    // Generate and send the code.
+    var code = VerificationController.generate();
+    
+    return VerificationController.send(user.email, code);
+}
+
 module.exports = VerificationController;

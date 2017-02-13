@@ -8,15 +8,15 @@
 var LoginController = {}
 
 /**
- * Generates a session ID so a user can be logged in using the given username
+ * Generates a session ID so a user can be logged in using the given email
  * and password.
  *
- * @param username The username for the desired user.
+ * @param email The email for the desired user.
  * @param password The corresponding password for the username.
  * @return A promise that holds the session ID if the user is now logged in.
  *         If the credentials did not match a user, then the promise holds null.
  */
-LoginController.login = function(username, password) {
+LoginController.login = function(email, password) {
 
 }
 
