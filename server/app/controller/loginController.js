@@ -1,11 +1,14 @@
 "use strict"
 
+var SessionModel = require('../model/sessionModel.js');
+var AccountModel = require('../model/accountModel.js');
+
 /**
  * The LoginController is responsible for handling logging users in, logging
  * users out, and determining which user is logged in.
  */
 
-var LoginController = {}
+var LoginController = {};
 
 /**
  * Generates a session ID so a user can be logged in using the given email
@@ -17,7 +20,16 @@ var LoginController = {}
  *         If the credentials did not match a user, then the promise holds null.
  */
 LoginController.login = function(email, password) {
+    // Check if a user with this email and password combination exists
+    return AccountModel.getByCredentials(email, password)
+        .then((user) => {
+            if (user) {
+                // If so, create a session
+                return SessionModel.create(user.userID);
+            }
 
+            return null;
+        }); 
 }
 
 /**
@@ -28,7 +40,8 @@ LoginController.login = function(email, password) {
  * @return A promise that is called after the user is logged out.
  */
 LoginController.logout = function(sessionID) {
-
+    // Defers to session model layer
+    return SessionModel.delete(sessionID);
 }
 
 /**
@@ -38,7 +51,16 @@ LoginController.logout = function(sessionID) {
  * @return A promise that holds the user if the user was found, otherwise null.
  */
 LoginController.getUser = function(sessionID) {
+    
+    // Retrieve the user ID using their sessionID token
+    return SessionModel.get(sessionID)
+        .then((userID) => {
+            if (userID) {
+                return AccountModel.getByID(userID);
+            }
 
-}
+            return null;
+        });
+    }
 
 module.exports = LoginController;
