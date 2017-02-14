@@ -1,20 +1,22 @@
 var React = require("react");
 var img = {
-  src: "../app/components/okaysoft.png",
+  src: "../app/components/okaysoft.png"
+};
+
+const imgStyle = {
   width: "50px",
   height: "50px",
-  opacity: "0.5"
+  opacity: "0.3"
 };
+
 
 var Footer = React.createClass({
   render: function () {
     return (
       <footer>
-        <img
+        <img 
+          style = {imgStyle}
           src = {img.src}
-          width = {img.width}
-          height = {img.height}
-          opacity = {img.opacity}
         />
       </footer>
     )
