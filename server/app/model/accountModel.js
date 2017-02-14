@@ -1,14 +1,14 @@
 "use strict"
 
 /**
- * This file contains the UserAccountModel which is responsible for access
+ * This file contains the AccountModel which is responsible for access
  * to users in the database. This allows for the searching and creating of
  * users on the database.
  */
 
 var db = require('./database.js');
 
-var UserAccountModel = {};
+var AccountModel = {};
 
 /**
  * Finds a user from a given e-mail address. Once a user has been found, then
@@ -21,7 +21,7 @@ var UserAccountModel = {};
  *         the promise is resolved with the userID and username. Otherwise,
  *         the promise is rejected with the associated error.
  */
-UserAccountModel.getByEmail = function(email) {
+AccountModel.getByEmail = function(email) {
 	email = db.escape(email.toLowerCase());
 
     // Only find matching users.
@@ -54,7 +54,7 @@ UserAccountModel.getByEmail = function(email) {
  *         username. Otherwise, the promise is rejected with the associated
  *         error.
  */
-UserAccountModel.getByID = function(userID) {
+AccountModel.getByID = function(userID) {
     // Only find users with the matching ID.
     var condition = 'userID = ' + userID;
 
@@ -80,7 +80,7 @@ UserAccountModel.getByID = function(userID) {
  * @param password The desired password for the user.
  * @return A promise that contains the user after inserting is done.
  */
-UserAccountModel.create = function(email, username, password) {
+AccountModel.create = function(email, username, password) {
     // TODO: Generate a random salt.
     // TODO: Encrypt the password using hash + salt.
 
@@ -107,7 +107,7 @@ UserAccountModel.create = function(email, username, password) {
  * @param password The password that corresponds the e-mail address.
  * @return A promise containing the user if found, otherwise the user is null.
  */
-UserAccountModel.getByCredentials = function(email, password) {
+AccountModel.getByCredentials = function(email, password) {
 	// Prepare the login information for a query.
  	email = db.escape(email.toLowerCase());
     password = db.escape(password);
@@ -129,4 +129,14 @@ UserAccountModel.getByCredentials = function(email, password) {
         })
 }
 
-module.exports = UserAccountModel;
+/**
+ * Deletes a user from the given user ID. Note that this is permanent.
+ *
+ * @param userID The ID for the user that should be deleted.
+ * @return A promise that runs after the user has been deleted.
+ */
+AccountModel.delete = function(userID) {
+    db.query('DELETE FROM tritor_users WHERE userID = ? LIMIT 1', [userID]);
+}
+
+module.exports = AccountModel;
