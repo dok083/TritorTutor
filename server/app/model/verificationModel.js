@@ -53,7 +53,7 @@ VerificationModel.get = function(userID) {
  * @return A promise for after the verification is done.
  */
 VerificationModel.delete = function(code) {
-    return db.query('DELETE FROM tritor_verify WHERE code = ? LIMIT 1', code);
+    return db.query('DELETE FROM tritor_verify WHERE code = ? LIMIT 1', [code]);
 }
 
 module.exports = VerificationModel;

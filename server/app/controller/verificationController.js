@@ -5,6 +5,9 @@
  * codes, sending of verification codes, and verification of users.
  */
 
+var VerificationModel = require('../model/VerificationController.js');
+var EmailModel = require('../model/emailModel.js');
+
 var VerificationController = {}
 
 /**
@@ -14,7 +17,8 @@ var VerificationController = {}
  * @return A promise that is called after the verification is done.
  */
 VerificationController.verify = function(code) {
-
+    // Remove the verification code.
+    return VerificationModel.delete(code);
 }
 
 /**
@@ -24,7 +28,9 @@ VerificationController.verify = function(code) {
  * @return A verification code.
  */
 VerificationController.generate = function() {
+    var crypto = require('crypto');
 
+    return crypto.randomBytes(32).toString('hex');
 }
 
 /**
@@ -37,7 +43,10 @@ VerificationController.generate = function() {
  * @return A promise that is called after the code has been sent.
  */
 VerificationController.send = function(email, code) {
+    var message = '<h1>Welcome to Tritor!</h1>' +
+                   '<p>Here is your verification code: ' + code + '</p>';
 
+    return EmailModel.send(email, 'Tritor Account Verification', message);
 }
 
 /**
@@ -48,9 +57,11 @@ VerificationController.send = function(email, code) {
  * @return A promise that is called after the verification code has been sent.
  */
 VerificationController.begin = function(user) {
-    // Generate and send the code.
+    // Generate and store the code.
     var code = VerificationController.generate();
-    
+    VerificationModel.create(user.userID, code);
+
+    // Notify the user of the code.
     return VerificationController.send(user.email, code);
 }
 
