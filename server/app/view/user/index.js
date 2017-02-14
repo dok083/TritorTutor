@@ -10,7 +10,7 @@ var controller = '../../controller/';
 var LoginController = require(controller + 'loginController.js');
 var AccountController = require(controller + 'accountController.js');
 var VerificationController = require(controller + 'verificationController.js');
-var UserFormValidator = require('./userFormValidator.js');
+var UserFormValidator = require(controller + 'userFormValidator.js');
 
 /**
  * Retrieves the user that is currently logged in.
@@ -35,6 +35,9 @@ function getUser(req, res) {
                 res.status(401).json({message: 'not logged in'});
             }
         })
+        .catch((error) => {
+            res.status(401).json({message: error});
+        });
 }
 
 /**

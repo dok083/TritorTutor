@@ -7,7 +7,7 @@
 var controller = '../../controller/';
 
 var LoginController = require(controller + 'loginController.js');
-var UserFormValidator = require('./userFormValidator.js');
+var UserFormValidator = require(controller + 'userFormValidator.js');
 
 /**
  * Logs a user in using the given credentials and keeps them logged in using
@@ -36,10 +36,16 @@ function login(req, res) {
                 LoginController.getUser(sessionID)
                     .then((user) => {
                         res.json(user);
+                    })
+                    .catch((error) => {
+                        res.status(401).json({message: error});
                     });
             } else {
                 res.status(401).json({message: 'invalid email or password'});
             }
+        })
+        .catch((error) => {
+            res.status(401).json({message: error});
         });
 }
 
