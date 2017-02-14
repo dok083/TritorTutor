@@ -36,6 +36,9 @@ function login(req, res) {
                 LoginController.getUser(sessionID)
                     .then((user) => {
                         res.json(user);
+                    })
+                    .catch((error) => {
+                        res.status(401).json({message: error});
                     });
             } else {
                 res.status(401).json({message: 'invalid email or password'});
