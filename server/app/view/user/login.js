@@ -38,14 +38,14 @@ function login(req, res) {
                         res.json(user);
                     })
                     .catch((error) => {
-                        res.status(401).json({message: error});
+                        res.status(401).json({message: 'user get error (' + error + ')'});
                     });
             } else {
                 res.status(401).json({message: 'invalid email or password'});
             }
         })
         .catch((error) => {
-            res.status(401).json({message: error});
+            res.status(401).json({message: 'unable to login (' + error + ')'});
         });
 }
 

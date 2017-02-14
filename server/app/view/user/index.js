@@ -76,7 +76,7 @@ function createUser(req, res) {
             // Set up the verification code for the user.
             VerificationController.begin(user);
 
-            res.json({id: user.id});
+            res.json({id: user.userID});
         })
         .catch((error) => {
             res.status(500).json({message: error});

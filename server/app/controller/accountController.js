@@ -5,6 +5,8 @@
  * accounts.
  */
 
+var AccountModel = require('../model/accountModel.js');
+
 var AccountController = {};
 
 /**
@@ -20,7 +22,7 @@ var AccountController = {};
  */
 AccountController.create = function(email, username, password) {
     // Check for duplicate account.
-    AccountModel.getByEmail(email).then((user) => {
+    return AccountModel.getByEmail(email).then((user) => {
         if (user) {
             return Promise.reject('Duplicate account for ' + email);
         }

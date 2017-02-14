@@ -121,7 +121,7 @@ AccountModel.getByCredentials = function(email, password) {
                 return {
                 	userID: results[0].userID,
                 	email: email,
-                	username: result[0].username
+                	username: results[0].username
                 };
             }
 

@@ -5,7 +5,7 @@
  * codes, sending of verification codes, and verification of users.
  */
 
-var VerificationModel = require('../model/VerificationController.js');
+var VerificationModel = require('../model/verificationModel.js');
 var EmailModel = require('../model/emailModel.js');
 
 var VerificationController = {}

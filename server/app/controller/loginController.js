@@ -51,7 +51,6 @@ LoginController.logout = function(sessionID) {
  * @return A promise that holds the user if the user was found, otherwise null.
  */
 LoginController.getUser = function(sessionID) {
-    
     // Retrieve the user ID using their sessionID token
     return SessionModel.get(sessionID)
         .then((userID) => {

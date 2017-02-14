@@ -43,7 +43,7 @@ EmailModel.send = function(email, subject, message) {
         transporter.sendMail(options, function(error, info) {
             if (error) {
                 reject(error);
-            } else
+            } else {
                 resolve();
             }
         });  

@@ -19,9 +19,9 @@ function logout(req, res) {
 
     // Empty the cookie for the session.
     res.session = null;
-    res.status(200);
+    res.status(200).json({message: 'bye'});
 }
 
 module.exports = {
-    '/logout': {get: login}
+    '/logout': {get: logout}
 };
