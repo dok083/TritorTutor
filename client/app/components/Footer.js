@@ -14,6 +14,7 @@ var Footer = React.createClass({
           src = {img.src}
           width = {img.width}
           height = {img.height}
+          opacity = {img.opacity}
         />
       </footer>
     )
