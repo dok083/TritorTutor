@@ -1,6 +1,9 @@
 var React = require("react");
 var img = {
-  src: "../components/okaysoft.png"
+  src: "../app/components/okaysoft.png",
+  width: "50px",
+  height: "50px",
+  opacity: "0.5"
 };
 
 var Footer = React.createClass({
@@ -9,6 +12,8 @@ var Footer = React.createClass({
       <footer>
         <img
           src = {img.src}
+          width = {img.width}
+          height = {img.height}
         />
       </footer>
     )
