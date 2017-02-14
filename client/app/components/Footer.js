@@ -6,7 +6,9 @@ var img = {
 const imgStyle = {
   width: "50px",
   height: "50px",
-  opacity: "0.3"
+  opacity: "0.3",
+  margin: "auto",
+  display: "block"
 };
 
 
