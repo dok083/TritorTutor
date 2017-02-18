@@ -1,8 +1,15 @@
+"use strict"
+
+/**
+ * This file provides a wrapper for node-mysql and allows for common queries
+ * to be made with shorter code.
+ */
+
 // Get configuration for database connection.
 var config = require('../../config/database.json');
-var mysql = require('mysql');
 
 // Create a query pool for our queries.
+var mysql = require('mysql');
 var pool = mysql.createPool(config);
 
 /**

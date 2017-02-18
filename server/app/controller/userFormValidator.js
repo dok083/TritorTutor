@@ -1,10 +1,13 @@
-/* This file contains validity checks for the business layer
- *
+"use strict"
+
+/*
+ * This file contains utility functions for validating the form of user fields
+ * for a user form.
  */
 
-
 var UserFormValidator = {};
-// Configurations for user accounts
+
+// Configurations for user accounts.
 var userConfig = require('../../config/user.json');
 
 /**
@@ -13,7 +16,7 @@ var userConfig = require('../../config/user.json');
  * @param userID The user ID to check.
  * @return True if it is a valid ID, false otherwise.
  */
-UserFormValidator.ID = function(userID) {
+UserFormValidator.checkID = function(userID) {
     userID = parseInt(userID);
 
     return userID && userID > 0 && Number.isSafeInteger(userID);
@@ -26,7 +29,7 @@ UserFormValidator.ID = function(userID) {
  * @param email The e-mail address to check.
  * @return True if it is valid, false otherwise.
  */
-UserFormValidator.email = function(email) {
+UserFormValidator.checkEmail = function(email) {
     // Regular expression for matching e-mail addresses.
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -39,7 +42,7 @@ UserFormValidator.email = function(email) {
  * @param username The username for to check.
  * @return True if it is valid, false otherwise.
  */
-UserFormValidator.username = function(username) {
+UserFormValidator.checkUsername = function(username) {
     return username.length >= userConfig.minUsernameLength;
 }
 
@@ -49,7 +52,7 @@ UserFormValidator.username = function(username) {
  * @param password The password to check.
  * @return True if it is valid, false otherwise.
  */
-UserFormValidator.password = function(password) {
+UserFormValidator.checkPassword = function(password) {
     return password.length >= userConfig.minPasswordLength;
 }
 

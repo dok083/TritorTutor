@@ -1,30 +1,29 @@
-// Constants for times in seconds.
+"use strict"
+
+/**
+ * This file provides functions for accessing the sessions in the database. This
+ * allows one to create, delete, and get sessions.
+ */
+
+// Constants for time.
 var SECOND = 1000
 var MINUTE = 60 * SECOND;
 var HOUR = 60 * MINUTE;
 var DAY = 24 * HOUR;
 var MONTH = 30 * DAY;
 
-var sessionModel = {};
-
-// Configurations for user accounts.
+var SessionModel = {};
 
 // Database for creating/fetching users.
 var db = require('./database.js');
-var db = require('./userAccountModel');
-var db = require('./verificationModel');
-var db = require('./userFormValidator');
 
 /**
- * Finds a user from a given session ID. Once the user has been found, then
- * the given callback is called with the parameters being the user's ID, the
- * user's e-mail, and the user's name. If a user could not be found, then the
- * callback is called with no parameters.
+ * Finds the user ID that corresponds to a session ID.
  *
  * @param token The session ID of a user.
- * @param callback A function that gets called after the lookup has results.
+ * @return A promise that passes in the ID of the user who owns the session.
  */
-sessionModel.get = function(token) {
+SessionModel.get = function(token) {
     // User's token must match the stored token.
     var condition = 'token = ' + db.escape(token);
 
@@ -32,7 +31,7 @@ sessionModel.get = function(token) {
     return db.select('tritor_sessions', ['userID'], condition, 1)
         .then((results) => {
             if (results) {
-                return sessionModel.get(results[0].userID);
+                return results[0].userID;
             }
 
             return null;
@@ -40,7 +39,6 @@ sessionModel.get = function(token) {
         .catch((error) => {
             return null;
         });
-
 }
 
 /**
@@ -49,7 +47,7 @@ sessionModel.get = function(token) {
  * @param token The ID of the session that should be removed.
  * @param callback A function that gets called after it has been removed.
  */
-sessionModel.delete = function(token) {
+SessionModel.delete = function(token) {
     return db.query('DELETE FROM tritor_sessions WHERE token = ?',
                     [token.toString()]);
 }
@@ -63,7 +61,7 @@ sessionModel.delete = function(token) {
  *        30 days.
  * @return A promise containing the ID of a newly generated session for a user.
  */
-sessionModel.create = function(userID, expire) {
+SessionModel.create = function(userID, expire) {
     // Generate a verification code.
     var crypto = require('crypto');
     var curTime = Date.now();
@@ -84,4 +82,4 @@ sessionModel.create = function(userID, expire) {
     });
 }
 
-module.exports = sessionModel;
+module.exports = SessionModel;
