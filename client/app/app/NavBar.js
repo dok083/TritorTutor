@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 import Button from 'react-bootstrap/lib/Button'
 import Navbar from 'react-bootstrap/lib/Navbar'
@@ -21,7 +22,7 @@ class NavBar extends React.Component {
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">Tritor</a>
+            <Link to="/">Tritor</Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
