@@ -11,27 +11,17 @@ import ListGroup from 'react-bootstrap/lib/ListGroup'
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem'
 import Label from 'react-bootstrap/lib/Label'
 
-import Review from './Review'
+import ReviewContainer from './ReviewContainer'
 
 class Profile extends React.Component {
   render() {
     const { params } = this.props;
-
-    var reviews = [
-      {reviewer: "John Doe", rating: 5, comment: "Good tutor!"},
-      {reviewer: "Judy", rating: 2, comment: "Not super star!!"},
-      {reviewer: "Manager Person", rating: 3, comment: "Coughed up blood :("}
-    ];
 
     var courses = [
       {name: "CSE 12", price: 15},
       {name: "CSE 15L", price: 10},
       {name: "CSE 110", price: 25}
     ];
-
-    var reviewList = reviews.map((review) => {
-      return <Review name={review.reviewer} comment={review.comment} />
-    });
 
     var courseList = courses.map((course) => {
       return (
@@ -48,7 +38,7 @@ class Profile extends React.Component {
       <Grid>
         <Col xs={12} md={4}>
           <Well>
-          <Image src='/profile.jpg' responsive className="center-block" />
+          <Image src={'/profiles/' + params.userID + '.jpg'} responsive className="center-block" />
           <h1>Gary Gillespie</h1>
           <h3>{params.userID}</h3>
           </Well>
@@ -84,7 +74,7 @@ class Profile extends React.Component {
       <Grid>
         <Col xs={12} md={12}>
         <h2>Reviews</h2>
-          {reviewList}
+          <ReviewContainer userID={params.userID} />
         </Col>
       </Grid>
       </div>
