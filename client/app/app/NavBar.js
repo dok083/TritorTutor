@@ -1,12 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { LinkContainer } from 'react-router-bootstrap'
 
-import Button from 'react-bootstrap/lib/Button'
-import Navbar from 'react-bootstrap/lib/Navbar'
-import FormGroup from 'react-bootstrap/lib/FormGroup'
-import InputGroup from 'react-bootstrap/lib/InputGroup'
-import FormControl from 'react-bootstrap/lib/FormControl'
-import Glyphicon from 'react-bootstrap/lib/Glyphicon'
+import { Button, Navbar, NavItem, Nav, FormGroup, InputGroup, FormControl, Glyphicon} from 'react-bootstrap'
 
 class NavBar extends React.Component {
   render() {
@@ -28,18 +24,15 @@ class NavBar extends React.Component {
         </Navbar.Header>
 
         <Navbar.Collapse>
-          <Navbar.Form pullLeft>
-            <FormGroup>
-              <InputGroup>
-                <FormControl type="text" placeholder="Looking for a..." />
-                <InputGroup.Button>
-                  <Button type="submit">Search</Button>
-                </InputGroup.Button>
-              </InputGroup>
-            </FormGroup>
-          </Navbar.Form>
-
-          {userProfile}
+          <Nav>
+            <LinkContainer to="/courses">
+              <NavItem>Courses</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/about">
+              <NavItem>About</NavItem>
+            </LinkContainer>
+            {userProfile}
+          </Nav>
         </Navbar.Collapse>
       </Navbar>
     );

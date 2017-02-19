@@ -8,7 +8,7 @@ import Footer from './app/Footer'
 import Home from './home/Home'
 import About from './about/About'
 import Profile from './profile/Profile'
-import Error from './error/Error'
+import NotFound from './error/NotFound'
 
 render((
   <Router history={browserHistory}>
@@ -17,6 +17,8 @@ render((
       <Route path='/about' component={About} />
       <Route path='/profile/:userID' component={Profile} />
     </Route>
-    <Route path='*' component={Error} />
+    <Route path='*' component={App}>
+      <IndexRoute component={NotFound} />
+    </Route>
   </Router>
 ), document.getElementById("app"));
