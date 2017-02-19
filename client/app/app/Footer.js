@@ -4,7 +4,7 @@ class Footer extends React.Component {
   render() {
     return (
       <footer>
-        <img src="okaysoft.png" />
+        <img src='/okaysoft.png' />
       </footer>
     );
   }
