@@ -15,7 +15,7 @@ module.exports = {
 		}]
 	},
 	output: {
-		filename: "tritor.js",
+		filename: "/tritor.js",
 		path: __dirname + "/build"
 	},
 	plugins: [HTMLWebpackPluginConfig]
