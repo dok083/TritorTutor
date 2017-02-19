@@ -6,16 +6,16 @@ class PopularCoursesContainer extends React.Component {
     super(props);
     this.state = {
       courses: [
-        'CSE 11',
-        'CSE 12',
-        'CSE 15L',
-        'CSE 30',
-        'CSE 20',
-        'MATH 20A',
-        'MATH 20B',
-        'MATH 20C',
-        'MATH 18',
-        'ETHN 170'
+        {name: 'CSE 11', id: 0},
+        {name: 'CSE 12', id: 0},
+        {name: 'CSE 15L', id: 0},
+        {name: 'CSE 30', id: 0},
+        {name: 'CSE 20', id: 0},
+        {name: 'MATH 20A', id: 0},
+        {name: 'MATH 20B', id: 0},
+        {name: 'MATH 20C', id: 0},
+        {name: 'MATH 18', id: 0},
+        {name: 'ETHN 170', id: 0}
       ]
     };
   }
