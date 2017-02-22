@@ -1,15 +1,5 @@
 import React from 'react'
-
-import Grid from 'react-bootstrap/lib/Grid'
-import Col from 'react-bootstrap/lib/Col'
-import Image from 'react-bootstrap/lib/Image'
-import Well from 'react-bootstrap/lib/Well'
-import Button from 'react-bootstrap/lib/Button'
-import PanelGroup from 'react-bootstrap/lib/PanelGroup'
-import Panel from 'react-bootstrap/lib/Panel'
-import ListGroup from 'react-bootstrap/lib/ListGroup'
-import ListGroupItem from 'react-bootstrap/lib/ListGroupItem'
-import Label from 'react-bootstrap/lib/Label'
+import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
 
 import ReviewContainer from './ReviewContainer'
 
@@ -44,12 +34,6 @@ class Profile extends React.Component {
           </Well>
           <Panel header="Options">
             <Button bsStyle="primary" bsSize="large" block>Request Tutoring</Button>
-          </Panel>
-          <Panel header="Pricing">
-            <h1>$5</h1>
-          </Panel>
-          <Panel header="Ratings">
-            5 stars from 100 reviews
           </Panel>
         </Col>
         <Col xs={12} md={8}>

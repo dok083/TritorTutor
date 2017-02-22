@@ -28,7 +28,7 @@ class ReviewComponent extends React.Component {
           </Link>
         </Media.Left>
         <Media.Body>
-          <Media.Heading><Link to={'/profiles/' + review.userID}>{review.name}</Link> {stars}</Media.Heading>
+          <Media.Heading><Link to={'/profile/' + review.userID}>{review.name}</Link> {stars}</Media.Heading>
           <p>{review.comment}</p>
         </Media.Body>
       </Media>
