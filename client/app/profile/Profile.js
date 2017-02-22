@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
+import { Link } from 'react-router'
 
 import ReviewContainer from './ReviewContainer'
 
@@ -8,16 +9,16 @@ class Profile extends React.Component {
     const { params } = this.props;
 
     var courses = [
-      {name: "CSE 12", price: 15},
-      {name: "CSE 15L", price: 10},
-      {name: "CSE 110", price: 25}
+      {id: 0, name: "CSE 12", price: 15},
+      {id: 0, name: "CSE 15L", price: 10},
+      {id: 0, name: "CSE 110", price: 25}
     ];
 
     var courseList = courses.map((course) => {
       return (
         <ListGroupItem>
           <h4>
-            {course.name} <Label>${course.price} per lesson</Label>
+            <Link to={'/course/' + course.id}>{course.name}</Link> <Label>${course.price} per lesson</Label>
           </h4>
         </ListGroupItem>
       );        

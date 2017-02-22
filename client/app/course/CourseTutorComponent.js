@@ -28,6 +28,8 @@ class CourseTutorComponent extends React.Component {
       negotiable = <Label bsStyle='info'>Price Negotiable</Label>
     }
 
+    var price = <Label>{'$' + this.props.price}</Label>
+
     return (
       <Panel>
       <Media>
@@ -38,7 +40,7 @@ class CourseTutorComponent extends React.Component {
         </Media.Left>
 
         <Media.Body>
-          <Media.Heading><Link to={profileURL}>{this.props.name}</Link> {stars} {negotiable}</Media.Heading>
+          <Media.Heading><Link to={profileURL}>{this.props.name}</Link> {stars} {price} {negotiable}</Media.Heading>
           <p>{this.props.desc}</p>
         </Media.Body>
       </Media>
