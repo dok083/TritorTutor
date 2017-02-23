@@ -1,7 +1,7 @@
 import React from 'react'
 
 import CourseTutorComponent from './CourseTutorComponent'
-import TutorSearchComponent from './TutorSearchComponent'
+import TutorSearchContainer from './TutorSearchContainer'
 
 class CourseTutorContainer extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class CourseTutorContainer extends React.Component {
     // Have this set when the tutor state is finished.
     // This allows for the search box to keep a copy of the original data while
     // allowing the tutors state to change.
-    this.search = <TutorSearchComponent onRefine={this.updateMatches} data={this.state.tutors} />
+    this.search = <TutorSearchContainer onRefine={this.updateMatches} data={this.state.tutors} />
   }
 
   updateMatches(newMatches) {
