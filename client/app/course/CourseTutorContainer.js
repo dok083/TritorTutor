@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Grid, Col, Row } from 'react-bootstrap'
+
 import CourseTutorComponent from './CourseTutorComponent'
 import TutorSearchContainer from './TutorSearchContainer'
 
@@ -38,10 +40,14 @@ class CourseTutorContainer extends React.Component {
     });
 
     return (
-      <div>
-        {this.search}
-        {tutors}
-      </div>
+      <Row>
+        <Col xs={12} sm={3}>
+          {this.search}
+        </Col>
+        <Col xs={12} sm={9}>
+          {tutors}
+        </Col>
+      </Row>
     );
   }
 }
@@ -49,3 +55,4 @@ class CourseTutorContainer extends React.Component {
 CourseTutorContainer.displayName = 'CourseTutorContainer';
 
 export default CourseTutorContainer
+
