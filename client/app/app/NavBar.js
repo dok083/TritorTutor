@@ -1,18 +1,14 @@
 import React from 'react'
+
+import UserTabContainer from './UserTabContainer'
+
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
-
 import { Button, Navbar, NavItem, Nav, FormGroup, InputGroup, FormControl, Glyphicon} from 'react-bootstrap'
 
 class NavBar extends React.Component {
   render() {
     var userProfile;
-
-    if (this.props.user) {
-      userProfile = <UserProfileTabContainer user={this.props.user} />
-    } else {
-      userProfile = <p></p>
-    }
 
     return (
       <Navbar>
@@ -31,7 +27,9 @@ class NavBar extends React.Component {
             <LinkContainer to="/about">
               <NavItem>About</NavItem>
             </LinkContainer>
-            {userProfile}
+          </Nav>
+          <Nav pullRight>
+            <UserTabContainer />
           </Nav>
         </Navbar.Collapse>
       </Navbar>

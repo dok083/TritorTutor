@@ -31,7 +31,7 @@ render((
         <Route path='/profile' component={ProfileSettings} />
         <Route path='/password' component={AccountSettings} />
         <Route path='/tutor' component={TutorSettings} />
-    </Route>
+      </Route>
     </Route>
     <Route path='*' component={App}>
       <IndexRoute component={NotFound} />
