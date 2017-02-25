@@ -30,7 +30,7 @@ render((
       <Route path='settings' component={Settings}>
         <IndexRedirect to='profile' />
         <Route path='profile' component={ProfileSettings} />
-        <Route path='password' component={AccountSettings} />
+        <Route path='account' component={AccountSettings} />
         <Route path='tutor' component={TutorSettings} />
       </Route>
     </Route>
