@@ -22,7 +22,7 @@ class Settings extends React.Component {
                 <NavItem eventKey={1}>Account</NavItem>
               </IndexLinkContainer>
               <IndexLinkContainer to='/settings/tutor'>
-                <NavItem eventKey={1}>Profile</NavItem>
+                <NavItem eventKey={1}>Tutoring</NavItem>
               </IndexLinkContainer>
             </Nav>
             </Panel>
