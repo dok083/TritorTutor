@@ -1,35 +1,44 @@
 import React from 'react'
+import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
+import { Link } from 'react-router'
 
-import Grid from 'react-bootstrap/lib/Grid'
-import Col from 'react-bootstrap/lib/Col'
-import Image from 'react-bootstrap/lib/Image'
-
-import Review from './Review'
+import ReviewContainer from './ReviewContainer'
 
 class Profile extends React.Component {
   render() {
     const { params } = this.props;
 
-    var reviews = [
-        {reviewer: "John Doe", rating: 5, comment: "Good tutor!"},
-        {reviewer: "Judy", rating: 2, comment: "Not super star!!"},
-        {reviewer: "Manager Person", rating: 3, comment: "Coughed up blood :("}
-    ]
+    var courses = [
+      {id: 0, name: "CSE 12", price: 15},
+      {id: 0, name: "CSE 15L", price: 10},
+      {id: 0, name: "CSE 110", price: 25}
+    ];
 
-    var reviewList = reviews.map((review) => {
-      return <Review name={review.reviewer} comment={review.comment} />
+    var courseList = courses.map((course) => {
+      return (
+        <ListGroupItem>
+          <h4>
+            <Link to={'/course/' + course.id}>{course.name}</Link> <Label>${course.price} per lesson</Label>
+          </h4>
+        </ListGroupItem>
+      );        
     });
 
     return (
       <div>
       <Grid>
-        <Col xs={6} md={4}>
-          <Image src='/profile.jpg' responsive />
+        <Col xs={12} md={4}>
+          <Well>
+          <Image src={'/profiles/' + params.userID + '.jpg'} responsive className="center-block" />
           <h1>Gary Gillespie</h1>
           <h3>{params.userID}</h3>
+          </Well>
+          <Panel header="Options">
+            <Button bsStyle="primary" bsSize="large" block>Request Tutoring</Button>
+          </Panel>
         </Col>
         <Col xs={12} md={8}>
-          <p>
+          <Panel>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
@@ -39,13 +48,18 @@ class Profile extends React.Component {
             with the release of Letraset sheets containing Lorem Ipsum passages,
             and more recently with desktop publishing software like Aldus
             PageMaker including versions of Lorem Ipsum.
-          </p>
+          </Panel>
+          <Panel header="Currently Tutoring">
+            <ListGroup>
+              {courseList}
+            </ListGroup>
+          </Panel>
         </Col>
       </Grid>
       <Grid>
-        <Col xs={18} md={12}>
+        <Col xs={12} md={12}>
         <h2>Reviews</h2>
-          {reviewList}
+          <ReviewContainer userID={params.userID} />
         </Col>
       </Grid>
       </div>
