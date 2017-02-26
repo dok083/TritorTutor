@@ -9,7 +9,7 @@ class RequestContainer extends React.Component {
         <Modal.Header closeButton>
           <Modal.Title>Tutoring Request</Modal.Title>
         </Modal.Header>
-        <RequestComponent />
+        <RequestComponent user={this.props.user} />
       </Modal>
     );
   }

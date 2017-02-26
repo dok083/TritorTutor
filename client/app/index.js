@@ -26,7 +26,7 @@ render((
     <Route path='/' component={App}>
       <IndexRoute component={Home} />
       <Route path='about' component={About} />
-      <Route path='profile/:userID' component={Profile} />
+      <Route path='profile/:id' component={Profile} />
       <Route path='profile' component={ProfileSettings} />
       <Route path='course/search/:query' component={CourseSearch} />
       <Route path='course/:id' component={Course} />
