@@ -3,6 +3,7 @@ import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroup
 import { Link } from 'react-router'
 
 import ReviewContainer from './ReviewContainer'
+import RequestContainer from './RequestContainer'
 
 // Fake user list here. In real code we wouldn't have this.
 const users = [
@@ -21,13 +22,20 @@ var courses = [
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    
     var userID = parseInt(props.params.id);
-
-    this.state = {
+    this.state = { 
+      showModal: false,
       user: users[userID],
       courses: ((userID == 0 || userID == 3) ? courses : [])
-    }
+    };
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
   }
 
   componentWillReceiveProps(props) {
@@ -60,7 +68,7 @@ class Profile extends React.Component {
     if (this.state.user.userID != 0) {
       options = (
         <Panel header="Options">
-          <Button bsStyle="primary" bsSize="large" block>Request Tutoring</Button>
+          <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>Request Tutoring</Button>
         </Panel>
       );
     }
@@ -101,9 +109,12 @@ class Profile extends React.Component {
           <ReviewContainer userID={this.state.user.userID} />
         </Col>
       </Grid>
+      <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)} user={this.state.user}/>
       </div>
     );
   }
 }
+
+Profile.displayName = 'Profile';
 
 export default Profile
