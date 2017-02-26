@@ -10,11 +10,11 @@ class MessageComponent extends React.Component {
     return (
       <LinkContainer to={'/message/view/' + message.id}>
         <tr>
-          <th>
+          <td>
             <img src={'/profiles/' + message.userID +'.jpg'} alt='' width={20} height={20} />
-          </th>
-          <th>{message.name}</th>
-          <th>{message.subject}</th>
+          </td>
+          <td>{message.name}</td>
+          <td>{message.subject}</td>
         </tr>
       </LinkContainer>
     );

@@ -14,12 +14,12 @@ class AccountSettings extends React.Component {
       type="text"
       placeholder="Confirm Password"
     /> <br />
-    <Button type="submit"> Submit </Button>
+    <Button type="submit" className='pull-right'>Update</Button>
     </Panel>
 
 
     <Panel header="Deactive Account">
-      <Button vertical block bsStyle ="danger" bsSize = "large">DEACTIVATE ACCOUNT</Button>
+      <Button vertical block bsStyle ="danger">DEACTIVATE ACCOUNT</Button>
     </Panel>
     </div>
   }
