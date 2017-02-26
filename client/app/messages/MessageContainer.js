@@ -1,10 +1,10 @@
 import React from 'react'
 import { Table } from 'react-bootstrap'
-import NotificationComponent from './NotificationComponent'
+import MessageComponent from './MessageComponent'
 
-class NotificationContainer extends React.Component {
+class MessageContainer extends React.Component {
 	this.state = {
-		notifications: [
+		messages: [
 			{userID: 1, name: 'Judy', subject: 'Where is my money'},
 			{userID: 2, name: 'Manager', subject: 'Tutor Request'},
 			{userID: 3, name: 'Rick Ord', subject: 'When are you available?'}
@@ -12,8 +12,8 @@ class NotificationContainer extends React.Component {
 	};
 
 	render() {
-		var notifications = this.state.notifications.map((notification) =>
-			return <NotificationComponent notification={notification} />
+		var messages = this.state.messages.map((message) =>
+			return <MessageComponent message={message} />
 		);
 	
 		return (
@@ -26,13 +26,13 @@ class NotificationContainer extends React.Component {
 					</tr>
 				</thead>
 				<tbody>
-					{notifications}
+					{messages}
 				</tbody>
 			</Table>
 		);
 	}
 }
 
-NotificationContainer.displayName = 'NotificationContainer';
+MessageContainer.displayName = 'MessageContainer';
 
-export default NotificationContainer
+export default MessageContainer

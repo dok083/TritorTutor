@@ -2,16 +2,16 @@ import React from 'react'
 import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
 import { Link } from 'react-router'
 
-import NotificationContainer from './NotificationContainer' 
+import MessageContainer from './MessageContainer' 
 
-class Notifications extends React.Component {
+class Messages extends React.Component {
 	render() {
 		return (
-			<NotificationContainer />
+			<MessageContainer />
 		);
 	}
 }
 
-Notifications.displayName = 'Notifications'
+Messages.displayName = 'Messages'
 
-export default Notifications
+export default Messages

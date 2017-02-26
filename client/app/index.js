@@ -18,6 +18,8 @@ import ProfileSettings from './settings/ProfileSettings'
 import AccountSettings from './settings/AccountSettings'
 import TutorSettings from './settings/TutorSettings'
 
+import Notifications from './messages/Messages'
+
 render((
   <Router history={browserHistory}>
     <Route path='/' component={App}>
@@ -27,6 +29,7 @@ render((
       <Route path='profile' component={ProfileSettings} />
       <Route path='course/search/:query' component={CourseSearch} />
       <Route path='course/:id' component={Course} />
+      <Route path='messages' component={Messages}/>
       <Route path='settings' component={Settings}>
         <IndexRedirect to='profile' />
         <Route path='profile' component={ProfileSettings} />
