@@ -28,11 +28,13 @@ class TutorSettings extends React.Component {
     });
 
     return (
+      <div>
         <Panel header="Courses that you Tutor">
-        <ListGroup>
-          {courseList}
-        </ListGroup>
+          <ListGroup>
+            {courseList}
+          </ListGroup>
         </Panel>
+      </div>
     );
   }
 }
