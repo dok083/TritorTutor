@@ -3,8 +3,22 @@ import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroup
 import { Link } from 'react-router'
 
 import ReviewContainer from './ReviewContainer'
+import RequestContainer from './RequestContainer'
 
 class Profile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showModal: false};
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
+  }
+
   render() {
     const { params } = this.props;
 
@@ -34,7 +48,7 @@ class Profile extends React.Component {
           <h3>{params.userID}</h3>
           </Well>
           <Panel header="Options">
-            <Button bsStyle="primary" bsSize="large" block>Request Tutoring</Button>
+            <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>Request Tutoring</Button>
           </Panel>
         </Col>
         <Col xs={12} md={8}>
@@ -62,9 +76,12 @@ class Profile extends React.Component {
           <ReviewContainer userID={params.userID} />
         </Col>
       </Grid>
+      <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)}/>
       </div>
     );
   }
 }
+
+Profile.displayName = 'Profile';
 
 export default Profile
