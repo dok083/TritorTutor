@@ -2,6 +2,7 @@ import React from 'react'
 
 import { NavDropdown, MenuItem, NavItem, Nav } from 'react-bootstrap'
 import { IndexLinkContainer } from 'react-router-bootstrap'
+import { browserHistory } from 'react-router'
 
 import LogInModal from '../login/LogInModal'
 import SignUpModal from '../login/SignUpModal'
@@ -58,6 +59,7 @@ class UserTabContainer extends React.Component {
       this.showSignUpModal();
     } else if (selectedKey == LOG_OUT) {
       this.setState({user: null});
+      browserHistory.push('/');
     }
   }
 
