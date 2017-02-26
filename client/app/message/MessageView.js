@@ -16,7 +16,6 @@ class MessageView extends React.Component {
   }
 
   render() {
-    console.log('yello')
     var reply;
 
     // Only allow replying to non-automated messages.
@@ -24,7 +23,7 @@ class MessageView extends React.Component {
       reply = (
         <Media>
           <Media.Left>
-            <img width={64} height={64} src={'/profiles/' + this.state.sender.userID + '.jpg'} />
+            <img width={64} height={64} src={'/profiles/' + this.state.user.userID + '.jpg'} />
           </Media.Left>
           <Media.Body>
             <MessageReply recipient={this.state.sender.userID} subject={this.state.subject} />
