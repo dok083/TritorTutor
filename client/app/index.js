@@ -31,7 +31,7 @@ render((
         <IndexRedirect to='profile' />
         <Route path='profile' component={ProfileSettings} />
         <Route path='account' component={AccountSettings} />
-        <Route path='tutor' component={TutorSettings} />
+        <Route path='tutoring' component={TutorSettings} />
       </Route>
     </Route>
     <Route path='*' component={App}>
