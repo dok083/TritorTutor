@@ -9,9 +9,6 @@ var express = require('express');
 var fs = require('fs');
 var path = require('path');
 
-// Length of the .js file extension.
-const JS_EXTENSION = ('.js').length;
-
 /**
  * Sets up all the routes from some route information to a router so
  * the requests are properly handled.
@@ -37,24 +34,34 @@ function bindRoute(routeInfo, router) {
  */
 function loadRoutes(app) {
     // Find each route file in the routes subfolder.
-    var routePath = path.join(__dirname, 'routes');
+    var routePath = path.join(__dirname, 'view');
+    
+    // Visit each folder in the view directory.
+    fs.readdirSync(routePath).forEach((file) => {
+        var folderPath = routePath + '/' + file;
 
-    fs.readdir(routePath, function(err, routes) {
-        routes.forEach(function(route) {
-            // Only load JavaScript files.
-            if (path.extname(route) !== '.js') {
+        // Don't visit files.
+        if (fs.statSync(folderPath).isFile()) {
+            return;
+        } 
+
+        // Create a route for this subdirectory.
+        var router = express.Router();
+        
+        // Load all the routes into the router.
+        fs.readdirSync(folderPath).forEach((routeFile) => {
+            if (path.extname(routeFile) !== '.js') {
                 return;
-            }
+            }    
 
-            // Set up middleware to handle our API routes.
-            var router = express.Router();
-
-            // Set up the router so handle the specified routes.
-            var routeInfo = require("./routes/" + route);
+            // Set up a new route from the file.
+            var routeInfo = require(folderPath + '/' + routeFile);
             bindRoute(routeInfo, router);
-
-            app.use('/' + route.substr(0, route.length - JS_EXTENSION), router);
+ 
         });
+
+        // Add the route to the application.
+        app.use('/' + file, router);
     });
 }
 
