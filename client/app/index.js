@@ -19,10 +19,10 @@ import AccountSettings from './settings/AccountSettings'
 import TutorSettings from './settings/TutorSettings'
 
 import Message from './message/Message'
-import MessageView from './message/MessageView' 
+import MessageView from './message/MessageView'
 
 render((
-  <Router history={browserHistory}>
+  <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={Home} />
       <Route path='about' component={About} />
