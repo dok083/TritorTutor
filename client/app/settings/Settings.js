@@ -21,13 +21,13 @@ class Settings extends React.Component {
               <IndexLinkContainer to='/settings/account'>
                 <NavItem eventKey={1}>Account</NavItem>
               </IndexLinkContainer>
-              <IndexLinkContainer to='/settings/tutor'>
+              <IndexLinkContainer to='/settings/tutoring'>
                 <NavItem eventKey={1}>Tutoring</NavItem>
               </IndexLinkContainer>
             </Nav>
             </Panel>
           </Col>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={9}>
             {this.props.children} 
           </Col>
         </Grid>

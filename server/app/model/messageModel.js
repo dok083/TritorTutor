@@ -2,17 +2,32 @@ var MessageModel = {}
 
 /**
  * Creates a new message sent from the sender (a user ID) to the recipient
- * (another user ID) with the given subject and message.
+ * (another user ID) with the given title and message.
  *
  * @param sender The user that sent the message.
  * @param recipient The user that should receive the email.
- * @param subject The subject title for the message.
- * @param message What the message contains.
+ * @param title The title title for the message.
+ * @param content What the message contains.
  * @return A promise that is called after the message has been made. The
  *         parameter is the ID of the message.
  */
-MessageModel.create = function(sender, recipient, subject, message) {
-    // TODO: Implement
+MessageModel.create = function(sender, recipient, title, content) {
+    // the current timestamp
+    var timeStamp = Math.floor(Date.now() / 1000);
+
+    // add the data of this message to the database
+    return db.insert('tritor_messages', {
+        sender: sender,
+        title: title,
+        creationTime: timeStamp
+        receiver: recipient,
+        content: content
+    }).then((results) => {
+        // return the MID
+        return {
+            msgID: results.insertId,
+        }
+    });
 }
 
 /**
@@ -38,21 +53,26 @@ MessageModel.deleteUser = function(userID) {
 /**
  * Gets a desired message from the given message ID.
  *
- * @param id The ID for the message.
+ * @param msgID The ID for the message.
  * @return A promise that contains the desired message
  */
-MessageModel.readMessage = function(id) {
-    // TODO: Implement
+MessageModel.readMessage = function(msgID) {
+// TODO return promise containing information about message with MID
 }
 
 /**
- * Gets all the messages that have been sent to a desired user.
- *
- * @param userID The ID of the user to retrieve messages for.
- * @return A promise that contains a list of all the messages for a user.
- */
+* Gets all the messages that have been sent to a desired user.
+*
+* @param userID The ID of the user to retrieve messages for.
+* @return A promise that contains a list of all the messages for a user.
+*/
 MessageModel.readUser = function(userID) {
-    // TODO: Implement
+// condition to check to find user with matching userID
+var conditions = 'receiver=' + userID;
+
+// return promise containing information about messages
+return db.select('tritor_messages', ['sender','title','receiver','content'], 
+    conditions, 50, 'creationTime DSC')
 }
 
 module.exports = MessageModel;
