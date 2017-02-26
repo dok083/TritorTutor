@@ -10,15 +10,22 @@ class LogInModal extends React.Component {
     super(props);
 
     this.state = {
-      username: '', // The current username entered.
-      password: '', // The current password entered.
-      busy: false,  // Whether or not this component is waiting for data.
-      error: ''     // The error message that should be displayed.
+      username: '',         // The current username entered.
+      password: '',         // The current password entered.
+      busy: false,          // Whether or not this component is waiting for data.
+      error: '',            // The error message that should be displayed.
+      forgotPassword: false // Whether or not we are resetting a password.
     };
   }
 
   login(e) {
     e.preventDefault();
+
+    if (this.state.forgotPassword) {
+      this.resetPassword();
+
+      return;
+    }
 
     this.setState({busy: true});
 
@@ -61,6 +68,19 @@ class LogInModal extends React.Component {
     this.setState({password: e.target.value});
   }
 
+  resetPassword() {
+    this.hideForgotPassword();
+    alert('An e-mail has been sent containing a password reset link.');
+  }
+
+  showForgotPassword() {
+    this.setState({forgotPassword: true});
+  }
+
+  hideForgotPassword() {
+    this.setState({forgotPassword: false});
+  }
+
   render() {
     var errorPrompt;
 
@@ -70,6 +90,24 @@ class LogInModal extends React.Component {
           <h4>Oh no!</h4>
           <p>{this.state.error}</p>
         </Alert>
+      );
+    }
+
+    var password;
+
+    if (!this.state.forgotPassword) {
+      password = [
+        <FormGroup id="password">
+          <ControlLabel>Password</ControlLabel>
+          <FormControl type="password"
+                       placeholder="Password"
+                       onChange={this.handlePasswordChange.bind(this)} />
+        </FormGroup>,
+        <a onClick={this.showForgotPassword.bind(this)}>Forgot password?</a>
+      ];
+    } else {
+      password = (
+        <a onClick={this.hideForgotPassword.bind(this)}>Back to login</a>
       );
     }
 
@@ -88,15 +126,13 @@ class LogInModal extends React.Component {
                                placeholder="triton@ucsd.edu"
                                onChange={this.handleEmailChange.bind(this)} />
                 </FormGroup>
-                <FormGroup id="password">
-                  <ControlLabel>Password</ControlLabel>
-                  <FormControl type="password"
-                               placeholder="Password"
-                               onChange={this.handlePasswordChange.bind(this)} />
-                </FormGroup>
+
+                {password}
             </Modal.Body>
             <Modal.Footer>
-              <Button bsStyle="primary" type="submit" disabled={this.state.busy}>Login</Button>
+              <Button bsStyle="primary" type="submit" disabled={this.state.busy}>
+                {this.state.forgotPassword ? 'Reset Password' : 'Login'}
+              </Button>
             </Modal.Footer>
           </form>
         </Modal>
