@@ -10,6 +10,7 @@ import About from './about/About'
 import Profile from './profile/Profile'
 import NotFound from './error/NotFound'
 
+import CourseList from './course/CourseList'
 import Course from './course/Course'
 import CourseSearch from './course/CourseSearch'
 
@@ -28,6 +29,7 @@ render((
       <Route path='about' component={About} />
       <Route path='profile/:id' component={Profile} />
       <Route path='profile' component={ProfileSettings} />
+      <Route path='courses' component={CourseList} />
       <Route path='course/search/:query' component={CourseSearch} />
       <Route path='course/:id' component={Course} />
       <Route path='message' component={Message} />
