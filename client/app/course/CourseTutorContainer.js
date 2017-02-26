@@ -12,7 +12,7 @@ class CourseTutorContainer extends React.Component {
     this.state = {
       tutors: [
         {userID: 0, name: 'Gary Gillespie', stars: 5, price: 25, negotiable: true, desc: 'Be tutored by a superstar!'},
-        {userID: 3, name: 'Rick Ord', stars: 5, price: 29, negotiable: false, desc: 'Simple boy from the midwest looking to tutor!'}
+        {userID: 3, name: 'Rick Ord', stars: 5, price: 25, negotiable: false, desc: 'Simple boy from the midwest looking to tutor!'}
       ]
     };
 

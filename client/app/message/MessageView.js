@@ -1,6 +1,8 @@
 import React from 'react'
 
 import { Media, Grid } from 'react-bootstrap'
+import { Link } from 'react-router'
+import { LinkContainer } from 'react-router-bootstrap'
 import MessageReply from './MessageReply'
 
 class MessageView extends React.Component {
@@ -37,7 +39,10 @@ class MessageView extends React.Component {
         <Grid>
         <Media>
           <Media.Left>
-            <img width={64} height={64} src={'/profiles/' + this.state.sender.userID + '.jpg'} />
+            <Link to={'/profile/' + this.state.sender.userID}>
+              <img width={64} height={64} src={'/profiles/' + this.state.sender.userID + '.jpg'} />
+              Rick Ord
+            </Link>
           </Media.Left>
           <Media.Body>
             <Media.Heading>{this.state.subject}</Media.Heading>
