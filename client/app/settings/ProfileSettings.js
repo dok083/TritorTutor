@@ -1,49 +1,47 @@
 import React from 'react'
 
-import { Grid, Col, Nav, NavItem, Panel,Button, FormGroup,FormControl } from 'react-bootstrap'
+import { Grid, Col, Nav, NavItem, Panel, Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 import { IndexLinkContainer } from 'react-router-bootstrap'
 
-
 class ProfileSettings extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      user: {userID: 0, username: 'Gary Gillespie'}
+    };
+  }
+
   render() {
+    var user = this.state.user;
+
     return (
-    	
-    <div id='container'>
-        <Grid>
-          <Col xs={12} md={9}>
-            <Panel header='Profile'>
-            <Nav bsStyle='pills' stacked>
-             
-              <form>
-        		<FormGroup bsSize='large'>
-         		 <FormControl type='text' placeholder='Change your display Name.' />
-       			 </FormGroup>
-     		  </form>
+      <div>
+        <form>
+          <FormGroup>
+            <ControlLabel>Profile Picture</ControlLabel>
+            <p>
+            <img width={256} height={256} src={'/profiles/' + user.userID + '.jpg'} />
+            <br />
+            <Button>Upload</Button>
+            </p>
+          </FormGroup>
 
-     		  <form>
-        		<FormGroup bsSize='large'>
-         		 <FormControl type='text' placeholder='Change your description.' />
-       			 </FormGroup>
-     		  </form>
-              
+          <FormGroup>
+            <ControlLabel>Display Name</ControlLabel>
+            <FormControl type='text' value={user.username} />
+          </FormGroup>
 
-              <Button className="pull-right" bsSize="large" type="Edit">
-      			Edit
-    	  	  </Button>
-
-            </Nav>
-            </Panel>
-          </Col>
-          
-          
-
-        </Grid>
-
-        
-
+          <FormGroup>
+            <ControlLabel>Profile Description</ControlLabel>
+            <FormControl type='text' placeholder='Enter your description here' />
+          </FormGroup>
+            
+          <Button className="pull-right" type="Edit">Update</Button>
+        </form>
       </div>
-      );
-}
+    );
+  }
 }
 
 ProfileSettings.displayName = 'ProfileSettings'
