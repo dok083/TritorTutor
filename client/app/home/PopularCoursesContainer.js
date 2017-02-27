@@ -6,7 +6,7 @@ class PopularCoursesContainer extends React.Component {
     super(props);
     this.state = {
       courses: [
-        {name: 'CSE 11', id: 0},
+        {name: 'CSE 110', id: 0},
         {name: 'CSE 12', id: 0},
         {name: 'CSE 15L', id: 0},
         {name: 'CSE 30', id: 0},

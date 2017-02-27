@@ -28,9 +28,7 @@ class NavBar extends React.Component {
               <NavItem>About</NavItem>
             </LinkContainer>
           </Nav>
-          <Nav pullRight>
-            <UserTabContainer />
-          </Nav>
+          <UserTabContainer />
         </Navbar.Collapse>
       </Navbar>
     );

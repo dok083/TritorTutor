@@ -26,7 +26,7 @@ class Home extends React.Component {
           <h3>The private tutoring marketplace for UCSD</h3>
           <br />
           <Grid>
-            <Col xs={8} xsOffset={2}>
+            <Col xs={10} xsOffset={1} md={8} mdOffset={2}>
               <CourseSearchContainer />
             </Col>
           </Grid>

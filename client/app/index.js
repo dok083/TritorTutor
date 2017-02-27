@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, IndexRedirect, browserHistory } from 'react-router'
 
 import App from './app/App'
 import Footer from './app/Footer'
@@ -18,19 +18,25 @@ import ProfileSettings from './settings/ProfileSettings'
 import AccountSettings from './settings/AccountSettings'
 import TutorSettings from './settings/TutorSettings'
 
+import Message from './message/Message'
+import MessageView from './message/MessageView'
+
 render((
-  <Router history={browserHistory}>
+  <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={Home} />
-      <Route path='/about' component={About} />
-      <Route path='/profile/:userID' component={Profile} />
-      <Route path='/profile' component={ProfileSettings} />
-      <Route path='/course/search/:query' component={CourseSearch} />
-      <Route path='/course/:id' component={Course} />
-      <Route path='/settings' component={Settings}>
-        <Route path='/profile' component={ProfileSettings} />
-        <Route path='/password' component={AccountSettings} />
-        <Route path='/tutor' component={TutorSettings} />
+      <Route path='about' component={About} />
+      <Route path='profile/:id' component={Profile} />
+      <Route path='profile' component={ProfileSettings} />
+      <Route path='course/search/:query' component={CourseSearch} />
+      <Route path='course/:id' component={Course} />
+      <Route path='message' component={Message} />
+      <Route path='message/view/:id' component={MessageView} />
+      <Route path='settings' component={Settings}>
+        <IndexRedirect to='profile' />
+        <Route path='profile' component={ProfileSettings} />
+        <Route path='account' component={AccountSettings} />
+        <Route path='tutoring' component={TutorSettings} />
       </Route>
     </Route>
     <Route path='*' component={App}>

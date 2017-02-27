@@ -23,7 +23,7 @@ class ReviewComponent extends React.Component {
     return (
       <Media>
         <Media.Left align="top">
-          <Link to={'/profiles/' + review.userID}>
+          <Link to={'/profile/' + review.userID}>
             <img width={64} height={64} src={'/profiles/' + review.userID + '.jpg'} />
           </Link>
         </Media.Left>
