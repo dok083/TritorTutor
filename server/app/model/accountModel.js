@@ -81,9 +81,34 @@ AccountModel.getByID = function(userID) {
  * @return A promise that contains the user after inserting is done.
  */
 AccountModel.create = function(email, username, password) {
-    // TODO: Generate a random salt.
-    // TODO: Encrypt the password using hash + salt.
+	bcrypt = require("bcrypt");
+	var rounds = 10;
+	
+	//randomly generate a salt for the input password
+	bcrypt.genSalt(rounds, function(err, salt) {
+		//if(err)
+		//	console.error(err);
+		
+		//if there is no error during salt generation, hash the password
+		//	progress parameter neglected
+		bcrypt.hash(email, salt, function(err, encrypted_password) {
+			// Insert values to the tritor_users table
+			return db.insert('tritor_users', {
+					email: email.toLowerCase(),
+					username: username,
+					password: encrypted_password,
+			}).then((results) => {
+				return {
+					userID: results.insertId,
+					email: email,
+					username: username
+				};
+			});
+		});
+	});
 
+
+/*
     // Insert values to the tritor_users table
     return db.insert('tritor_users', {
             email: email,
@@ -97,6 +122,9 @@ AccountModel.create = function(email, username, password) {
         	username: username
         };
     });
+*/
+
+
 }
 
 /**
@@ -108,9 +136,33 @@ AccountModel.create = function(email, username, password) {
  * @return A promise containing the user if found, otherwise the user is null.
  */
 AccountModel.getByCredentials = function(email, password) {
+	
+	// Prepare the login information for a query.
+ 	email = db.escape(email.toLowerCase());
+
+    // Look for a user with a matching e-mail
+    var conditions = 'email=' + email;	
+	
+	// retrieve encrypted password from db
+    return db.select('tritor_users', ['userID'], conditions, 1)
+        .then((results) => {
+            if (results && results.length > 0) {
+                return {
+                	userID: results[0].userID,
+                	email: email,
+                	username: results[0].username
+                };
+            }
+
+            return null;
+        })
+
+/*	
 	// Prepare the login information for a query.
  	email = db.escape(email.toLowerCase());
     password = db.escape(password);
+
+
 
     // Look for a user with a matching e-mail and password combination.
     var conditions = 'email=' + email + ' AND password=' + password;
@@ -127,6 +179,8 @@ AccountModel.getByCredentials = function(email, password) {
 
             return null;
         })
+
+*/
 }
 
 /**
