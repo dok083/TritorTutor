@@ -94,14 +94,14 @@ AccountModel.create = function(email, username, password) {
 		bcrypt.hash(email, salt, function(err, encrypted_password) {
 			// Insert values to the tritor_users table
 			return db.insert('tritor_users', {
-					email: email.toLowerCase(),
-					username: username,
-					password: encrypted_password,
+				email: email.toLowerCase(),
+				username: username,
+				password: encrypted_password,
 			}).then((results) => {
 				return {
-					userID: results.insertId,
-					email: email,
-					username: username
+				userID: results.insertId,
+				email: email,
+				username: username
 				};
 			});
 		});
@@ -185,12 +185,11 @@ AccountModel.getByCredentials = function(email, password) {
 
 /**
  * Deletes a user from the given user ID. Note that this is permanent.
- *
  * @param userID The ID for the user that should be deleted.
  * @return A promise that runs after the user has been deleted.
  */
 AccountModel.delete = function(userID) {
-    db.query('DELETE FROM tritor_users WHERE userID = ? LIMIT 1', [userID]);
+    return db.query('DELETE FROM tritor_users WHERE userID = ? LIMIT 1', [userID]);
 }
 
 module.exports = AccountModel;
