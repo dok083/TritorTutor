@@ -5,7 +5,7 @@
  * contain information about an account that others can see.
  */
 
-var db = requrire('./database.js');
+var db = require('./database.js');
 
 var ProfileModel = {};
 
