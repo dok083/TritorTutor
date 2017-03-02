@@ -87,6 +87,9 @@ class UserTabContainer extends React.Component {
           <IndexLinkContainer to='/message'>
             <MenuItem eventKey={0}>Messages</MenuItem>
           </IndexLinkContainer>
+          <IndexLinkContainer to='/history'>
+            <MenuItem eventKey={0}>Tutoring History</MenuItem>
+          </IndexLinkContainer>
           <IndexLinkContainer to='/settings/profile'>
             <MenuItem eventKey={0}>Settings</MenuItem>
           </IndexLinkContainer>
