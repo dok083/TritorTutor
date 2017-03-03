@@ -9,9 +9,10 @@ class HistoryEntryContainer extends React.Component {
     // placeholder data
     this.state = {
       entries: [
-        {tutorID: 0, tutorName: 'Gary Gillespie', studentID: 3, studentName:
-        'Rick Ord', course: 'CSE 11'},
-        {tutorID: 1 ,tutorName: 'Judy', studentID: 0, studentName: 'Gary Gillespie', course: '####'},
+        {tutorID: 0, tutorName: 'Gary Gillespie', studentID: 3,
+         studentName: 'Rick Ord', course: 'CSE 11', courseID: 0},
+        {tutorID: 1 ,tutorName: 'Judy', studentID: 0,
+         studentName: 'Gary Gillespie', course: 'Some course', courseID: 0},
       ]
     };
   }
