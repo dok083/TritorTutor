@@ -40,8 +40,7 @@ MessageController.getByUID = function(userID) {
     return MessageModel.readUser(userID).then(
         (results) => {
             // to hold each message
-            var msgList = [];
-
+        
             if (results && results.length > 0){
                 // construct and return list of messages 
                 return results.map((result) => {
@@ -66,6 +65,17 @@ MessageController.getByUID = function(userID) {
  */
 MessageController.getByMID = function(msgID) {
     // TODO retrieve data of message with msgID
+    return MessageModel.readMessage(msgID).then(
+        (results) => {
+            if (results && results.length == 1) {
+                return {
+                        sender: results[0].sender,
+                        recipient: results[0].receiver,
+                        title: results[0].title,
+                        content: results[0].content
+                    };
+            }
+        }
     // TODO construct a message for this message
     // TODO construct and return promise containing message
 }
