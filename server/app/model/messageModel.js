@@ -57,7 +57,12 @@ MessageModel.deleteUser = function(userID) {
  * @return A promise that contains the desired message
  */
 MessageModel.readMessage = function(msgID) {
-// TODO return promise containing information about message with MID
+// condition to check to find user with matching msgID
+var conditions = 'msgID=' + msgID;
+
+// return promise containing information about message
+return db.select('tritor_messages', ['sender','title','receiver','content'], 
+    conditions, 1, 'creationTime DSC')
 }
 
 /**
