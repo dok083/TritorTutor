@@ -3,6 +3,11 @@ import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroup
 import { Link } from 'react-router'
 
 class AccountSettings extends React.Component {
+
+  eventHandle() {
+    confirm('Are you sure to deactivate your account?');
+  }
+
   render() {
     return <div>
     <Panel header="Password">
@@ -19,7 +24,7 @@ class AccountSettings extends React.Component {
 
 
     <Panel header="Deactive Account">
-      <Button vertical block bsStyle ="danger">DEACTIVATE ACCOUNT</Button>
+      <Button vertical block bsStyle ="danger" onClick={this.eventHandle}> DEACTIVATE ACCOUNT</Button>
     </Panel>
     </div>
   }
