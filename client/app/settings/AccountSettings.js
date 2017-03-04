@@ -14,7 +14,7 @@ class AccountSettings extends React.Component {
       type="text"
       placeholder="Confirm Password"
     /> <br />
-    <Button type="submit"> Submit </Button>
+    <Button className="pull-right" type="submit"> Submit </Button>
     </Panel>
 
 
