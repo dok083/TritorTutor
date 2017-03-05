@@ -40,8 +40,7 @@ MessageController.getByUID = function(userID) {
     return MessageModel.readUser(userID).then(
         (results) => {
             // to hold each message
-            var msgList = [];
-
+        
             if (results && results.length > 0){
                 // construct and return list of messages 
                 return results.map((result) => {
@@ -65,9 +64,21 @@ MessageController.getByUID = function(userID) {
  * @return promise containing the message associated with the given MID.
  */
 MessageController.getByMID = function(msgID) {
-    // TODO retrieve data of message with msgID
-    // TODO construct a message for this message
-    // TODO construct and return promise containing message
+    // retrieve data of message with msgID and construct and return promise
+    // containing message
+    return MessageModel.readMessage(msgID).then(
+        (results) => {
+            // a message was found at this MID
+            if (results && results.length == 1) {
+                // construct and return a message for this message
+                return {
+                        sender: results[0].sender,
+                        recipient: results[0].receiver,
+                        title: results[0].title,
+                        content: results[0].content
+                    };
+            }
+        }
 }
 
 /**
@@ -77,9 +88,9 @@ MessageController.getByMID = function(msgID) {
  *
  * @return empty promise
  */
-MessageController.delete = function(userID) {
-    // TODO delete data of all messages with userID
-    // TODO construct and return empty promise
+MessageController.deleteByUID = function(userID) {
+    // delete data of all messages with userID and return promise
+    return MessageModel.deleteUser(userID);
 }
 
 /**
@@ -90,8 +101,8 @@ MessageController.delete = function(userID) {
  * @return empty promise
  */
 MessageController.delete = function(msgID) {
-    // TODO delete data of message with msgID
-    // TODO construct and return empty promise
+    // delete data of all messages with userID and return promise
+    return MessageModel.deleteMessage(userID);
 }
 
 module.exports = MessageController;

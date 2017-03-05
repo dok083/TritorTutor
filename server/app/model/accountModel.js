@@ -133,7 +133,7 @@ AccountModel.getByCredentials = function(email, password) {
         .then((results) => {
             if (results && results.length > 0) {
                 //call bcrypt compare function
-				compare(password, results.password, callback(err_diff, same){
+				bcrypt.compare(password, results.password, (err_diff, same) => {
 					if(err_diff) {
 						console.err(err_diff);
 						/*customized message*/
@@ -147,8 +147,9 @@ AccountModel.getByCredentials = function(email, password) {
 					};
 				});
 			}
+
 			return null;
-		}
+		});
 }
 				
 /**
