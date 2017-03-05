@@ -1,5 +1,7 @@
 var MessageModel = {}
 
+var db = require( "./database.js" );
+
 /**
  * Creates a new message sent from the sender (a user ID) to the recipient
  * (another user ID) with the given title and message.
@@ -13,20 +15,18 @@ var MessageModel = {}
  */
 MessageModel.create = function(sender, recipient, title, content) {
     // the current timestamp
-    var timeStamp = Math.floor(Date.now() / 1000);
+    var timeStamp = new Date();
 
     // add the data of this message to the database
     return db.insert('tritor_messages', {
         sender: sender,
         title: title,
-        creationTime: timeStamp
+        creationTime: timeStamp,
         receiver: recipient,
         content: content
     }).then((results) => {
         // return the MID
-        return {
-            msgID: results.insertId,
-        }
+        return results.insertId;
     });
 }
 
@@ -64,7 +64,7 @@ MessageModel.readMessage = function(msgID) {
 
     // return promise containing information about message
     return db.select('tritor_messages', ['sender','title','receiver','content'],
-            conditions, 1, 'creationTime DSC');
+            conditions, 1, 'creationTime DESC');
 }
 
 /**
@@ -79,7 +79,7 @@ MessageModel.readUser = function(userID) {
 
     // return promise containing information about messages
     return db.select('tritor_messages', ['sender','title','receiver','content'],
-            conditions, 50, 'creationTime DSC');
+            conditions, 50, 'creationTime DESC');
 }
 
 module.exports = MessageModel;

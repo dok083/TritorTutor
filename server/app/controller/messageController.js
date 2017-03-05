@@ -7,7 +7,7 @@
 
 var MessageModel = require('../model/messageModel.js');
 
-var ModelController = {};
+var MessageController = {};
 
 /**
  * Creates a new message with the given sender and recipient UIDs and message
@@ -76,9 +76,11 @@ MessageController.getByMID = function(msgID) {
                         recipient: results[0].receiver,
                         title: results[0].title,
                         content: results[0].content
-                    };
+                };
             }
-        }
+            // message not found
+            return null;
+        } );
 }
 
 /**
@@ -100,9 +102,9 @@ MessageController.deleteByUID = function(userID) {
  *
  * @return empty promise
  */
-MessageController.delete = function(msgID) {
+MessageController.deleteByMID = function(msgID) {
     // delete data of all messages with userID and return promise
-    return MessageModel.deleteMessage(userID);
+    return MessageModel.deleteMessage(msgID);
 }
 
 module.exports = MessageController;
