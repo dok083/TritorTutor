@@ -7,6 +7,7 @@
  */
 
 var db = require('./database.js');
+var bcrypt = require("bcrypt");
 
 var AccountModel = {};
 
@@ -81,7 +82,6 @@ AccountModel.getByID = function(userID) {
  * @return A promise that contains the user after inserting is done.
  */
 AccountModel.create = function(email, username, password) {
-	bcrypt = require("bcrypt");
 	var rounds = 10;
 	
 	//randomly generate a salt for the input password
