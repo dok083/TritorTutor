@@ -1,11 +1,12 @@
 import React from 'react'
 import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label, Glyphicon, FormControl } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 
 class AccountSettings extends React.Component {
 
   eventHandle() {
     confirm('Are you sure to deactivate your account?');
+    browserHistory.push('/');
   }
 
   render() {
