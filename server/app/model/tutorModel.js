@@ -68,7 +68,7 @@ TutorModel.get = function(course) {
  * @return A promise that contains nothing.
  */
 TutorModel.update = function(course, userID, data) {
-	var conditions = ['classID=' + course, 'tutorID=' + userID];
+	var conditions = 'classID=' + course + 'AND tutorID=' + userID;
 
 	return db.update('tritor_tutorlist', data, conditions, 1);
 }
