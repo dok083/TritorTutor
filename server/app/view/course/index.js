@@ -57,4 +57,5 @@ function deleteTutor(req, res) {
  		get: getTutors,
  		post: addTutor,
  		delete: deleteTutor
- 	} 
+ 	}
+}
