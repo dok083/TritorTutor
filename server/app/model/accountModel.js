@@ -85,14 +85,18 @@ AccountModel.create = function(email, username, password) {
 	var rounds = 10;
 	
 	//randomly generate a salt for the input password
-	bcrypt.genSalt(rounds, function(err, salt) {
-		//if(err)
-		//	console.error(err);
-		
+	bcrypt.genSalt(rounds, function(err_salt, salt) {
+		if(err_salt) 
+			console.err(err_salt);
+
 		//if there is no error during salt generation, hash the password
 		//	progress parameter neglected
-		bcrypt.hash(email, salt, function(err, encrypted_password) {
-			// Insert values to the tritor_users table
+		bcrypt.hash(email, salt, function(err_hash, encrypted_password) {
+			if(err_hash)
+				console.err(err_hash);
+
+			//otherwise return a promise that create an account with encrypted
+			//password
 			return db.insert('tritor_users', {
 				email: email.toLowerCase(),
 				username: username,
@@ -106,25 +110,6 @@ AccountModel.create = function(email, username, password) {
 			});
 		});
 	});
-
-
-/*
-    // Insert values to the tritor_users table
-    return db.insert('tritor_users', {
-            email: email,
-            username: username,
-            password: password,
-            salt: '' 
-    }).then((results) => {
-        return {
-        	userID: results.insertId,
-        	email: email,
-        	username: username
-        };
-    });
-*/
-
-
 }
 
 /**
@@ -147,42 +132,26 @@ AccountModel.getByCredentials = function(email, password) {
     return db.select('tritor_users', ['userID'], conditions, 1)
         .then((results) => {
             if (results && results.length > 0) {
-                return {
-                	userID: results[0].userID,
-                	email: email,
-                	username: results[0].username
-                };
-            }
+                //call bcrypt compare function
+				bcrypt.compare(password, results.password, (err_diff, same) => {
+					if(err_diff) {
+						console.err(err_diff);
+						/*customized message*/
+						return null;
+					}
+					//password matched
+					return {
+						userID: results[0].userID,
+						email: email,
+						username: results[0].username
+					};
+				});
+			}
 
-            return null;
-        })
-
-/*	
-	// Prepare the login information for a query.
- 	email = db.escape(email.toLowerCase());
-    password = db.escape(password);
-
-
-
-    // Look for a user with a matching e-mail and password combination.
-    var conditions = 'email=' + email + ' AND password=' + password;
-
-    return db.select('tritor_users', ['userID'], conditions, 1)
-        .then((results) => {
-            if (results && results.length > 0) {
-                return {
-                	userID: results[0].userID,
-                	email: email,
-                	username: results[0].username
-                };
-            }
-
-            return null;
-        })
-
-*/
+			return null;
+		});
 }
-
+				
 /**
  * Deletes a user from the given user ID. Note that this is permanent.
  * @param userID The ID for the user that should be deleted.

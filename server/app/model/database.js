@@ -119,7 +119,7 @@ function select(table, columns, condition, limit, order) {
 
     // Add the desired order.
     if (order) {
-        queryStr += ' ORDER BY' + order;
+        queryStr += ' ORDER BY ' + order;
     }
 
     // Add the desired limit.

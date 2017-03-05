@@ -1,5 +1,7 @@
 var MessageModel = {}
 
+var db = require( "./database.js" );
+
 /**
  * Creates a new message sent from the sender (a user ID) to the recipient
  * (another user ID) with the given title and message.
@@ -13,20 +15,18 @@ var MessageModel = {}
  */
 MessageModel.create = function(sender, recipient, title, content) {
     // the current timestamp
-    var timeStamp = Math.floor(Date.now() / 1000);
+    var timeStamp = new Date();
 
     // add the data of this message to the database
     return db.insert('tritor_messages', {
         sender: sender,
         title: title,
-        creationTime: timeStamp
+        creationTime: timeStamp,
         receiver: recipient,
         content: content
     }).then((results) => {
         // return the MID
-        return {
-            msgID: results.insertId,
-        }
+        return results.insertId;
     });
 }
 
@@ -36,8 +36,9 @@ MessageModel.create = function(sender, recipient, title, content) {
  * @param id The ID for the desired message.
  * @return A promise that is called after the message has been deleted.
  */
-MessageModel.deleteMessage = function(id) {
-    // TODO: Implement   
+MessageModel.deleteMessage = function(msgID) {
+    // delete the mssage with id from database
+    return db.query( "DELETE FROM tritor_messages WHERE msgID=?", [msgID] );
 }
 
 /**
@@ -47,7 +48,8 @@ MessageModel.deleteMessage = function(id) {
  * @return A promise that is called after all messages are deleted.
  */
 MessageModel.deleteUser = function(userID) {
-    // TODO: Implement
+    // delete the message with id from database
+    return db.query( "DELETE FROM tritor_messages WHERE receiver=?", [userID] );
 }
 
 /**
@@ -57,7 +59,12 @@ MessageModel.deleteUser = function(userID) {
  * @return A promise that contains the desired message
  */
 MessageModel.readMessage = function(msgID) {
-// TODO return promise containing information about message with MID
+    // condition to check to find user with matching msgID
+    var conditions = 'msgID=' + msgID;
+
+    // return promise containing information about message
+    return db.select('tritor_messages', ['sender','title','receiver','content'],
+            conditions, 1, 'creationTime DESC');
 }
 
 /**
@@ -67,12 +74,12 @@ MessageModel.readMessage = function(msgID) {
 * @return A promise that contains a list of all the messages for a user.
 */
 MessageModel.readUser = function(userID) {
-// condition to check to find user with matching userID
-var conditions = 'receiver=' + userID;
+    // condition to check to find user with matching userID
+    var conditions = 'receiver=' + userID;
 
-// return promise containing information about messages
-return db.select('tritor_messages', ['sender','title','receiver','content'], 
-    conditions, 50, 'creationTime DSC')
+    // return promise containing information about messages
+    return db.select('tritor_messages', ['sender','title','receiver','content'],
+            conditions, 50, 'creationTime DESC');
 }
 
 module.exports = MessageModel;

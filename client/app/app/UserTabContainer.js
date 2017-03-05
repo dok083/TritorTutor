@@ -2,7 +2,7 @@ import React from 'react'
 
 import { NavDropdown, MenuItem, NavItem, Nav } from 'react-bootstrap'
 import { IndexLinkContainer } from 'react-router-bootstrap'
-import { browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 
 import LogInModal from '../login/LogInModal'
 import SignUpModal from '../login/SignUpModal'
@@ -63,6 +63,20 @@ class UserTabContainer extends React.Component {
     }
   }
 
+  /* need to do REST API thing*/
+  eventHandle() {
+    /*axios.get ('/api/user/logout')
+    $.ajax({
+      url: "/api/user/logout",
+      dataType: "json",
+      type : "GET",
+      success : function(r) {
+        alert("Come back soon!");
+  }
+});*/
+    browserHistory.push('/');
+  }
+
   render() {
     var userOptions;
 
@@ -94,7 +108,7 @@ class UserTabContainer extends React.Component {
             <MenuItem eventKey={0}>Settings</MenuItem>
           </IndexLinkContainer>
           <MenuItem divider/>
-          <MenuItem eventKey={LOG_OUT}>Logout</MenuItem>
+          <MenuItem eventKey={LOG_OUT} onClick={this.eventHandle}>Logout</MenuItem>
         </NavDropdown>
       );
     } else {
