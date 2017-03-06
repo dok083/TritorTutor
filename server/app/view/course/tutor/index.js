@@ -1,10 +1,11 @@
 var TutorController = require('../../controller/tutorController.js');
+var requireLoggedIn = require('../../userUtils.js');
 
 /**
  * Allows users to get information about listings for a course
  */
 
-function getTutors(req, res) {
+function getTutors(req, res, user) {
  	var courseID = req.params.courseID;
 
  	if(!courseID) {
@@ -31,7 +32,7 @@ function updateTutors(req, res) {
 
  module.exports = {
  	'/:id':  {
- 		get: getTutors,
+ 		get: requireLoggedIn(getTutors),
  		post: updateTutors
  	} 
  };

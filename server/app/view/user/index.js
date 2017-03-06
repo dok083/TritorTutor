@@ -11,33 +11,13 @@ var LoginController = require(controller + 'loginController.js');
 var AccountController = require(controller + 'accountController.js');
 var VerificationController = require(controller + 'verificationController.js');
 var UserFormValidator = require(controller + 'userFormValidator.js');
+var requireLogin = require('../userUtils.js');
 
 /**
  * Retrieves the user that is currently logged in.
  */
-function getUser(req, res) {
-    // Get the session ID from the user.
-    var sessionID = req.session.sessionID;
-
-    // Indicate the user is not logged in if there is no session.
-    if (!sessionID) {
-        res.status(401).json({message: 'not logged in'});
-
-        return;
-    }
-
-    // Find the user from the session ID.
-    LoginController.getUser(sessionID)
-        .then((user) => {
-            if (user) {
-                res.json(user);
-            } else {
-                res.status(401).json({message: 'not logged in'});
-            }
-        })
-        .catch((error) => {
-            res.status(401).json({message: error});
-        });
+function getUser(req, res, user) {
+    res.json(user);
 }
 
 /**
@@ -85,7 +65,7 @@ function createUser(req, res) {
 
 module.exports = {
     '/': {
-        get: getUser,
+        get: requireLogin(getUser),
         post: createUser
     }
 };
