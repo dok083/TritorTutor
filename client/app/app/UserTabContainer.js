@@ -17,10 +17,14 @@ class UserTabContainer extends React.Component {
     super(props);
 
     this.state = {
-      user: null,
+      user: props.user || null,
       showLogInModal: false,
       showSignUpModal: false
     };
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({user: props.user});
   }
 
   // Called when a user for this session is found.
@@ -29,6 +33,10 @@ class UserTabContainer extends React.Component {
     this.hideSignUpModal();
 
     this.setState({user: user});
+
+    if (this.props.onGetUser) {
+      this.props.onGetUser(user);
+    }
   }
 
   showLogInModal() {
@@ -59,7 +67,7 @@ class UserTabContainer extends React.Component {
     } else if (selectedKey == SIGN_UP) {
       this.showSignUpModal();
     } else if (selectedKey == LOG_OUT) {
-      this.setState({user: null});
+      this.onGetUser(null);
       browserHistory.push('/');
     }
   }

@@ -28,7 +28,7 @@ class NavBar extends React.Component {
               <NavItem>About</NavItem>
             </LinkContainer>
           </Nav>
-          <UserTabContainer />
+          <UserTabContainer user={this.props.user} onGetUser={this.props.onGetUser} />
         </Navbar.Collapse>
       </Navbar>
     );
