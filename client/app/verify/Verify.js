@@ -32,7 +32,7 @@ class Verify extends React.Component {
     if (this.state.done) {
       message = (
         <p>
-          Your account has been verified!
+          Your account has been verified! 
           <IndexLink to='/'>Click here to return to Tritor</IndexLink>.
         </p>
       );
