@@ -65,4 +65,14 @@ VerificationController.begin = function(user) {
     return VerificationController.send(user.email, code);
 }
 
+/**
+ * Checks whether or not the given user is a verified user.
+ *
+ * @param user The user that will be checked.
+ * @return A promise that contains the verified (boolean) status.
+ */
+VerificationController.check = function(user) {
+    return VerificationModel.get(user.userID);
+}
+
 module.exports = VerificationController;
