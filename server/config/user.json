@@ -1,4 +1,5 @@
 {
     "minUsernameLength": 2,
-    "minPasswordLength": 4
+    "minPasswordLength": 4,
+    "verifyEmail": "<h1>Welcome to Tritor!</h1><p>Please verify your account by clicking on the following link: <a href='http://138.197.211.222/verify/{0}'>http://138.197.211.222/verify/{0}</a>."
 }
