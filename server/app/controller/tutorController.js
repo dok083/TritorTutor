@@ -5,7 +5,7 @@
  * listings.
  */
 
-var TutorModel = require('../model/TutorModel.js');
+var TutorModel = require('../model/tutorModel.js');
 
 var TutorController = {};
 
