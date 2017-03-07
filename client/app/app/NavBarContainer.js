@@ -8,4 +8,6 @@ class NavBarContainer extends React.Component {
   }
 }
 
+NavBarContainer.displayName = 'NavBarContainer';
+
 export default NavBarContainer

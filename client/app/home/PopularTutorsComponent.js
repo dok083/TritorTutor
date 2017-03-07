@@ -6,7 +6,7 @@ class PopularTutorsComponent extends React.Component {
   render() {
     var entries = this.props.tutors.map((user, index) => {
       return (
-        <LinkContainer to={'/profile/' + user.userID}>
+        <LinkContainer to={'/profile/' + user.userID} key={index}>
           <ListGroupItem>
             {index + 1}. {user.name}
           </ListGroupItem>

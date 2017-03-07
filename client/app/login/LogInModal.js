@@ -35,7 +35,7 @@ class LogInModal extends React.Component {
         password: this.state.password
     }).then((res) => {
       this.setState({busy: false});
-      console.log(res);
+
       if (!res.data) {
         this.showError('Unknown error!');
 
@@ -49,7 +49,7 @@ class LogInModal extends React.Component {
       }
     })
     .catch((e) => {
-      this.showError(e.response && e.response.data.message || e.error || "Unknown error!");
+      this.showError(e.response && e.response.data.message || e.response.data.toString() || "Unknown error!");
       this.setState({busy: false});
     });
   }
@@ -95,17 +95,17 @@ class LogInModal extends React.Component {
 
     if (!this.state.forgotPassword) {
       password = [
-        <FormGroup id="password">
+        <FormGroup id="password" key="password">
           <ControlLabel>Password</ControlLabel>
           <FormControl type="password"
                        placeholder="Password"
                        onChange={this.handlePasswordChange.bind(this)} />
         </FormGroup>,
-        <a onClick={this.showForgotPassword.bind(this)}>Forgot password?</a>
+        <a onClick={this.showForgotPassword.bind(this)} key="forgot">Forgot password?</a>
       ];
     } else {
       password = (
-        <a onClick={this.hideForgotPassword.bind(this)}>Back to login</a>
+        <a onClick={this.hideForgotPassword.bind(this)} key="back">Back to login</a>
       );
     }
 
@@ -118,7 +118,7 @@ class LogInModal extends React.Component {
           <form onSubmit={!this.state.busy ? this.login.bind(this) : null}>
             <Modal.Body>
               {errorPrompt}
-                <FormGroup id="email">
+                <FormGroup id="email" key="email">
                   <ControlLabel>Email Address</ControlLabel>
                   <FormControl type="email"
                                placeholder="triton@ucsd.edu"

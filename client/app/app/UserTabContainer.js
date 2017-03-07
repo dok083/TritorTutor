@@ -3,8 +3,9 @@ import React from 'react'
 import { NavDropdown, MenuItem, NavItem, Nav } from 'react-bootstrap'
 import { IndexLinkContainer } from 'react-router-bootstrap'
 import { browserHistory, Link } from 'react-router'
-import Img from 'react-image-fallback'
+import axios from 'axios'
 
+import ProfilePic from '../profile/ProfilePic'
 import LogInModal from '../login/LogInModal'
 import SignUpModal from '../login/SignUpModal'
 
@@ -67,23 +68,10 @@ class UserTabContainer extends React.Component {
     } else if (selectedKey == SIGN_UP) {
       this.showSignUpModal();
     } else if (selectedKey == LOG_OUT) {
+      axios.get('/api/user/logout');
       this.onGetUser(null);
       browserHistory.push('/');
     }
-  }
-
-  /* need to do REST API thing*/
-  eventHandle() {
-    /*axios.get ('/api/user/logout')
-    $.ajax({
-      url: "/api/user/logout",
-      dataType: "json",
-      type : "GET",
-      success : function(r) {
-        alert("Come back soon!");
-  }
-});*/
-    browserHistory.push('/');
   }
 
   render() {
@@ -99,33 +87,31 @@ class UserTabContainer extends React.Component {
                                    onHide={this.hideSignUpModal.bind(this)} />
 
     if (this.state.user) {
-      var profilePic = <Img width={24} height={24}
-                            src={'/profiles/' + this.state.user.userID + '.jpg'}
-                            fallbackImage='/profiles/default.jpg' />;
+      var profilePic = <ProfilePic width={24} height={24} user={this.state.user.userID} />
       var displayName = <span>{profilePic} {this.state.user.username}</span>
 
       userOptions = (
         <NavDropdown title={displayName}>
           <IndexLinkContainer to={'/profile/' + this.state.user.userID}>
-            <MenuItem eventKey={0}>Profile</MenuItem>
+            <MenuItem eventKey={0} key='profile'>Profile</MenuItem>
           </IndexLinkContainer>
           <IndexLinkContainer to='/message'>
-            <MenuItem eventKey={0}>Messages</MenuItem>
+            <MenuItem eventKey={0} key='message'>Messages</MenuItem>
           </IndexLinkContainer>
           <IndexLinkContainer to='/history'>
-            <MenuItem eventKey={0}>Tutoring History</MenuItem>
+            <MenuItem eventKey={0} key='history'>Tutoring History</MenuItem>
           </IndexLinkContainer>
           <IndexLinkContainer to='/settings/profile'>
-            <MenuItem eventKey={0}>Settings</MenuItem>
+            <MenuItem eventKey={0} key='settings'>Settings</MenuItem>
           </IndexLinkContainer>
           <MenuItem divider/>
-          <MenuItem eventKey={LOG_OUT} onClick={this.eventHandle}>Logout</MenuItem>
+          <MenuItem eventKey={LOG_OUT} key='logout'>Logout</MenuItem>
         </NavDropdown>
       );
     } else {
       userOptions = [
-        <NavItem eventKey={LOG_IN}>Log In</NavItem>,
-        <NavItem eventKey={SIGN_UP}>Sign Up</NavItem>
+        <NavItem eventKey={LOG_IN} key='login'>Log In</NavItem>,
+        <NavItem eventKey={SIGN_UP} key='signup'>Sign Up</NavItem>
       ];
     }
 

@@ -35,4 +35,6 @@ class NavBar extends React.Component {
   }
 }
 
+NavBar.displayName = 'NavBar';
+
 export default NavBar

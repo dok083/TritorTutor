@@ -6,7 +6,7 @@ class PopularCoursesComponent extends React.Component {
   render() {
     var entries = this.props.courses.map((course, index) => {
       return (
-        <LinkContainer to={'/course/' + course.id}>
+        <LinkContainer to={'/course/' + course.id} key={index}>
           <ListGroupItem>{index + 1}. {course.name}</ListGroupItem>
         </LinkContainer>
       );
