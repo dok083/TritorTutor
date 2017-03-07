@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Table } from 'react-bootstrap'
 
