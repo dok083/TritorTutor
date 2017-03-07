@@ -17,6 +17,9 @@ class App extends React.Component {
           user: res.data,
           loading: false
         });
+      })
+      .catch((res) => {
+        this.setState({loading: false});
       });
   }
 
