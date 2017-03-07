@@ -5,7 +5,10 @@
  * of new accounts
  */
  
-var LoginController = require('../controller/loginController.js');
+const controller = '../controller/';
+
+var LoginController = require(controller + 'loginController.js');
+var VerificationController = require(controller + 'verificationController.js');
 
 /**
  * Decorator for API requests that require a user. This is useful for if you
@@ -17,9 +20,10 @@ var LoginController = require('../controller/loginController.js');
  *       telling the user they are not logged in.
  *
  * @param The request function that should be decorated.
+ * @param requiresVerified Whether or not the user must also be verified.
  * @return The decorated request function. Use for API request exports.
  */
-function requiresLoggedIn(requestFunc) {
+function requiresLoggedIn(requestFunc, requiresVerified) {
     return function(req, res) {
         // Get the session ID from the user.
         var sessionID = req.session.sessionID;
@@ -35,10 +39,17 @@ function requiresLoggedIn(requestFunc) {
         LoginController.getUser(sessionID)
             .then((user) => {
                 if (user) {
-                    return requestFunc(req, res, user);
+                    return user;
                 } else {
                     res.status(401).json({message: 'not logged in'});
                 }
+            })
+            .then((user) => {
+                VerificationController.check(user)
+                    .then((verified) => {
+                        user.verified = verified;
+                        requestFunc(req, res, user);
+                    });
             })
             .catch((error) => {
                 res.status(401).json({message: error});

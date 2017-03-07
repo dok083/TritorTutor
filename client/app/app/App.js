@@ -1,6 +1,7 @@
 import React from 'react'
 import NavBarContainer from './NavBarContainer'
 import Footer from './Footer'
+import VerificationAlertContainer from '../verify/VerificationAlertContainer'
 import axios from 'axios'
 
 class App extends React.Component {
@@ -29,7 +30,7 @@ class App extends React.Component {
 
   render() {
     var contents;
-
+    console.log(this.state.user);
     if (this.state.loading) {
       const style = {
         position: 'absolute',
@@ -48,6 +49,7 @@ class App extends React.Component {
     } else {
       contents = (
         <div>
+          <VerificationAlertContainer user={this.state.user} />
           <NavBarContainer user={this.state.user} onGetUser={this.onGetUser.bind(this)} />
           {this.props.children}
           <Footer />
