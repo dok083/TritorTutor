@@ -12,32 +12,14 @@ var AccountController = require(controller + 'accountController.js');
 var VerificationController = require(controller + 'verificationController.js');
 var UserFormValidator = require(controller + 'userFormValidator.js');
 
+// Decorator that forces the user to be logged in.
+var requiresLoggedIn = require('../userUtils.js');
+
 /**
  * Retrieves the user that is currently logged in.
  */
-function getUser(req, res) {
-    // Get the session ID from the user.
-    var sessionID = req.session.sessionID;
-
-    // Indicate the user is not logged in if there is no session.
-    if (!sessionID) {
-        res.status(401).json({message: 'not logged in'});
-
-        return;
-    }
-
-    // Find the user from the session ID.
-    LoginController.getUser(sessionID)
-        .then((user) => {
-            if (user) {
-                res.json(user);
-            } else {
-                res.status(401).json({message: 'not logged in'});
-            }
-        })
-        .catch((error) => {
-            res.status(401).json({message: error});
-        });
+function getUser(req, res, user) {
+    res.json(user);
 }
 
 /**
@@ -76,16 +58,16 @@ function createUser(req, res) {
             // Set up the verification code for the user.
             VerificationController.begin(user);
 
-            res.json({id: user.userID});
+            res.json({user: user});
         })
         .catch((error) => {
-            res.status(500).json({message: error});
+            res.status(500).json({message: JSON.stringify(error)});
         });
 }
 
 module.exports = {
     '/': {
-        get: getUser,
+        get: requiresLoggedIn(getUser),
         post: createUser
     }
 };

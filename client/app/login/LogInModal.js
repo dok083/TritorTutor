@@ -30,30 +30,28 @@ class LogInModal extends React.Component {
     this.setState({busy: true});
 
     // Send login information to the server.
-    /*
     axios.post('/api/user/login', {
         email: this.state.email,
         password: this.state.password
-    }).then(function (r) {
+    }).then((res) => {
+      this.setState({busy: false});
+      console.log(res);
+      if (!res.data) {
+        this.showError('Unknown error!');
+
+        return;
+      }
+
       // If we succesfully logged in, then close this login window and pass on
       // the login data to whatever needs it.
-      if (this.props.onLogin) {
-        this.props.onLogin(r.data);
+      if (this.props.onLoggedIn) {
+        this.props.onLoggedIn(res.data);
       }
-      
-      this.close();
-    }.bind(this)).catch(function (e) {
-      // Otherwise, keep this window open and show the login error.
-      this.open();
-      
+    })
+    .catch((e) => {
       this.showError(e.response && e.response.data.message || e.error || "Unknown error!");
-      this.setState({allowLogin: true, isLoggingIn: false});
-    }.bind(this));
-    */
-
-    this.props.onLoggedIn(gary);
-
-    this.setState({busy: false});
+      this.setState({busy: false});
+    });
   }
 
   showError(message) {

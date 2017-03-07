@@ -2,7 +2,8 @@ import React from 'react'
 
 import { NavDropdown, MenuItem, NavItem, Nav } from 'react-bootstrap'
 import { IndexLinkContainer } from 'react-router-bootstrap'
-import { browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
+import Img from 'react-image-fallback'
 
 import LogInModal from '../login/LogInModal'
 import SignUpModal from '../login/SignUpModal'
@@ -63,6 +64,20 @@ class UserTabContainer extends React.Component {
     }
   }
 
+  /* need to do REST API thing*/
+  eventHandle() {
+    /*axios.get ('/api/user/logout')
+    $.ajax({
+      url: "/api/user/logout",
+      dataType: "json",
+      type : "GET",
+      success : function(r) {
+        alert("Come back soon!");
+  }
+});*/
+    browserHistory.push('/');
+  }
+
   render() {
     var userOptions;
 
@@ -76,7 +91,9 @@ class UserTabContainer extends React.Component {
                                    onHide={this.hideSignUpModal.bind(this)} />
 
     if (this.state.user) {
-      var profilePic = <img width={24} height={24} src={'/profiles/' + this.state.user.userID + '.jpg'} />;
+      var profilePic = <Img width={24} height={24}
+                            src={'/profiles/' + this.state.user.userID + '.jpg'}
+                            fallbackImage='/profiles/default.jpg' />;
       var displayName = <span>{profilePic} {this.state.user.username}</span>
 
       userOptions = (
@@ -87,11 +104,14 @@ class UserTabContainer extends React.Component {
           <IndexLinkContainer to='/message'>
             <MenuItem eventKey={0}>Messages</MenuItem>
           </IndexLinkContainer>
+          <IndexLinkContainer to='/history'>
+            <MenuItem eventKey={0}>Tutoring History</MenuItem>
+          </IndexLinkContainer>
           <IndexLinkContainer to='/settings/profile'>
             <MenuItem eventKey={0}>Settings</MenuItem>
           </IndexLinkContainer>
           <MenuItem divider/>
-          <MenuItem eventKey={LOG_OUT}>Logout</MenuItem>
+          <MenuItem eventKey={LOG_OUT} onClick={this.eventHandle}>Logout</MenuItem>
         </NavDropdown>
       );
     } else {

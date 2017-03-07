@@ -22,6 +22,8 @@ import TutorSettings from './settings/TutorSettings'
 import Message from './message/Message'
 import MessageView from './message/MessageView'
 
+import History from './history/History'
+
 render((
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path='/' component={App}>
@@ -34,6 +36,7 @@ render((
       <Route path='course/:id' component={Course} />
       <Route path='message' component={Message} />
       <Route path='message/view/:id' component={MessageView} />
+      <Route path='history' component={History} />
       <Route path='settings' component={Settings}>
         <IndexRedirect to='profile' />
         <Route path='profile' component={ProfileSettings} />
