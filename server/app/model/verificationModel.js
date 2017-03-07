@@ -21,8 +21,8 @@ var db = require('./database.js');
  */
 VerificationModel.create = function(userID, code) {
     // Clear the last verification code of this user.
-    db.query('INSERT INTO tritor_verify (userID, code) VALUES (?, ?)' +
-             'ON DUPLICATE KEY UPDATE code=VALUES(?)', [userID, code, code]);
+    db.query('INSERT INTO tritor_verify (userID, code) VALUES (?, ?) ' +
+             'ON DUPLICATE KEY UPDATE code=?', [userID, code, code]);
 }
 
 /*

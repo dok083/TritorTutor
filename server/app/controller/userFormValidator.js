@@ -33,7 +33,7 @@ UserFormValidator.checkEmail = function(email) {
     // Regular expression for matching e-mail addresses.
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-        return re.test(email);
+    return re.test(email);
 }
 
 /**
@@ -43,6 +43,10 @@ UserFormValidator.checkEmail = function(email) {
  * @return True if it is valid, false otherwise.
  */
 UserFormValidator.checkUsername = function(username) {
+    if (!username) {
+        return false;
+    }
+
     return username.length >= userConfig.minUsernameLength;
 }
 
@@ -53,6 +57,10 @@ UserFormValidator.checkUsername = function(username) {
  * @return True if it is valid, false otherwise.
  */
 UserFormValidator.checkPassword = function(password) {
+    if (!password) {
+        return false;
+    }
+
     return password.length >= userConfig.minPasswordLength;
 }
 

@@ -19,7 +19,7 @@ var LoginController = require('../controller/loginController.js');
  * @param The request function that should be decorated.
  * @return The decorated request function. Use for API request exports.
  */
-function requiredLoggedIn(requestFunc) {
+function requiresLoggedIn(requestFunc) {
     return function(req, res) {
         // Get the session ID from the user.
         var sessionID = req.session.sessionID;
@@ -35,7 +35,7 @@ function requiredLoggedIn(requestFunc) {
         LoginController.getUser(sessionID)
             .then((user) => {
                 if (user) {
-                    return requestFunc(req, 
+                    return requestFunc(req, res, user);
                 } else {
                     res.status(401).json({message: 'not logged in'});
                 }
@@ -46,4 +46,4 @@ function requiredLoggedIn(requestFunc) {
     };
 }
 
-module.exports = requireLoggedIn;
+module.exports = requiresLoggedIn;

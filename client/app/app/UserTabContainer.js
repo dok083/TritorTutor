@@ -3,6 +3,7 @@ import React from 'react'
 import { NavDropdown, MenuItem, NavItem, Nav } from 'react-bootstrap'
 import { IndexLinkContainer } from 'react-router-bootstrap'
 import { browserHistory, Link } from 'react-router'
+import Img from 'react-image-fallback'
 
 import LogInModal from '../login/LogInModal'
 import SignUpModal from '../login/SignUpModal'
@@ -90,7 +91,9 @@ class UserTabContainer extends React.Component {
                                    onHide={this.hideSignUpModal.bind(this)} />
 
     if (this.state.user) {
-      var profilePic = <img width={24} height={24} src={'/profiles/' + this.state.user.userID + '.jpg'} />;
+      var profilePic = <Img width={24} height={24}
+                            src={'/profiles/' + this.state.user.userID + '.jpg'}
+                            fallbackImage='/profiles/default.jpg' />;
       var displayName = <span>{profilePic} {this.state.user.username}</span>
 
       userOptions = (

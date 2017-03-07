@@ -11,7 +11,9 @@ var LoginController = require(controller + 'loginController.js');
 var AccountController = require(controller + 'accountController.js');
 var VerificationController = require(controller + 'verificationController.js');
 var UserFormValidator = require(controller + 'userFormValidator.js');
-var requireLogin = require('../userUtils.js');
+
+// Decorator that forces the user to be logged in.
+var requiresLoggedIn = require('../userUtils.js');
 
 /**
  * Retrieves the user that is currently logged in.
@@ -56,16 +58,16 @@ function createUser(req, res) {
             // Set up the verification code for the user.
             VerificationController.begin(user);
 
-            res.json({id: user.userID});
+            res.json({user: user});
         })
         .catch((error) => {
-            res.status(500).json({message: error});
+            res.status(500).json({message: JSON.stringify(error)});
         });
 }
 
 module.exports = {
     '/': {
-        get: requireLogin(getUser),
+        get: requiresLoggedIn(getUser),
         post: createUser
     }
 };
