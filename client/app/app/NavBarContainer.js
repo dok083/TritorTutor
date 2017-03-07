@@ -4,7 +4,7 @@ import NavBar from './NavBar'
 
 class NavBarContainer extends React.Component {
   render() {
-      return <NavBar />
+      return <NavBar user={this.props.user} onGetUser={this.props.onGetUser} />
   }
 }
 
