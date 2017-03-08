@@ -46,6 +46,16 @@ class ProfileSettings extends React.Component {
     this.setState({description: e.target.value});
   }
 
+  onImageChange(e) {
+    var reader = new FileReader();
+
+    reader.addEventListener('load', () => {
+      this.setState({image: reader.result});
+    }, false);
+
+    reader.readAsDataURL(e.target.value);
+  }
+
   save() {
     var changes = {};
 
@@ -124,6 +134,7 @@ class ProfileSettings extends React.Component {
             <p>
             <ProfilePic width={256} height={256} user={user.userID} />
             <br />
+            <input type='file' onChange={this.onImageChange.bind(this)} />
             <Button>Upload</Button>
             </p>
           </FormGroup>
