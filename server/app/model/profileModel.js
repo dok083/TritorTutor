@@ -57,7 +57,7 @@ ProfileModel.get = function(userID, fields) {
  * @return A promise that is called after the profile has been updated.
  */
 ProfileModel.update = function(userID, values) {
-    return db.update('tritor_profile', values, 'userID=' + userID, 1);
+    return db.update('tritor_users', values, 'userID=' + userID, 1);
 }
 
 /**
