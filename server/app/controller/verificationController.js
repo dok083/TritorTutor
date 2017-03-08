@@ -1,5 +1,18 @@
 "use strict"
 
+// http://stackoverflow.com/questions/18405736/is-there-a-c-sharp-string-format-equivalent-in-javascript
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
+
 /**
  * The VerificationController is responsible for the creation of verification
  * codes, sending of verification codes, and verification of users.
@@ -7,6 +20,7 @@
 
 var VerificationModel = require('../model/verificationModel.js');
 var EmailModel = require('../model/emailModel.js');
+var config = require('../../config/user.json');
 
 var VerificationController = {}
 
@@ -43,8 +57,7 @@ VerificationController.generate = function() {
  * @return A promise that is called after the code has been sent.
  */
 VerificationController.send = function(email, code) {
-    var message = '<h1>Welcome to Tritor!</h1>' +
-                   '<p>Here is your verification code: ' + code + '</p>';
+    var message = config.verifyEmail.format(code);
 
     return EmailModel.send(email, 'Tritor Account Verification', message);
 }
@@ -63,6 +76,16 @@ VerificationController.begin = function(user) {
 
     // Notify the user of the code.
     return VerificationController.send(user.email, code);
+}
+
+/**
+ * Checks whether or not the given user is a verified user.
+ *
+ * @param user The user that will be checked.
+ * @return A promise that contains the verified (boolean) status.
+ */
+VerificationController.check = function(user) {
+    return VerificationModel.get(user.userID);
 }
 
 module.exports = VerificationController;

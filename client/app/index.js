@@ -24,6 +24,8 @@ import MessageView from './message/MessageView'
 
 import History from './history/History'
 
+import Verify from './verify/Verify'
+
 render((
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path='/' component={App}>
@@ -44,6 +46,7 @@ render((
         <Route path='tutoring' component={TutorSettings} />
       </Route>
     </Route>
+    <Route path='verify/:code' component={Verify} />
     <Route path='*' component={App}>
       <IndexRoute component={NotFound} />
     </Route>

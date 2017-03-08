@@ -7,6 +7,7 @@
 var controller = '../../controller/';
 
 var LoginController = require(controller + 'loginController.js');
+var VerificationController = require(controller + 'verificationController.js');
 var UserFormValidator = require(controller + 'userFormValidator.js');
 
 /**
@@ -35,7 +36,11 @@ function login(req, res) {
                 // Get the user that is now logged in.
                 LoginController.getUser(sessionID)
                     .then((user) => {
-                        res.json(user);
+                        VerificationController.check(user)
+                            .then((verified) => {
+                                user.verified = verified;
+                                res.json(user);
+                            });
                     })
                     .catch((error) => {
                         res.status(401).json({message: 'user get error (' + error + ')'});

@@ -58,6 +58,9 @@ function createUser(req, res) {
             // Set up the verification code for the user.
             VerificationController.begin(user);
 
+            // Default verified to false.
+            user.verified = false;
+
             res.json({user: user});
         })
         .catch((error) => {
