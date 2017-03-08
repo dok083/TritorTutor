@@ -13,6 +13,7 @@
     "bcrypt": "^1.0.2",
     "body-parser": "^1.16.0",
     "cookie-session": "^2.0.0-alpha.2",
+    "escape-html": "^1.0.3",
     "express": "^4.14.0",
     "mysql": "^2.13.0",
     "nodemailer": "^0.7.1",

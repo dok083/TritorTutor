@@ -34,7 +34,7 @@ Action.prototype.getData = function()
 
 Action.prototype.dispatch = function()
 {
-    require('./dispatch.js').onActionDispatched( this );
+    require('./Dispatch.js').onActionDispatched( this );
 }
 
 module.exports = Action;

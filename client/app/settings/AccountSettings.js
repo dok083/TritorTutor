@@ -5,7 +5,7 @@ import { Link, browserHistory } from 'react-router'
 class AccountSettings extends React.Component {
 
   eventHandle() {
-    confirm('Are you sure to deactivate your account?');
+    confirm('Are you sure you want to deactivate your account?');
     browserHistory.push('/');
   }
 
@@ -24,7 +24,7 @@ class AccountSettings extends React.Component {
     </Panel>
 
 
-    <Panel header="Deactive Account">
+    <Panel header="Deactivate Account">
       <Button vertical block bsStyle ="danger" onClick={this.eventHandle}> DEACTIVATE ACCOUNT</Button>
     </Panel>
     </div>

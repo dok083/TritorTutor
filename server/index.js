@@ -33,4 +33,9 @@ require('./app/loadRoutes.js')(app);
 // Listen on the desired port.
 app.listen(serverConfig.port);
 
+// Set up file uploading for profile pictures.
+var formidable = require('express-formidable');
+
+app.use(formidable);
+
 console.log("Tritor API server started on port " + serverConfig.port);

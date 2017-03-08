@@ -29,13 +29,14 @@ AccountModel.getByEmail = function(email) {
     var conditions = 'email=' + email;
 
     // Find a user from the given e-mail.
-    return db.select('tritor_users', ['userID', 'username'], conditions, 1)
+    return db.select('tritor_users', ['userID', 'username', 'description'], conditions, 1)
         .then((results) => {
             if (results && results.length > 0) {
                 return {
                     userID: results[0].userID,
                     email: email,
-                    username: results[0].username
+                    username: results[0].username,
+                    description: results[0].description || ''
                 };
             }
 
@@ -59,13 +60,14 @@ AccountModel.getByID = function(userID) {
     // Only find users with the matching ID.
     var condition = 'userID = ' + userID;
 
-    return db.select('tritor_users', ['email', 'username'], condition, 1)
+    return db.select('tritor_users', ['email', 'username', 'description'], condition, 1)
         .then((results) => {
             if (results && results.length > 0) {
                 return {
                     userID: userID,
                     email: results[0].email,
-                    username: results[0].username
+                    username: results[0].username,
+                    description: results[0].description || ''
                 };
             }
 
@@ -110,9 +112,10 @@ AccountModel.create = function(email, username, password) {
                     password: encrypted_password,
                 }).then((results) => {
                     return {
-                    userID: results.insertId,
-                    email: email,
-                    username: username
+                        userID: results.insertId,
+                        email: email,
+                        username: username,
+                        description: 'I am a new user!'
                     };
                 }));
             });
@@ -137,7 +140,7 @@ AccountModel.getByCredentials = function(email, password) {
     var conditions = 'email=' + email;  
     
     // retrieve encrypted password from db
-    return db.select('tritor_users', ['userID', 'password', 'username'], conditions, 1)
+    return db.select('tritor_users', ['userID', 'password', 'username', 'description'], conditions, 1)
         .then((results) => {
             if (results && results.length > 0) {
                 return new Promise(function(resolve, reject) {
@@ -154,7 +157,8 @@ AccountModel.getByCredentials = function(email, password) {
                             resolve({
                                 userID: results[0].userID,
                                 email: email,
-                                username: results[0].username
+                                username: results[0].username,
+                                description: results[0].description || ''
                             });
                         } else {
                             resolve(null);
