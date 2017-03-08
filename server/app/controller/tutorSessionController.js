@@ -81,7 +81,9 @@ TutorSessionController.get = function(tutorID, studentID, classID, status)  {
  * @return Promise containing nothing.
  */
 TutorSessionController.remove = function(tutorID, studentID, classID) {
-	return TutorSessionModel.delete(tutorID, studentID, classID);
+	var data = {status: -1};
+
+	return TutorSessionModel.update(tutorID, studentID, classID, data);
 }
 
 module.exports = TutorSessionController;

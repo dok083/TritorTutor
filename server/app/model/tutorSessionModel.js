@@ -15,7 +15,7 @@ var TutorSessionModel = {};
  * @param tutorID The userID of the tutor.
  * @param studentID The userID of the student.
  * @param classID The course of the tutoring session.
- * @param status The session is either pending, ongoing, or complete
+ * @param status The session is either pending, rejected, ongoing, or complete
  * @return Promise containing nothing.
  */
 TutorSessionModel.create = function(tutorID, studentID, classID, status) {
@@ -55,20 +55,6 @@ TutorSessionModel.get = function(conditions) {
 	var columns = null;
 
 	return db.select('tritor_tutor_sessions', columns, conditions);
-}
-
-/**
- * Removes a tutoring session when it is rejected by deleting it from the 
- * database.
- * 
- * @param tutorID The userID of the tutor.
- * @param studentID The userID of the student.
- * @param classID The course of the tutoring session.
- * @return Promise containing nothing.
- */
-TutorSessionModel.delete = function(tutorID, studentID, classID) {
-	return db.query("DELETE FROM tritor_tutor_sessions \ 
-		WHERE tutorID=? AND studentID=? AND classID=? LIMIT 1", [tutorID, studentID, classID]);
 }
 
 module.exports = TutorSessionModel;
