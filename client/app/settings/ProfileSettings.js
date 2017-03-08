@@ -12,7 +12,8 @@ class ProfileSettings extends React.Component {
     super(props);
 
     this.state = {
-      user: {userID: 0, username: 'Gary Gillespie'},
+      user: null,
+      image: '',
       username: '',
       description: '',
       error: '',
@@ -47,13 +48,21 @@ class ProfileSettings extends React.Component {
   }
 
   onImageChange(e) {
+    if (e.target.files.length == 0) {
+      return;
+    }
+
+    // Save the file for when we upload.
+    this.setState({imageFile: e.target.files[0]});
+
+    // Get the image data for the preview.
     var reader = new FileReader();
 
     reader.addEventListener('load', () => {
       this.setState({image: reader.result});
     }, false);
 
-    reader.readAsDataURL(e.target.value);
+    reader.readAsDataURL(e.target.files[0]);
   }
 
   save() {
@@ -107,6 +116,19 @@ class ProfileSettings extends React.Component {
     }
   }
 
+  upload() {
+    if (this.state.image.length > 0) {
+      // Upload the picture to the server.
+      axios.put('/api/settings/profile', {data: this.state.image})
+        .then(() => {
+          window.location.reload(true);
+        })
+        .catch((error) => {
+          this.setState({error: 'Your profile picture could not be uploaded. Please make sure it is not too large.'});
+        })
+    }
+  }
+
   render() {
     var user = this.state.user;
 
@@ -124,6 +146,15 @@ class ProfileSettings extends React.Component {
       error = <Alert bsStyle='danger'>{this.state.error}</Alert>;
     }
 
+    // Get the image for the profile pic preview.
+    var profilePicPreview;
+
+    if (this.state.image) {
+        profilePicPreview = <img src={this.state.image} width={256} height={256} />
+    } else {
+        profilePicPreview = <ProfilePic width={256} height={256} user={user.userID} />;
+    }
+
     return (
       <div>
         {error}
@@ -132,10 +163,10 @@ class ProfileSettings extends React.Component {
           <FormGroup>
             <ControlLabel>Profile Picture</ControlLabel>
             <p>
-            <ProfilePic width={256} height={256} user={user.userID} />
+            {profilePicPreview}
             <br />
-            <input type='file' onChange={this.onImageChange.bind(this)} />
-            <Button>Upload</Button>
+            <input type='file' onChange={this.onImageChange.bind(this)} accept='image/jpeg' />
+            <Button onClick={this.upload.bind(this)}>Upload</Button>
             </p>
           </FormGroup>
 
