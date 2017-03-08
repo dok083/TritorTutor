@@ -16,12 +16,29 @@ var fs = require('fs');
 /**
  * Called when a user wants to change a group of profile settings.
  */
-function changeProfileSettings(req, res, user) {
+function changeSettings(req, res, user) {
     var changes = req.body;
-    console.log(changes);
+    var whitelist = {
+        username: true,
+        description: true,
+        password: true
+    };
+
+    var hasChanges = false;
+
+    // Make sure we do not include unwanted changes.
+    for (const key of Object.keys(changes)) {
+        if (!whitelist[key]) {
+            res.status(400).json({message: 'invalid change for ' + key});
+
+            return;
+        }
+
+        hasChanges = true;
+    }
 
     // Make sure there are actually changes.
-    if (Object.keys(changes) == 0) {
+    if (!hasChanges) {
         res.json({message: 'okay'});
 
         return;
@@ -39,6 +56,7 @@ function changeProfileSettings(req, res, user) {
             res.json({message: 'done'});
         })
         .catch((error) => {
+            console.log('this one?');
             res.status(400).json({message: error.toString()});
         });
 }
@@ -79,8 +97,8 @@ function uploadProfilePic(req, res, user) {
 }
 
 module.exports = {
-    '/profile': {
-        post: requiresLoggedIn(changeProfileSettings),
+    '/': {
+        post: requiresLoggedIn(changeSettings),
         put: requiresLoggedIn(uploadProfilePic)
-    },
+    }
 }
