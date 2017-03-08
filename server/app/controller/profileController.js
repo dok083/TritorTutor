@@ -5,6 +5,7 @@
  */
 
 var ProfileModel = require('../model/profileModel.js');
+var AccountModel = require('../model/accountModel.js');
 
 var ProfileController = {}
 
@@ -49,8 +50,25 @@ ProfileController.update = function(userID, values) {
         }
     }
 
+    var promise = new Promise(function(resolve, reject) {
+        // Hash password if we need to change it.
+        if (values.password) {
+            AccountModel.getHashedPassword(values.password)
+                .then((hashedPassword) => {
+                    newValues.password = hashedPassword;
+                    resolve();
+                });
+
+            return;
+        }
+
+        resolve();
+    });
+
     // Update the profile.
-    return ProfileModel.update(userID, newValues);
+    return promise.then(() => {
+        return ProfileModel.update(userID, newValues);
+    });
 }
 
 /**

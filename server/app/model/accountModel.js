@@ -29,13 +29,14 @@ AccountModel.getByEmail = function(email) {
     var conditions = 'email=' + email;
 
     // Find a user from the given e-mail.
-    return db.select('tritor_users', ['userID', 'username'], conditions, 1)
+    return db.select('tritor_users', ['userID', 'username', 'description'], conditions, 1)
         .then((results) => {
             if (results && results.length > 0) {
                 return {
                     userID: results[0].userID,
                     email: email,
-                    username: results[0].username
+                    username: results[0].username,
+                    description: results[0].description || ''
                 };
             }
 
@@ -59,13 +60,14 @@ AccountModel.getByID = function(userID) {
     // Only find users with the matching ID.
     var condition = 'userID = ' + userID;
 
-    return db.select('tritor_users', ['email', 'username'], condition, 1)
+    return db.select('tritor_users', ['email', 'username', 'description'], condition, 1)
         .then((results) => {
             if (results && results.length > 0) {
                 return {
                     userID: userID,
                     email: results[0].email,
-                    username: results[0].username
+                    username: results[0].username,
+                    description: results[0].description || ''
                 };
             }
 
@@ -74,16 +76,14 @@ AccountModel.getByID = function(userID) {
 }
 
 /**
- * Creates a user by inserting them into the database.
+ * Hashes a plaintext password using bcrypt for storage on the database.
  *
- * @param email The e-mail address of the user.
- * @param username The desired display name for the user.
- * @param password The desired password for the user.
- * @return A promise that contains the user after inserting is done.
+ * @param password The password that needs to be hashed.
+ * @return A promise that contains the hashed password.
  */
-AccountModel.create = function(email, username, password) {
+AccountModel.getHashedPassword = function(password) {
     return new Promise(function(resolve, reject) {
-        var rounds = 10;
+        const rounds = 10;
         
         //randomly generate a salt for the input password
         bcrypt.genSalt(rounds, function(err_salt, salt) {
@@ -96,28 +96,43 @@ AccountModel.create = function(email, username, password) {
             //if there is no error during salt generation, hash the password
             //  progress parameter neglected
             bcrypt.hash(password, salt, function(err_hash, encrypted_password) {
-                if(err_hash) {
+                if (err_hash) {
                     reject(err_hash);
 
                     return;
                 }
 
-                //otherwise return a promise that create an account with encrypted
-                //password
-                resolve(db.insert('tritor_users', {
-                    email: email.toLowerCase(),
-                    username: username,
-                    password: encrypted_password,
-                }).then((results) => {
-                    return {
-                    userID: results.insertId,
-                    email: email,
-                    username: username
-                    };
-                }));
+                resolve(encrypted_password);
             });
         });
     });
+}
+
+/**
+ * Creates a user by inserting them into the database.
+ *
+ * @param email The e-mail address of the user.
+ * @param username The desired display name for the user.
+ * @param password The desired password for the user.
+ * @return A promise that contains the user after inserting is done.
+ */
+AccountModel.create = function(email, username, password) {
+    AccountModel.getHashedPassword(password)
+        .then((encrypted_password) => {
+            return db.insert('tritor_users', {
+                email: email.toLowerCase(),
+                username: username,
+                password: encrypted_password,
+            });
+        })
+        .then((results) => {
+            return {
+                userID: results.insertId,
+                email: email,
+                username: username,
+                description: 'I am a new user!'
+            };
+        });
 }
 
 /**
@@ -137,7 +152,7 @@ AccountModel.getByCredentials = function(email, password) {
     var conditions = 'email=' + email;  
     
     // retrieve encrypted password from db
-    return db.select('tritor_users', ['userID', 'password', 'username'], conditions, 1)
+    return db.select('tritor_users', ['userID', 'password', 'username', 'description'], conditions, 1)
         .then((results) => {
             if (results && results.length > 0) {
                 return new Promise(function(resolve, reject) {
@@ -154,7 +169,8 @@ AccountModel.getByCredentials = function(email, password) {
                             resolve({
                                 userID: results[0].userID,
                                 email: email,
-                                username: results[0].username
+                                username: results[0].username,
+                                description: results[0].description || ''
                             });
                         } else {
                             resolve(null);
