@@ -26,6 +26,8 @@ import History from './history/History'
 
 import Verify from './verify/Verify'
 
+import ResetPassword from './reset-password/ResetPassword'
+
 render((
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path='/' component={App}>
@@ -45,6 +47,7 @@ render((
         <Route path='account' component={AccountSettings} />
         <Route path='tutoring' component={TutorSettings} />
       </Route>
+      <Route path='reset-password/:code' component={ResetPassword} />
     </Route>
     <Route path='verify/:code' component={Verify} />
     <Route path='*' component={App}>
