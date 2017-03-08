@@ -10,16 +10,13 @@ var CourseController = {};
 
 
 /**
- * Get information of a certain course
+ * Get information for a certain course for coursepage display
  *
  * @param classID: The id of a certain course, e.g. CSE110
- * 
- *
- *
+ * @return return the information get for a specific classID
  */
 
 CourseController.displayPage = function(classID) {
-	classID.
+	//return the couresInfo get by using the classID
+	return CourseModel.getCourse(classID);
 }
-
-CourseController.

@@ -16,24 +16,30 @@ var CourseModel = {};
  * @param description: Description of the course
  * @param department: Department of the course
  * @param bool_upper: True if the course is in upper-division
+ * @return return: have database insert a new class entry on tritor_classlist
  */
-CourseModel.create = function(classID, description, department, bool_upper, tutorCounts) {
+CourseModel.create = function(classID, description, department, bool_upper) {
+	//return 
 	return db.insert('tritor_classlist', {
 		classID: classID,
 		description: description,
 		department: department,
 		upperDivision: bool_upper,
-		tutorCounts: tutorCounts
+		tutorCounts: 0 
 	});
 }
 
 
 /**
  * Delete a certain course from database
+ * @param classID The ID of a specific course
+ * @return return A promise that runs after the course has been deleted
  */
 CourseModel.delete = function(classID) {
-	//TODO
+	return db.query('DELETE FROM tritor_classList WHERE classID = ? LIMIT 1', [classID]);
 }
+
+
 
 /**
  * Get course information from database
@@ -42,7 +48,7 @@ CourseModel.delete = function(classID) {
  *
  */
 CourseModel.getCourse = function(classID) {
-	//TODO	
+		
 }
 
 /**
@@ -62,5 +68,7 @@ CourseModel.getByTutorCounts = function(classID) {
 CourseModel.getByDepartment = function(department) {
 	//TODO
 }
+
+
 
 module.exports = CourseModel;
