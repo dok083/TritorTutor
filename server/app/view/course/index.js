@@ -51,7 +51,7 @@ function getTutorListing(req, res) {
 }
 
 module.exports = {
-	'/:classID': {
+	'/view/:classID': {
 		get: getCourseInfo},
 	'/:classID/tutorListing': {
  		get: getTutorListing},
