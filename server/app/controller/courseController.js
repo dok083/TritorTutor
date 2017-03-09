@@ -21,15 +21,6 @@ CourseController.getCourseInfo = function(classID) {
 }
 
 /**
- *	Update TutorCounts for a certain course
- *	@param classID the class to be updated
- *	@return return a promise to update the counts
- */
-CourseController.updateTutorCounts = function(classID) {
-	return CourseModel.updateCounts(classID);
-}
-
-/**
  * Get top10 popular courses of all time
  * @return return a promise to retrieve top 10 popular courses
  */
