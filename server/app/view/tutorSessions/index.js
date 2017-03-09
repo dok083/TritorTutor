@@ -3,6 +3,10 @@
 var TutorSessionController = require('../../controller/tutorSessionController.js');
 var requiresLoggedIn = require('../userUtils.js');
 
+/**
+ * Get the all sessions involving the user
+ *
+ */
 function getHistory(req, res, user) {
     if(!user.verified) {
         return res.status(400).json({message: 'unverififed user'});
@@ -15,6 +19,13 @@ function getHistory(req, res, user) {
 
 }
 
+/**
+ * Update the status of a session. 
+ * 0 - pending
+ * 1 - ongoing
+ * 2 - complete
+ * -1 - rejected
+ */
 function updateSession(req, res, user) {
     if(!user.verified) {
         return res.status(400).json({message: 'unverififed user'});
@@ -29,6 +40,9 @@ function updateSession(req, res, user) {
         .then();
 }
 
+/**
+ * Create a tutoring session.
+ */
 function createSession(req, res, user) {   
     if(!user.verified) {
         return res.status(400).json({message: 'unverififed user'});
@@ -42,6 +56,9 @@ function createSession(req, res, user) {
         .then();
 }
 
+/**
+ * Get a specific session.
+ */
 function getSession(req, res, user) {
     if(!user.verified) {
         return res.status(400).json({message: 'unverififed user'});
