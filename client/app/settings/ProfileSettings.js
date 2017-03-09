@@ -82,7 +82,7 @@ class ProfileSettings extends React.Component {
     if (Object.keys(changes).length > 0) {
       this.setState({error: '', saved: false, saving: true});
 
-      axios.post('/api/settings/profile', changes)
+      axios.post('/api/settings', changes)
         .then(() => {
             var user = this.state.user;
 
@@ -119,7 +119,7 @@ class ProfileSettings extends React.Component {
   upload() {
     if (this.state.image.length > 0) {
       // Upload the picture to the server.
-      axios.put('/api/settings/profile', {data: this.state.image})
+      axios.put('/api/settings', {data: this.state.image})
         .then(() => {
           window.location.reload(true);
         })

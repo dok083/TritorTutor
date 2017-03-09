@@ -17,6 +17,21 @@ class SignUpModal extends React.Component {
     };
   }
 
+  onHide() {
+    this.state = {
+      email: '',
+      username: '',
+      password: '',
+      passwordConfirm: '',
+      busy: false,
+      error: ''
+    };
+
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
+  }
+
   signUp(e) {
     e.preventDefault();
 
@@ -139,7 +154,7 @@ class SignUpModal extends React.Component {
 
     return (
       <div style={{display: 'inline'}}>
-        <Modal show={this.props.show} onHide={this.props.onHide}>
+        <Modal show={this.props.show} onHide={this.onHide.bind(this)}>
           <Modal.Header closeButton>
               <Modal.Title>Sign Up</Modal.Title>
           </Modal.Header>

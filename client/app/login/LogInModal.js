@@ -3,14 +3,12 @@ import React from 'react'
 import { Modal, Button, FormControl, FormGroup, ControlLabel, Glyphicon, Alert } from 'react-bootstrap'
 import axios from 'axios'
 
-const gary = {userID: 0, username: 'Gary Gillespie'};
-
 class LogInModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: '',         // The current username entered.
+      email: '',            // The current email entered.
       password: '',         // The current password entered.
       busy: false,          // Whether or not this component is waiting for data.
       error: '',            // The error message that should be displayed.
@@ -20,6 +18,10 @@ class LogInModal extends React.Component {
 
   login(e) {
     e.preventDefault();
+
+    if (!this.isValidEmail()) {
+      return;
+    }
 
     if (this.state.forgotPassword) {
       this.resetPassword();
@@ -54,6 +56,20 @@ class LogInModal extends React.Component {
     });
   }
 
+  onHide() {
+    this.setState({
+      email: '',
+      password: '',
+      busy: false,
+      error: '',
+      forgotPassword: false
+    });
+
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
+  }
+
   showError(message) {
     this.setState({error: message});
   }
@@ -66,9 +82,39 @@ class LogInModal extends React.Component {
     this.setState({password: e.target.value});
   }
 
+  isValidEmail() {
+    // Regular expression for matching e-mail addresses.
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+    return re.test(this.state.email);
+  }
+
   resetPassword() {
-    this.hideForgotPassword();
-    alert('An e-mail has been sent containing a password reset link.');
+    if (!this.isValidEmail()) {
+      return;
+    }
+
+    this.setState({busy: true});
+
+    axios.post('/api/reset-password', {email: this.state.email})
+      .then(() => {
+        this.setState({busy: false});
+        this.hideForgotPassword();
+
+        alert('An e-mail has been sent containing a password reset link.');
+      })
+      .catch((error) => {
+        var message = error.response && error.response.data;
+
+        if (message.message) {
+          message = message.message;
+        } else {
+          message = error.toString();
+        }
+
+        this.showError(message);
+        this.setState({busy: false});
+      });
   }
 
   showForgotPassword() {
@@ -99,7 +145,8 @@ class LogInModal extends React.Component {
           <ControlLabel>Password</ControlLabel>
           <FormControl type="password"
                        placeholder="Password"
-                       onChange={this.handlePasswordChange.bind(this)} />
+                       onChange={this.handlePasswordChange.bind(this)}
+                       required />
         </FormGroup>,
         <a onClick={this.showForgotPassword.bind(this)} key="forgot">Forgot password?</a>
       ];
@@ -111,7 +158,7 @@ class LogInModal extends React.Component {
 
     return (
       <div style={{display: 'inline'}}>
-        <Modal show={this.props.show} onHide={this.props.onHide}>
+        <Modal show={this.props.show} onHide={this.onHide.bind(this)}>
           <Modal.Header closeButton>
               <Modal.Title>Login</Modal.Title>
           </Modal.Header>
@@ -122,7 +169,8 @@ class LogInModal extends React.Component {
                   <ControlLabel>Email Address</ControlLabel>
                   <FormControl type="email"
                                placeholder="triton@ucsd.edu"
-                               onChange={this.handleEmailChange.bind(this)} />
+                               onChange={this.handleEmailChange.bind(this)}
+                               required />
                 </FormGroup>
 
                 {password}

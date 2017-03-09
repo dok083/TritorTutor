@@ -23,7 +23,7 @@ var VerificationController = require(controller + 'verificationController.js');
  * @param requiresVerified Whether or not the user must also be verified.
  * @return The decorated request function. Use for API request exports.
  */
-function requiresLoggedIn(requestFunc, requiresVerified) {
+function requiresLoggedIn(requestFunc) {
     return function(req, res) {
         // Get the session ID from the user.
         var sessionID = req.session.sessionID;

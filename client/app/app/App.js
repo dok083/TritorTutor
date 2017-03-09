@@ -43,7 +43,6 @@ class App extends React.Component {
 
   render() {
     var contents;
-    console.log(this.state.user);
 
     if (this.state.loading) {
       const style = {
