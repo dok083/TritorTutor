@@ -61,7 +61,7 @@ class App extends React.Component {
       );
     } else {
       contents = (
-        <div>
+        <div key={this.state.user ? this.state.user.userID : 0}>
           <VerificationAlertContainer user={this.state.user} />
           <NavBarContainer user={this.state.user} onGetUser={this.onGetUser.bind(this)} />
           {this.props.children}

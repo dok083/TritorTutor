@@ -1,57 +1,74 @@
 import React from 'react'
 
-import { Media, Grid } from 'react-bootstrap'
+import { Media, Grid, Alert, FormControl, FormGroup, Modal, Button, Glyphicon } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
+
 import MessageReply from './MessageReply'
+import ProfilePic from '../profile/ProfilePic'
 
 class MessageView extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      user: {userID: 0, username: 'Gary Gillespie'},
-      sender: {userID: 3, username: 'Rick Ord'},
-      subject: 'When are you available?',
-      message: 'Hey Gary! Thanks for accepting my tutor request. When are you available for a tutoring session?'
+  delete() {
+    if (this.props.onDelete) {
+      this.props.onDelete(this.props.message);
     }
   }
 
   render() {
+    const message = this.props.message;
+    const areaStyle = {
+      resize: 'vertical'
+    };
+
     var reply;
+    var senderProfile;
 
     // Only allow replying to non-automated messages.
-    if (this.state.sender.userID > 0) {
+    if (message.sender) {
       reply = (
         <Media>
           <Media.Left>
-            <img width={64} height={64} src={'/profiles/' + this.state.user.userID + '.jpg'} />
+            <ProfilePic user={this.props.user.userID} width={64} height={64} />
           </Media.Left>
           <Media.Body>
-            <MessageReply recipient={this.state.sender.userID} subject={this.state.subject} />
+            <FormGroup>
+              <FormControl style={areaStyle} componentClass='textarea' placeholder='Reply to the message' />
+            </FormGroup>
           </Media.Body>
         </Media>
+      );
+
+      senderProfile = (
+        <Media.Left>
+          <Link to={'/profile/' + message.sender.userID}>
+            <ProfilePic user={message.sender.userID} width={64} height={64} />
+            {message.sender.username}
+          </Link>
+        </Media.Left>
       );
     }
 
     return (
-      <div id='container'>
-        <Grid>
-        <Media>
-          <Media.Left>
-            <Link to={'/profile/' + this.state.sender.userID}>
-              <img width={64} height={64} src={'/profiles/' + this.state.sender.userID + '.jpg'} />
-              Rick Ord
-            </Link>
-          </Media.Left>
-          <Media.Body>
-            <Media.Heading>{this.state.subject}</Media.Heading>
-            <p>{this.state.message}</p>
-          </Media.Body>
-        </Media>
-        {reply}
-        </Grid>
-      </div>
+      <Modal show={true} onHide={this.props.onHide}>
+        <Modal.Header closeButton>
+          <Modal.Title>{message.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Media>
+            {senderProfile}
+            <Media.Body>
+              <p>{message.content}</p>
+            </Media.Body>
+          </Media>
+          {reply}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button bsStyle='danger' onClick={this.delete.bind(this)}>
+            <Glyphicon glyph='trash' />
+          </Button>
+          <Button bsStyle='primary' className='pull-right'>Reply</Button>
+        </Modal.Footer>
+      </Modal>
     );
   }
 }
