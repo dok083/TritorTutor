@@ -23,7 +23,6 @@ function getReviews(req, res) {
         });
 }
 
-console.log('hello')
 module.exports = {
     '/:userID': {
         get: getReviews

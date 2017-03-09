@@ -8,6 +8,7 @@
 var db = require('./database.js');
 
 var TutorModel = {};
+
 /**
  * Creates a tutor listing by inserting it into the database.
  *
@@ -52,10 +53,14 @@ TutorModel.delete = function(course, userID) {
 TutorModel.get = function(course) {
 	// Return tutor listing attributes
 	var columns = ['tutorID', 'description', 'avgRating', 'price', 'negotiable'];
+	
 	// Only find matching listings
 	var conditions = 'classID=' + course;
 
-	return db.select('tritor_tutorlist', columns, conditions);
+	return db.select('tritor_tutorlist', columns, conditions)
+		.then((results) => {
+			results.classID = course; 
+		});
 }
 
 /**

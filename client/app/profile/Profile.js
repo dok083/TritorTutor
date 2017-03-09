@@ -7,11 +7,14 @@ import ProfilePic from './ProfilePic'
 import ReviewContainer from './ReviewContainer'
 import RequestContainer from './RequestContainer'
 
+import Dispatch from '../Dispatch.js'
+
 class Profile extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = { 
+      localUser: null,
       showModal: false,
       user: null,
       courses: []
@@ -23,6 +26,20 @@ class Profile extends React.Component {
    * profile corresponding to the given user ID.
    */
   componentWillMount() {
+    // Get who we are currently logged in as.
+    Dispatch.addListener('getUserInfo', (data) => {
+      if (data.component == this) {
+        this.setState({
+          localUser: data.user
+        });
+      }
+    });
+
+    var action = Dispatch.createAction('requestUserInfo');
+    action.set('component', this);
+    action.dispatch();
+
+    // Get the user for the profile page.\
     var userID = parseInt(this.props.params.id);
 
     axios.get('/api/profile/' + userID)
@@ -66,7 +83,8 @@ class Profile extends React.Component {
     var options;
 
     // Eventually replace 0 with local user ID.
-    if (false) {
+    if (this.state.localUser && this.state.user &&
+        this.state.localUser.userID != this.state.user.userID) {
       options = (
         <Panel header="Options">
           <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>Request Tutoring</Button>
