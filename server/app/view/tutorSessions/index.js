@@ -34,12 +34,12 @@ function requestSession(req, res, user) {
     }
 
     var courseID = req.body.courseID;
-    var tutorID = req.params.id;
-    var studentID = req.params.id;
+    var tutorID = req.body.tutorID;
+    var studentID = req.body.id;
 
     // Check if there is a session that is active/pending from this user to
     // the tutor. If so, do not allow this request.
-    TutorSessionController.getBetween(tutorID, studentID, courseID)
+    TutorSessionController.getBetweenCourse(tutorID, studentID, courseID)
         .then((session)=> {
             if (session.status == 0 || session.status == 1) {
                 return res.status(400).json({message: 'pending session exists'});
@@ -67,24 +67,60 @@ function requestSession(req, res, user) {
  * Allows a user to give a response to a session request.
  */
 function requestSessionResponse(req, res, user) {
-    var courseID = req.body.courseID;
-    var studentID = req.params.id;
+    if (!user.verified) {
+        return res.status(400).json({message: 'unverififed user'});
+    }
+
+    var courseID = req.params.courseID;
+    var studentID = req.params.studentID;
+    var tutorID = req.params.id;
     var accept = req.params.accept;
 
     // Find a pending session with the studentID and courseID.
     // If one does not exist, then error.
-    // Otherwise, set the session state to active if accept is true or
-    // delete the request if false.
-    // Send a message to the student with the result of the response.
-    // Send a message to the tutor indicate the response.
+    TutorSessionController.getBetweenCourse(tutorID, studentID, courseID)
+        .then((session)=> {
+            if (session.status != 0) {
+                return res.status(400).json({message: 'pending session does not exist'});
+            }
+            else {
+                // Otherwise, set the session state to active if accept is true or
+                // delete the request if false.
+                // Send a message to the student with the result of the response.
+                // Send a message to the tutor indicate the response.
+                if (accept) {
+                    TutorSessionController.update(tutorID, studentID, courseID, 1)
+                        .then(()=> {
+                            var tutor = "Hey dood, It's me Tritor. You just accepted a request for tutoring."
+                            var student = "hey dood, It's me Tritor. Your request to " + user.username + " was accepted." 
+                            MessageController.send(0, studentID, user.username + ' accepted your request', student);
+                            MessageController.send(0, tutorID, 'You accepted a request', tutor);
+                        });
+                } 
+                else {
+                    TutorSessionController.remove(tutorID, studentID, courseID)
+                        .then(()=> {
+                            var tutor = "Hey dood, It's me Tritor. You just rejected a request for tutoring."
+                            var student = "hey dood, It's me Tritor. Your request to " + user.username + " was rejected." 
+                            MessageController.send(0, studentID, user.username + ' rejected your request', student);
+                            MessageController.send(0, tutorID, 'You rejected a request', tutor);
+                        });
+                }
+            }
+        });
 }
 
 /**
  * Ends a session from a given session ID.
  */
 function sessionFinish(req, res, user) {
-    var otherID = req.body.otherID;
-    var courseID = req.body.courseID;
+    if (!user.verified) {
+        return res.status(400).json({message: 'unverififed user'});
+    }
+
+    var userID = req.params.id;
+    var otherID = req.params.otherID;
+    var courseID = req.params.courseID;
 
     // Check if there is a session with the other user. Note that it does not
     // matter if the user is the tutor or student.
@@ -100,57 +136,30 @@ function sessionFinish(req, res, user) {
  * Returns all sessions between the current user and the desired user.
  */
 function getSessionsWith(req, res, user) {
-    const otherID = req.body.otherID;
+    if (!user.verified) {
+        return res.status(400).json({message: 'unverififed user'});
+    }
+
+    const userID = user.id;
+    const otherID = req.params.otherID;
 
     // Return all the sessions (does not matter if the user is tutor or student)
     // where the user corresponding to otherID is involved. Only include
     // either pending or active sessions.
-}
-
-
-/**
- * Update the status of a session. 
- * 0 - pending
- * 1 - ongoing
- * 2 - complete
- * -1 - rejected
- */
-function updateSession(req, res, user) {
-    if(!user.verified) {
-        return res.status(400).json({message: 'unverififed user'});
-    }
-
-    var tutorID = req.params.tutorID;
-    var studentID = req.params.studentID;
-    var classID = req.params.courseID;
-    var status = req.params.status;
-
-    TutorSessionController.update(tutorID, studentID, classID, status)
-        .then();
-}
-
-/**
- * Get a specific session.
- */
-function getSession(req, res, user) {
-    if(!user.verified) {
-        return res.status(400).json({message: 'unverififed user'});
-    }
-
-    var studentID = req.params.studentID;
-    var classID = req.params.courseID;
-    var status = req.params.status;
-
-    TutorSessionController.get(tutorID, studentID, classID)
+    TutorSessionController.getPair(userID, otherID)
+        .then((sessions)=> {
+            
+        });
 }
 
 module.exports = {
 	'/:id': {
 		get: requiresLoggedIn(getSessionsWith),
-        post: requiresLoggedIn(requestSession, true),
+        post: requiresLoggedIn(requestSession),
         put: requiresLoggedIn(requestSessionResponse)
 	},
 	'/': {
-        get: requiresLoggedIn(getHistory)
+        get: requiresLoggedIn(getHistory),
+        put: requiresLoggedIn(sessionFinish)
 	}
 }

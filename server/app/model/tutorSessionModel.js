@@ -141,4 +141,24 @@ TutorSessionModel.getBetween = function(studentID, tutorID, classID) {
 }
 
 
+/**
+ * Returns all tutoring sessions where the tutor corresponds to the given
+ * user ID.
+ *
+ * @param userID The user ID of the tutor.
+ * @return A promise containing a list of matching tutoring sessions.
+ */
+TutorSessionModel.getPair = function(userID, otherID) {
+    const fields = ['sessionID', 'studentID', 'tutorID', 'classID', 'status'];
+    const conditions = '(studentID='+ db.escape(userID) + 'AND tutorID=' + db.escape(otherID) 
+                        + ') OR (studentID=' + db.escape(otherID) + ' AND tutorID=' + db.escape(userID) + ')';
+    
+    return db.select('tritor_tutor_sessions', fields, conditions)
+        .then((results) => {
+            return results.map((session) => {
+                return session;
+            });            
+        });
+ }
+
 module.exports = TutorSessionModel;
