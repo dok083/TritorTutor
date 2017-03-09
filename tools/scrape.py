@@ -24,7 +24,7 @@ def fix_spaces(text):
 
     return text.strip()
 
-output = open(sys.argv[2] or "out.sql", "w")
+output = open(sys.argv[2] if len(sys.argv) > 2 else "out.sql", "w")
 
 # Outputs queries for inserting each course in a department to the database.
 def parse(department):
@@ -59,7 +59,7 @@ def parse(department):
         desc = MySQLdb.escape_string(desc)
 
         # Output the query for this course.
-        output.write("INSERT INTO tritor_courses (classID,courseName,description) VALUES ('{0}','{1}','{2}');".format(code, title, desc))
+        output.write("INSERT INTO tritor_courses (classID,className,description) VALUES ('{0}','{1}','{2}');".format(code, title, desc))
         output.write("\n")
 
 def main():
@@ -70,7 +70,7 @@ def main():
     subjects = json.load(data_file)
 
     for subject in subjects:
-        parse(subject["code"])
+        parse(subject["code"].strip())
 
     output.close()
 
