@@ -74,6 +74,17 @@ TutorSessionController.get = function(tutorID, studentID, classID, status)  {
 }
 
 /**
+ * Returns all the sessions between a student and a tutor.
+ *
+ * @param studentID The user ID for the student.
+ * @param tutorID The user ID for the tutor.
+ * @return A promise that contains the list of all sessions between the two.
+ */
+TutorSessionController.getBetween = function(studentID, tutorID) {
+	return TutorSessionModel.getBetween(studentID, tutorID);
+}
+
+/**
  * Get all sessions that have the passed in user
  * 
  * @param userID The userID of the user.

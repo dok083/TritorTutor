@@ -44,9 +44,27 @@ TutorController.remove = function(course, userID) {
 	return TutorModel.delete(course, userID);
 }
 
-TutorController.update = function(course, userID, avgRating, desc, price, nego) {
-	// TODO:data
-	return db.update(course, userID, data);
+TutorController.update = function(course, userID, data) {
+    // Get a clean value for the desired changes.
+    var changes = {};
+
+    if (data.avgRating) {
+        changes.avgRating = Math.min(Math.max(parseFloat(data.avgRating), 0.0), 5.0);
+    }
+
+    if (data.desc) {
+        changes.desc = data.desc.substr(0, 500);
+    }
+
+    if (data.price) {
+        changes.price = Math.max(Math.ceil(data.price), 0);
+    }
+
+    if (data.negotiable != undefined) {
+        changes.negotiable = data.negotiable ? true : false;
+    }
+
+	return TutorModel.update(course, userID, data);
 }
 
 module.exports = TutorController;
