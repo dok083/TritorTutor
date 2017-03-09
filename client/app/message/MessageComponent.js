@@ -4,8 +4,13 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Table, Thumbnail } from 'react-bootstrap'
 
 import ProfilePic from '../profile/ProfilePic'
+import MessageView from './MessageView'
 
 class MessageComponent extends React.Component {
+  view() {
+    this.props.onMessageView(this.props.message);
+  }
+
   render() {
     var message = this.props.message;
 
@@ -21,15 +26,13 @@ class MessageComponent extends React.Component {
     }
 
     return (
-      <LinkContainer to={'/message/view/' + message.id}>
-        <tr>
-          <td>
-            {profilePic}
-          </td>
-          <td>{username}</td>
-          <td>{message.title}</td>
-        </tr>
-      </LinkContainer>
+      <tr onClick={this.view.bind(this)} key={message.id}>
+        <td>
+          {profilePic}
+        </td>
+        <td>{username}</td>
+        <td>{message.title}</td>
+      </tr>
     );
   }
 }

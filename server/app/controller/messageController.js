@@ -41,14 +41,19 @@ MessageController.getByUID = function(userID) {
     return new Promise(function(resolve, reject) {
         MessageModel.readUser(userID).then(
         (results) => {
+            // Do nothing if there are no messages to handle.
+            if (results.length == 0) {
+                resolve([]);
+
+                return;
+            }
+
             var messages = [];
+            var done = 0;
 
             // Load the sender for each message.
             for (var i = 0; i < results.length; i++) {
                 const result = results[i];
-
-                // Store because promise runs later, so i is wrong.
-                const index = i;
 
                 ProfileModel.get(result.sender)
                     .then((sender) => {
@@ -61,8 +66,10 @@ MessageController.getByUID = function(userID) {
                             content: result.content
                         });
 
+                        done++;
+
                         // If we finished the last one, resolve the promise.
-                        if (index == (results.length - 1)) {
+                        if (done == results.length) {
                             resolve(messages);
                         }
                     });
