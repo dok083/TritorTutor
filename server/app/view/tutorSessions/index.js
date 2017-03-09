@@ -1,13 +1,21 @@
 "use strict"
 
 var TutorSessionController = require('../../controller/tutorSessionController.js');
+var MessageController = require('../../controller/messageController.js');
 var requiresLoggedIn = require('../userUtils.js');
+
+/**
+ * 0 - pending
+ * 1 - ongoing
+ * 2 - complete
+ * -1 - rejected
+ */
 
 /**
  * Get the all sessions involving the user
  */
 function getHistory(req, res, user) {
-    if(!user.verified) {
+    if (!user.verified) {
         return res.status(400).json({message: 'unverififed user'});
     }
 
@@ -21,16 +29,38 @@ function getHistory(req, res, user) {
  * Sends a request for a session to another user.
  */
 function requestSession(req, res, user) {
+    if (!user.verified) {
+        return res.status(400).json({message: 'unverififed user'});
+    }
+
     var courseID = req.body.courseID;
     var tutorID = req.params.id;
+    var studentID = req.params.id;
 
     // Check if there is a session that is active/pending from this user to
     // the tutor. If so, do not allow this request.
+    TutorSessionController.getBetween(tutorID, studentID, courseID)
+        .then((session)=> {
+            if (session.status == 0 || session.status == 1) {
+                return res.status(400).json({message: 'pending session exists'});
+            }
+            else {
+                // Otherwise, create a new session.
+                // Send a message to the tutor stating this user wants tutoring.
+                // Send a message to the student stating a request has been made.
+                // Respond with the tutor session ID.
+                TutorSessionController.add(tutorID, studentID, courseID)
+                    .then((sessionID)=> {
+                        res.json(sessionID);
 
-    // Otherwise, create a new session.
-    // Send a message to the tutor stating this user wants tutoring.
-    // Send a message to the student stating a request has been made.
-    // Respond with the tutor session ID.
+                        var tutor = "Hey dood, It's me Tritor. Someone wants your help"
+                        var student = "hey dood, It's me Tritor. I sent your request."
+                        MessageController.send(0, tutorID, 'Tutor request from ' + user.username ,tutor);
+                        MessageController.send(0, studentID, 'Tutor request sent', student);
+                        
+                    });                
+            }
+        });
 }
 
 /**
@@ -96,22 +126,6 @@ function updateSession(req, res, user) {
     var status = req.params.status;
 
     TutorSessionController.update(tutorID, studentID, classID, status)
-        .then();
-}
-
-/**
- * Create a tutoring session.
- */
-function createSession(req, res, user) {   
-    if(!user.verified) {
-        return res.status(400).json({message: 'unverififed user'});
-    }
-
-    var tutorID = req.params.tutorID;
-    var studentID = req.params.studentID;
-    var classID = req.params.courseID;
-
-    TutorSessionController.add(tutorID, studentID, classID)
         .then();
 }
 

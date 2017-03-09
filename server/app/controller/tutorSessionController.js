@@ -40,40 +40,6 @@ TutorSessionController.update = function(tutorID, studentID, classID, status) {
 }
 
 /**
- * Get all sessions that meet the condition
- * 
- * @param tutorID The userID of the tutor.
- * @param studentID The userID of the student.
- * @param classID The course of the tutoring session.
- * @param status The session is either pending, ongoing, or complete
- * @return A promise containing a list for all sessions that match the 
- *         condition.
- */
-TutorSessionController.get = function(tutorID, studentID, classID, status)  {
-	var conditions = [];
-
-	if(tutorID) {
-		conditions.push('tutorID=' + tutorID);
-	}
-
-	if(studentID) {
-		conditions.push('studentID=' + studentID);	
-	}
-
-	if(classID) {
-		conditions.push('classID=' + classID);
-	}
-
-	if(status) {
-		conditions.push('status=' + status);	
-	}
-
-	var cond = conditions.join(" AND ");
-
-	return TutorSessionModel.get(cond);
-}
-
-/**
  * Returns all the sessions between a student and a tutor.
  *
  * @param studentID The user ID for the student.
@@ -83,6 +49,18 @@ TutorSessionController.get = function(tutorID, studentID, classID, status)  {
 TutorSessionController.getBetween = function(studentID, tutorID) {
 	return TutorSessionModel.getBetween(studentID, tutorID);
 }
+
+/**
+ * Returns all the sessions between a student and a tutor.
+ *
+ * @param studentID The user ID for the student.
+ * @param tutorID The user ID for the tutor.
+ * @return A promise that contains the list of all sessions between the two.
+ */
+TutorSessionController.getBetween = function(studentID, tutorID, classID) {
+	return TutorSessionModel.getBetween(studentID, tutorID, classID);
+}
+
 
 /**
  * Get all sessions that have the passed in user
