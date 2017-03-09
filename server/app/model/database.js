@@ -193,7 +193,7 @@ function update(table, data, condition, limit) {
 function increment(table, field, value, condition) {
 	var limit = 1; //only modify a single row which matches the condition
 
-	var queryStr = 'UPDATE ' + table + ' SET ' + field + ' = ' field + value
+	var queryStr = 'UPDATE ' + table + ' SET ' + field + ' = ' (field + value)
 		+ ' WHERE ' + condition + ' LIMIT ' + limit;
     
 	return query(queryStr, values);

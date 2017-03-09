@@ -15,8 +15,32 @@ var CourseController = {};
  * @param classID: The id of a certain course, e.g. CSE110
  * @return return the information get for a specific classID
  */
-
-CourseController.displayPage = function(classID) {
+CourseController.getCourseInfo = function(classID) {
 	//return the couresInfo get by using the classID
-	return CourseModel.getCourse(classID);
+	return CourseModel.getByID(classID);
+}
+
+/**
+ *	Update TutorCounts for a certain course
+ *	@param classID the class to be updated
+ *	@return return a promise to update the counts
+ */
+CourseController.updateTutorCounts = function(classID) {
+	return CourseModel.updateCounts(classID);
+}
+
+/**
+ * Get top10 popular courses of all time
+ * @return return a promise to retrieve top 10 popular courses
+ */
+CourseController.getPopularCourses = function() {
+	return CourseModel.getByTutorCounts();
+}
+
+/**
+ * Get course by department
+ * @return return a promise to retrieve courses under a given department
+ */
+CourseController.getByDepartment = function(department) {
+	return CourseModel.getByDepartment(department);
 }

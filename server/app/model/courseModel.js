@@ -10,65 +10,60 @@ var db = require('./database.js');
 var CourseModel = {};
 
 /**
- * Craete a new entry in tritor_classlist table in database
- *
- * @param classID: ID of a certain course, e.g. CSE110, MATH109
- * @param description: Description of the course
- * @param department: Department of the course
- * @param bool_upper: True if the course is in upper-division
- * @return return: have database insert a new class entry on tritor_classlist
+ * Get course information from database by classID
+ * @param classID ID of a specific course i.g. CSE110
+ * @return return a promise that retrieve course information by givin classID. 
  */
-CourseModel.create = function(classID, description, department, bool_upper) {
-	//return 
-	return db.insert('tritor_classlist', {
-		classID: classID,
-		description: description,
-		department: department,
-		upperDivision: bool_upper,
-		tutorCounts: 0 
-	});
-}
+CourseModel.getByID = function(classID) {
+	classID = classID.toUpperCase();
+	//set condition to classID in order to retrieve one row
+	condition = 'classID ' + classID;
 
 
-/**
- * Delete a certain course from database
- * @param classID The ID of a specific course
- * @return return A promise that runs after the course has been deleted
- */
-CourseModel.delete = function(classID) {
-	return db.query('DELETE FROM tritor_classList WHERE classID = ? LIMIT 1', [classID]);
-}
-
-
-
-/**
- * Get course information from database
- * 
- * @param classID
- *
- */
-CourseModel.getCourse = function(classID) {
-		
+	return db.select('tritor_classlist', ['classID', 'courseName', 'description', 'department'], condition, 1)
+		.then((results) => {
+			if (results && results.length > 0) {
+				return {
+					classID: results[0].classID,
+					courseName: results[0].courseName,
+					description: results[0].description,
+					department: results[0].department
+				};
+			}
+			return null;
+		});
 }
 
 /**
  * Update tutorCount of a certain course
+ * @param classID ID of a specific course, i.g. CSE110
+ * @return return a promise to increment a certain field of a certain row.
  */
-CourseModel.update = function(classID) {
-	//TODO
+CourseModel.updateCounts = function(classID) {
+	classID = classID.toUpperCase();
+	value = 1; //tutorCount will be incremented by 1
+	condition = 'classID ' + classID;
+
+	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
 
 /**
- * Get a list of popular courses, ordered by number of tutors sigend up for that course
+ * Get a list of top 10 popular courses, ordered by number of tutors ssgend up 
+ * for that course
+ * @return return a promise that retrieve the top 10 courses by tutorCounts
  */
-CourseModel.getByTutorCounts = function(classID) {
-	//TODO
+CourseModel.getByTutorCounts = function() {
+	//retrun the first 10 courses with most tutors
+	return db.select('tritor_classlist', ['classID'], null, 10, 'DESC');
 }
 
+/**
+ * Get a list of popular courses under a certain department
+ * @param department the abbreviation of a certain department, e.g. CSE, Math
+ * @return return a promise that retrieve all courses under a certain department
+ */
 CourseModel.getByDepartment = function(department) {
-	//TODO
+	var condition = 'department=' + department;
+	//select all courses under the department
+	return db.select('tritor_classlist', ['classID'], condition);
 }
-
-
-
-module.exports = CourseModel;
