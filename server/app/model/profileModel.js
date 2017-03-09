@@ -46,6 +46,11 @@ ProfileModel.get = function(userID, fields) {
     return db.select('tritor_users', fields, 'userID=' + userID, 1)
         .then((results) => {
             var user = results[0];
+
+            if (!user) {
+                return null;
+            }
+            
             user.userID = userID;
             
             return user;
