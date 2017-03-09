@@ -1,27 +1,78 @@
 import React from 'react'
-import { Table, Grid } from 'react-bootstrap'
+import { Table, Grid, Modal, Button, Glyphicon, Label } from 'react-bootstrap'
+import axios from 'axios'
+
 import MessageComponent from './MessageComponent'
+import MessageView from './MessageView'
 
 class MessageContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      messages: [
-        {id: 1, userID: 1, name: 'Judy', subject: 'Where is my money'},
-        {id: 2, userID: 2, name: 'Tritor', subject: 'You have received a tutor request from Brian Hang'},
-        {id: 3, userID: 3, name: 'Rick Ord', subject: 'When are you available?'}
-      ]
+      messages: [],
+      message: null
     };
   }
 
-  render() {
-    var messages = this.state.messages.map((message) => {
-      return <MessageComponent message={message} />
+  componentWillMount() {
+    axios.get('/api/message')
+      .then((messages) => {
+        var messages = messages.data.sort((a, b) => {
+          return b.id - a.id;
+        });
+
+        this.setState({messages: messages});
+      });
+  }
+
+  viewMessage(message) {
+    this.setState({message: message});
+  }
+
+  hideMessage() {
+    this.setState({message: null});
+  }
+
+  delete(message) {
+    // Delete the message from the server.
+    axios.delete('/api/message/' + message.id);
+
+    // Delete the message from this container.
+    const newMessages = this.state.messages.filter((other) => {
+      return message.id != other.id;
     });
+
+    this.setState({
+      message: null,
+      messages: newMessages
+    });
+  }
+
+  render() {
+    if (!this.state.messages) {
+      return <p className='text-center'>Loading messages...</p>;
+    }
+
+    var messages = this.state.messages.map((message) => {
+      return <MessageComponent message={message}
+                               onMessageView={this.viewMessage.bind(this)}
+                               key={message.id} />
+    });
+
+    var messageView;
+    const message = this.state.message;
+
+    if (message) {
+      messageView = <MessageView message={message}
+                                 user={this.props.user}
+                                 onHide={this.hideMessage.bind(this)}
+                                 onDelete={this.delete.bind(this)} />
+    }
   
     return (
       <div id='container'>
+        {messageView}
         <Grid>
           <Table responsive hover>
             <thead>
