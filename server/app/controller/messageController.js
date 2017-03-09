@@ -6,6 +6,7 @@
  */
 
 var MessageModel = require('../model/messageModel.js');
+var ProfileModel = require('../model/profileModel.js');
 
 var MessageController = {};
 
@@ -37,23 +38,37 @@ MessageController.send = function(sender, recipient, title, content)
  */
 MessageController.getByUID = function(userID) {
     // retrieve data of all messages with userID
-    return MessageModel.readUser(userID).then(
+    return new Promise(function(resolve, reject) {
+        MessageModel.readUser(userID).then(
         (results) => {
-            // to hold each message
-        
-            if (results && results.length > 0){
-                // construct and return list of messages 
-                return results.map((result) => {
-                    // add this message to the list
-                    return {
-                        sender: result.sender,
-                        recipient: result.receiver,
-                        title: result.title,
-                        content: result.content
-                    };
-                })
+            var messages = [];
+
+            // Load the sender for each message.
+            for (var i = 0; i < results.length; i++) {
+                const result = results[i];
+
+                // Store because promise runs later, so i is wrong.
+                const index = i;
+
+                ProfileModel.get(result.sender)
+                    .then((sender) => {
+                        // Add the message with the user to the message list.
+                        messages.push({
+                            id: result.msgID,
+                            sender: sender,
+                            title: result.title,
+                            time: result.creationTime,
+                            content: result.content
+                        });
+
+                        // If we finished the last one, resolve the promise.
+                        if (index == (results.length - 1)) {
+                            resolve(messages);
+                        }
+                    });
             }
         });
+    });
 }
 
 /**

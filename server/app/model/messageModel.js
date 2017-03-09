@@ -78,7 +78,7 @@ MessageModel.readUser = function(userID) {
     var conditions = 'receiver=' + userID;
 
     // return promise containing information about messages
-    return db.select('tritor_messages', ['sender','title','receiver','content'],
+    return db.select('tritor_messages', ['sender','title','msgID','creationTime','content'],
             conditions, 50, 'creationTime DESC');
 }
 
