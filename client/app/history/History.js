@@ -1,7 +1,4 @@
 import React from 'react'
-import { Grid, Table, Image } from 'react-bootstrap'
-import { Link } from 'react-router'
-import { LinkContainer } from 'react-router-bootstrap'
 
 import HistoryEntryContainer from './HistoryEntryContainer'
 

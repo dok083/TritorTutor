@@ -106,7 +106,7 @@ function select(table, columns, condition, limit, order) {
             return '`' + column + '`';
         }).join();
     } else {
-        table = '*';
+        columns = '*';
     }
 
     // Start the select query.

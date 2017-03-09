@@ -1,13 +1,27 @@
 import React from 'react'
 import NavBarContainer from './NavBarContainer'
 import Footer from './Footer'
+import VerificationAlertContainer from '../verify/VerificationAlertContainer'
 import axios from 'axios'
+
+import Dispatch from '../Dispatch'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {user: null, loading: true};
+
+    Dispatch.addListener('requestUserInfo', (data) => {
+      var action = Dispatch.createAction('getUserInfo');
+      action.set('component', data.component);
+      action.set('user', this.state.user);
+      action.dispatch();
+    });
+
+    Dispatch.addListener('updateUserInfo', (data) => {
+      this.setState({user: data.user});
+    });
   }
 
   componentWillMount() {
@@ -48,6 +62,7 @@ class App extends React.Component {
     } else {
       contents = (
         <div>
+          <VerificationAlertContainer user={this.state.user} />
           <NavBarContainer user={this.state.user} onGetUser={this.onGetUser.bind(this)} />
           {this.props.children}
           <Footer />

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Grid, Col, Row } from 'react-bootstrap'
+import { Grid, Col, Row, Panel } from 'react-bootstrap'
 
 import CourseTutorComponent from './CourseTutorComponent'
 import TutorSearchContainer from './TutorSearchContainer'
@@ -28,16 +28,23 @@ class CourseTutorContainer extends React.Component {
   }
 
   render() {
-    var tutors = this.state.tutors.map((tutor) => {
-      return (
-        <CourseTutorComponent userID={tutor.userID}
-                              name={tutor.name}
-                              stars={tutor.stars}
-                              price={tutor.price}
-                              negotiable={tutor.negotiable}
-                              desc={tutor.desc} />
-      );
-    });
+    var tutors;
+
+    if(this.state.tutors.length == 0){
+      tutors = <Panel>There are currently no tutors for this course.</Panel>
+    }
+    else {
+      tutors = this.state.tutors.map((tutor) => {
+        return (
+          <CourseTutorComponent userID={tutor.userID}
+                                name={tutor.name}
+                                stars={tutor.stars}
+                                price={tutor.price}
+                                negotiable={tutor.negotiable}
+                                desc={tutor.desc} />
+        );
+      });
+    }
 
     return (
       <Row>

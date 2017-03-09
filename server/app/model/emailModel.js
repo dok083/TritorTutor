@@ -42,7 +42,7 @@ EmailModel.send = function(email, subject, message) {
     return new Promise(function(resolve, reject) {
         transporter.sendMail(options, function(error, info) {
             if (error) {
-                reject(error);
+                reject(error.toString());
             } else {
                 resolve();
             }

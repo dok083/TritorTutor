@@ -1,4 +1,4 @@
-var Action = require( './action.js' );
+var Action = require( './Action.js' );
 var Dispatch = {};
 // list of listeners for certain actions
 Dispatch.listeners = {};
@@ -22,7 +22,7 @@ Dispatch.createAction = function ( name )
 Dispatch.onActionDispatched = function ( action )
 {
     // go through all of the callbacks for a particular action 
-    this.listeners[ action.name ].forEach( function( callback )
+    (this.listeners[ action.name ] || []).forEach( function( callback )
     {
         callback( action.getData() );
     } );
