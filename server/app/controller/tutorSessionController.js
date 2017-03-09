@@ -18,8 +18,10 @@ var TutorSessionController = {};
  * @param status The session is usually pending on creation.
  * @return Promise containing nothing.
  */
-TutorSessionController.add = function(tutorID, studentID, classID, status) {
-	return TutorSessionModel.create(tutorID, studentID, classID, status); 
+TutorSessionController.add = function(tutorID, studentID, classID) {
+	var data = {status: 0}
+
+	return TutorSessionModel.create(tutorID, studentID, classID, data); 
 }
 
 /**
@@ -70,6 +72,25 @@ TutorSessionController.get = function(tutorID, studentID, classID, status)  {
 
 	return TutorSessionModel.get(cond);
 }
+
+/**
+ * Get all sessions that have the passed in user
+ * 
+ * @param userID The userID of the user.
+ * @return A promise containing a list for all sessions that match the 
+ *         condition.
+ */
+TutorSessionController.getHistory = function(userID) {
+	TutorSessionModel.getByStudent(userID)
+		.then((student)=> {
+			return TutorSessionModel.getByTutor(userID)
+				.then((tutor)=> {
+					var history = student.concat(tutor);
+					return history;
+				});
+		});
+}
+
 
 /**
  * Removes a tutoring session when it is rejected by deleting it from the 
