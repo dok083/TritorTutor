@@ -57,8 +57,19 @@ TutorSessionController.getBetween = function(studentID, tutorID) {
  * @param tutorID The user ID for the tutor.
  * @return A promise that contains the list of all sessions between the two.
  */
-TutorSessionController.getBetween = function(studentID, tutorID, classID) {
+TutorSessionController.getBetweenCourse = function(studentID, tutorID, classID) {
 	return TutorSessionModel.getBetween(studentID, tutorID, classID);
+}
+
+/**
+ * Returns all the sessions between a user and another.
+ *
+ * @param studentID The user ID for the student.
+ * @param tutorID The user ID for the tutor.
+ * @return A promise that contains the list of all sessions between the two.
+ */
+TutorSessionController.getPair = function(userID, otherID) {
+	return TutorSessionModel.getPair(userID, otherID);
 }
 
 
