@@ -23,10 +23,10 @@ var AccountModel = {};
  *         the promise is rejected with the associated error.
  */
 AccountModel.getByEmail = function(email) {
-    email = db.escape(email.toLowerCase());
+    email = email.toLowerCase();
 
     // Only find matching users.
-    var conditions = 'email=' + email;
+    var conditions = 'email=' + db.escape(email);
 
     // Find a user from the given e-mail.
     return db.select('tritor_users', ['userID', 'username', 'description'], conditions, 1)
@@ -144,12 +144,11 @@ AccountModel.create = function(email, username, password) {
  * @return A promise containing the user if found, otherwise the user is null.
  */
 AccountModel.getByCredentials = function(email, password) {
-    
     // Prepare the login information for a query.
-    email = db.escape(email.toLowerCase());
+    email = email.toLowerCase();
 
     // Look for a user with a matching e-mail
-    var conditions = 'email=' + email;  
+    var conditions = 'email=' + db.escape(email);  
     
     // retrieve encrypted password from db
     return db.select('tritor_users', ['userID', 'password', 'username', 'description'], conditions, 1)

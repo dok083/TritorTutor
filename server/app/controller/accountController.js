@@ -33,6 +33,13 @@ AccountController.create = function(email, username, password) {
 }
 
 /**
+ * Returns an account that belongs to the given email.
+ */
+AccountController.getByEmail = function(email) {
+    return AccountModel.getByEmail(email);
+}
+
+/**
  * Removes a user from existence using the given userID.
  *
  * @param userID The ID of the account that should be deleted.

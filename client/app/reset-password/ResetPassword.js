@@ -19,7 +19,10 @@ class ResetPassword extends React.Component {
   changePassword(newPassword) {
     this.setState({busy: true});
 
-    axios.post('/api/reset-password', {password: newPassword})
+    // The URL for resetting a password with the given code.
+    const url = '/api/reset-password/' + this.props.params.code;
+
+    axios.post(url, {password: newPassword})
       .then(() => {
         this.setState({done: true});
       })
@@ -49,7 +52,12 @@ class ResetPassword extends React.Component {
     var message;
 
     if (this.state.message.length > 0) {
-      message = <Alert bsStyle={this.state.messageType}>{this.state.message}</Alert>;
+      message = (
+        <div>
+          <p>Please enter your new desired password:</p>
+          <Alert bsStyle={this.state.messageType}>{this.state.message}</Alert>
+        </div>
+      );
     }
 
     // The content for the form.
@@ -71,7 +79,6 @@ class ResetPassword extends React.Component {
           <Col xs={8} xsOffset={2}>
             <h2><br /><br />Tritor Password Reset</h2>
             {message}
-            <p>Please enter your new desired password:</p>
             {content}
           </Col>
         </Grid>

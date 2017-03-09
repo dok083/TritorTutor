@@ -47,8 +47,8 @@ render((
         <Route path='account' component={AccountSettings} />
         <Route path='tutoring' component={TutorSettings} />
       </Route>
-      <Route path='reset-password/:code' component={ResetPassword} />
     </Route>
+    <Route path='reset-password/:code' component={ResetPassword} />
     <Route path='verify/:code' component={Verify} />
     <Route path='*' component={App}>
       <IndexRoute component={NotFound} />
