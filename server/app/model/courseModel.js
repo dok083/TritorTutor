@@ -35,15 +35,27 @@ CourseModel.getByID = function(classID) {
 }
 
 /**
- * Update tutorCount of a certain course
+ * Increment tutorCount of a certain course
  * @param classID ID of a specific course, i.g. CSE110
  * @return return a promise to increment a certain field of a certain row.
  */
-CourseModel.updateCounts = function(classID) {
+CourseModel.incrementTutorCounts = function(classID) {
 	classID = classID.toUpperCase();
 	value = 1; //tutorCount will be incremented by 1
 	condition = 'classID ' + classID;
+	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
+}
 
+
+/**
+ * Decrement tutorCount of a certain course
+ * @param classID ID of a specific course, i.g. CSE110
+ * @return return a promise to increment a certain field of a certain row.
+ */
+CourseModel.decrementTutorCounts = function(classID) {
+	classID = classID.toUpperCase();
+	value = -1; //tutorCount will be decremented by 1
+	condition = 'classID ' + classID;
 	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
 
