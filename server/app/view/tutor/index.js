@@ -33,7 +33,7 @@ function updateTutors(req, res, user) {
         return res.status(403).json({message: 'not verified'});
     }
 
-    const courseID = req.body.courseID;
+    const courseID = req.params.id;
     const data = req.body.data;
 
     // TODO: Validate user changes. Expect an object containing changes.
@@ -55,9 +55,9 @@ function addTutor(req, res, user) {
         return res.status(403).json({message: 'not verified'});
     }
 
-    var courseID = req.body.courseID;
+    var courseID = req.params.id;
     var desc = req.body.desc;
-    var price = req.body.price;
+    var price = parseFloat(req.body.price);
     var nego = req.body.nego;
 
     // Validate the course ID.
@@ -95,14 +95,21 @@ function addTutor(req, res, user) {
             }
 
             // If it does exist, add the tutor.
-            TutorController.add(courseID, userID, desc, price, nego);
+            TutorController.add(courseID, user.userID, desc, price, nego)
+                .then(() => {
+                    console.log('woo')
+                    res.json({message: 'success'});
+                })
+                .catch((error) => {
+                    res.status(400).json({message: error.toString()});
+                });
         });
 }
 
 function deleteTutor(req, res, use) {
-    var courseID = req.params.courseID;
+    var courseID = req.params.id;
 
-    if(!courseID || !userID) {
+    if (!courseID || !userID) {
         return res.status(400).json({message: 'listing not found'});
     }
 

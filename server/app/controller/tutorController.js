@@ -6,7 +6,7 @@
  */
 
 var TutorModel = require('../model/tutorModel.js');
-
+var ProfileModel = require('../model/profileModel.js');
 var TutorController = {};
 
 /**
@@ -17,7 +17,39 @@ var TutorController = {};
  *         description, price, and negotiable.
  */
 TutorController.get = function(course) {
-	return TutorModel.get(course);
+    return new Promise(function(resolve, reject) {
+        // Get all of the tutors for this course.
+        return TutorModel.get(course)
+            .then((results) => {
+                // If there were no results, just return an empty list.
+                if (results.length == 0) {
+                    resolve([]);
+
+                    return;
+                }
+
+                var tutors = [];
+
+                // Otherwise, get the username for each tutor.
+                // This indentation is thiccccc
+                results.forEach((result) => {
+                    ProfileModel.get(result.tutorID, 'username')
+                        .then((user) => {
+                            result.userID = result.tutorID;
+                            result.tutorID = undefined;
+                            result.username = user.username;
+
+                            // Form a new list of tutors with their username.
+                            tutors.push(result);
+
+                            // Once the list is finished, resolve the promise.
+                            if (tutors.length == results.length) {
+                                resolve(tutors);
+                            }
+                        });
+                });
+            });
+    });
 }
 
 /**

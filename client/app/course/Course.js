@@ -56,7 +56,9 @@ class Course extends React.Component {
 
     return (
       <div id='container'>
-        <CourseTutorRequest show={this.state.tutorModalVisible} onHide={this.hideTutorModal.bind(this)} />
+        <CourseTutorRequest show={this.state.tutorModalVisible}
+                            onHide={this.hideTutorModal.bind(this)}
+                            course={this.props.params.id} />
         <Grid>
           <PageHeader>{this.state.name}
             <small> {this.state.title}</small> 

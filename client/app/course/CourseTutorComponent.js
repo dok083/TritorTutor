@@ -2,23 +2,27 @@ import React from 'react'
 
 import { Media, Glyphicon, Label, Panel } from 'react-bootstrap'
 import { Link } from 'react-router'
+import ProfilePic from '../profile/ProfilePic'
 
 class CourseTutorComponent extends React.Component {
   render() {
-    var stars = [];
+    var stars;
+    console.log(this.props);
+    if (this.props.stars) {
+      stars = [];
 
-    for (var i = 1; i <= 5; i++) {
-      var glyph;
+      for (var i = 1; i <= 5; i++) {
+        var glyph;
 
-      if (this.props.stars < i) {
-        glyph = 'star-empty';
-      } else {
-        glyph = 'star';
+        if (this.props.stars < i) {
+          glyph = 'star-empty';
+        } else {
+          glyph = 'star';
+        }
+
+        stars[i] = <Glyphicon glyph={glyph} />
       }
-
-      stars[i] = <Glyphicon glyph={glyph} />
     }
-
 
     var profileURL = '/profile/' + this.props.userID;
 
@@ -28,15 +32,13 @@ class CourseTutorComponent extends React.Component {
       negotiable = <Label bsStyle='info'>Price Negotiable</Label>
     }
 
-    var price = <Label>{'$' + this.props.price}</Label>
+    var price = <Label>{'$' + this.props.price.toFixed(2)}</Label>
 
     return (
       <Panel>
       <Media>
         <Media.Left>
-          <Link to={profileURL}>
-            <img width={64} height={64} src={'/profiles/' + this.props.userID + '.jpg'} />
-          </Link>
+          <ProfilePic width={64} height={64} user={this.props.userID} />
         </Media.Left>
 
         <Media.Body>

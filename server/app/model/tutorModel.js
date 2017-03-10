@@ -20,6 +20,7 @@ var TutorModel = {};
  * @return A promise that contains nothing. 
  */
 TutorModel.create = function(course, userID, desc, price, nego) {
+    console.log(231)
 	// Create new listing by inserting to the table in the database.
 	return db.insert('tritor_tutorlist', {
 		classID: course,

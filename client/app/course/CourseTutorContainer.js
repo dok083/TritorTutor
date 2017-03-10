@@ -24,6 +24,7 @@ class CourseTutorContainer extends React.Component {
   componentWillMount() {
     axios.get('/api/course/tutors/' + this.props.course)
       .then((results) => {
+        console.log(results.data);
         this.setState({tutors: results.data});
       });
   }
@@ -43,7 +44,7 @@ class CourseTutorContainer extends React.Component {
         return (
           <CourseTutorComponent userID={tutor.userID}
                                 name={tutor.username}
-                                stars={tutor.avgRating}
+                                stars={tutor.avgRatig}
                                 price={tutor.price}
                                 negotiable={tutor.negotiable}
                                 desc={tutor.description} />

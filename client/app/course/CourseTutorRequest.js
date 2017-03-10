@@ -3,6 +3,8 @@ import React from 'react'
 import { Modal, FormGroup, ControlLabel, FormControl, InputGroup, Checkbox, Button, Alert } from 'react-bootstrap'
 import Dispatch from '../Dispatch'
 
+import axios from 'axios'
+
 class CourseTutorRequest extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +18,19 @@ class CourseTutorRequest extends React.Component {
       messageType: '',
       busy: false
     }
+  }
+
+  onHide() {
+      // Reset the states when hidden.
+      this.setState({
+          message: '',
+          messageType: '',
+          busy: false
+      });
+
+      if (this.props.onHide) {
+          this.props.onHide();
+      }
   }
 
   componentWillMount() {
@@ -49,24 +64,25 @@ class CourseTutorRequest extends React.Component {
     var price = parseInt(this.state.price);
 
     if (!price || price < 0) {
-      this.setState({message: 'You have entered an invalid price.'}); 
-      this.setState({messageType: 'danger'}); 
+      this.setState({
+        message: 'You have entered an invalid price.',
+        messageType: 'danger'
+      }); 
+
       return;
     }
 
     this.setState({busy: true});
-    var listing = {};
 
-    listing.courseID = //TODO after course is completed.
-    listing.userID = this.state.user;
-    listing.desc = this.state.description;
-    listing.price = price;
-    listing.nego = this.state.negotiable;
+    var listing = {
+        desc: this.state.description,
+        price: this.state.price,
+        nego: this.state.negotiable
+    };
 
-    axios.post('/api/course/tutor/:id', listing)
+    axios.post('/api/tutor/' + this.props.course, listing)
       .then(() => {
-          this.setState({busy: false});
-          this.props.onHide();
+          this.onHide();
       })
       .catch((error) => {
         var message = error.response;
@@ -77,11 +93,24 @@ class CourseTutorRequest extends React.Component {
           message = error.toString();
         }       
 
-        this.setState({message: message, messageType: 'danger', busy: false});
+        this.setState({
+          message: message,
+          messageType: 'danger',
+          busy: false
+        });
       });
   }
 
   render() {
+    if (!this.state.user) {
+      return <p className='text-center'>Loading</p>;
+    }
+
+    // Show an error if the user is not verified.
+    if (this.state.user.verified == false) {
+      return <p className='text-center'>Sorry, you must be verified to use this feature.</p>;
+    }
+
     var message;
 
     if (this.state.message.length > 0) {
@@ -89,7 +118,7 @@ class CourseTutorRequest extends React.Component {
     }
 
     return (
-      <Modal show={this.props.show} onHide={this.props.onHide}>
+      <Modal show={this.props.show} onHide={this.onHide.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Tutor for this Class</Modal.Title>
         </Modal.Header>
