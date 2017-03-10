@@ -67,4 +67,13 @@ TutorController.update = function(course, userID, data) {
 	return TutorModel.update(course, userID, data);
 }
 
+/**
+ * Returns the top tutors on Tritor.
+ * 
+ * @return A promise containing a list of popular tutors.
+ */
+TutorController.getPopular = function() {
+    return TutorModel.getPopular();
+}
+
 module.exports = TutorController;

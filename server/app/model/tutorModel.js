@@ -69,6 +69,26 @@ TutorModel.get = function(course) {
 }
 
 /**
+ * Retrieves the top 10 tutors for Tritor. This is done by getting the top 10
+ * rating users. Since ratings are only given to tutors, we can assume anyone
+ * who has a rating has tutored. Hence, we do not need to check for the user
+ * actually tutoring for someone.
+ *
+ * @return A promise containing a list of the top 10 tutors.
+ */
+TutorModel.getPopular = function() {
+    return db.select('tritor_users', ['userID', 'username'], null, 10,
+                     'avgRating DESC').then((results) => {
+        return results.map((result) => {
+            return {
+                userID: result.userID,
+                username: result.username
+            };
+        });
+    })
+}
+
+/**
  * Update a certain listing.
  *
  * @param course The course this listing is for.
