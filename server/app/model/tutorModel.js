@@ -25,7 +25,7 @@ TutorModel.create = function(course, userID, desc, price, nego) {
 		classID: course,
 		tutorID: userID,
 		description: desc,
-		avgRating: -1,
+        // avgRating nullable in the database
 		price: price,
 		negotiable:	nego,
 	});
@@ -55,11 +55,16 @@ TutorModel.get = function(course) {
 	var columns = ['tutorID', 'description', 'avgRating', 'price', 'negotiable'];
 	
 	// Only find matching listings
-	var conditions = 'classID=' + course;
+	var conditions = 'classID=' + db.escape(course);
 
 	return db.select('tritor_tutorlist', columns, conditions)
 		.then((results) => {
-			results.classID = course; 
+            return results.map( 
+            ( listing ) =>
+            {
+                listing.classID = course;
+                return listing;
+            } );
 		});
 }
 
@@ -73,7 +78,7 @@ TutorModel.get = function(course) {
  * @return A promise that contains nothing.
  */
 TutorModel.update = function(course, userID, data) {
-	var conditions = 'classID=' + course + 'AND tutorID=' + userID;
+	var conditions = 'classID=' + db.escape(course) + ' AND tutorID=' + userID;
 
 	return db.update('tritor_tutorlist', data, conditions, 1);
 }

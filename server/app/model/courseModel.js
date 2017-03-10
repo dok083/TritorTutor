@@ -10,57 +10,89 @@ var db = require('./database.js');
 var CourseModel = {};
 
 /**
- * Craete a new entry in tritor_classlist table in database
- *
- * @param classID: ID of a certain course, e.g. CSE110, MATH109
- * @param description: Description of the course
- * @param department: Department of the course
- * @param bool_upper: True if the course is in upper-division
+ * Get course information from database by classID
+ * @param classID ID of a specific course i.g. CSE110
+ * @return return a promise that retrieve course information by givin classID. 
  */
-CourseModel.create = function(classID, description, department, bool_upper, tutorCounts) {
-	return db.insert('tritor_classlist', {
-		classID: classID,
-		description: description,
-		department: department,
-		upperDivision: bool_upper,
-		tutorCounts: tutorCounts
-	});
+CourseModel.getByID = function(classID) {
+	//set condition to classID in order to retrieve one row
+	var condition = 'classID=' + db.escape(classID);
+
+	return db.select('tritor_classlist', ['className', 'description', 'department'], condition, 1)
+		.then((results) => {
+			if (results && results.length > 0) {
+				return {
+					courseName: results[0].className,
+					description: results[0].description,
+					department: results[0].department
+				};
+			}
+
+			return null;
+		});
+}
+
+/**
+ * Increment tutorCount of a certain course
+ * @param classID ID of a specific course, i.g. CSE110
+ * @return return a promise to increment a certain field of a certain row.
+ */
+CourseModel.incrementTutorCounts = function(classID) {
+	value = 1; //tutorCount will be incremented by 1
+	condition = 'classID ' + classID;
+
+	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
 
 
 /**
- * Delete a certain course from database
+ * Decrement tutorCount of a certain course
+ * @param classID ID of a specific course, i.g. CSE110
+ * @return return a promise to increment a certain field of a certain row.
  */
-CourseModel.delete = function(classID) {
-	//TODO
+CourseModel.decrementTutorCounts = function(classID) {
+	classID = classID.toUpperCase();
+	value = -1; //tutorCount will be decremented by 1
+	condition = 'classID ' + classID;
+	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
 
 /**
- * Get course information from database
- * 
- * @param classID
- *
+ * Get a list of top 10 popular courses, ordered by number of tutors ssgend up 
+ * for that course
+ * @return return a promise that retrieve the top 10 courses by tutorCounts
  */
-CourseModel.getCourse = function(classID) {
-	//TODO	
+CourseModel.getByTutorCounts = function() {
+	//retrun the first 10 courses with most tutors
+    // TODO: Generate query that selects top 10 rows in tritor_classlist
+    // Need to somehow use a query that can ORDER BY the COUNT of classID
+    // in tritor_tutor_list
+	return db.select('tritor_classlist', ['classID'], null, 10/*, 'DESC'*/)
+        .then((results) => {
+            return results.map((result) => {
+                return result.classID;
+            });
+        });
 }
 
 /**
- * Update tutorCount of a certain course
+ * Get a list of popular courses under a certain department
+ * @param department the abbreviation of a certain department, e.g. CSE, Math
+ * @return return a promise that retrieve all courses under a certain department
  */
-CourseModel.update = function(classID) {
-	//TODO
-}
-
-/**
- * Get a list of popular courses, ordered by number of tutors sigend up for that course
- */
-CourseModel.getByTutorCounts = function(classID) {
-	//TODO
-}
-
 CourseModel.getByDepartment = function(department) {
-	//TODO
+    department = db.escape(department);
+
+    var condition = 'classID LIKE ' +
+                    department.substring(0, department.length - 1) + '%\'';
+
+	//select all courses under the department
+	return db.select('tritor_classlist', ['classID'], condition)
+        .then((results) => {
+            return results.map((result) => {
+                return result.classID;
+            });
+        });
 }
 
 module.exports = CourseModel;

@@ -6,6 +6,7 @@
  */
 
 var TutorSessionModel = require('../model/tutorSessionModel.js');
+var CourseModel = require('../model/courseModel.js');
 
 var TutorSessionController = {};
 
@@ -21,7 +22,10 @@ var TutorSessionController = {};
 TutorSessionController.add = function(tutorID, studentID, classID) {
 	var data = {status: 0}
 
-	return TutorSessionModel.create(tutorID, studentID, classID, data); 
+	return TutorSessionModel.create(tutorID, studentID, classID, data)
+		.then(()=> {
+			CourseModel.incrementTutorCounts(classID);
+		}); 
 }
 
 /**
@@ -91,7 +95,6 @@ TutorSessionController.getHistory = function(userID) {
 		});
 }
 
-
 /**
  * Removes a tutoring session when it is rejected by deleting it from the 
  * database.
@@ -104,7 +107,20 @@ TutorSessionController.getHistory = function(userID) {
 TutorSessionController.remove = function(tutorID, studentID, classID) {
 	var data = {status: -1};
 
-	return TutorSessionModel.update(tutorID, studentID, classID, data);
+	return TutorSessionModel.update(tutorID, studentID, classID, data)
+		.then(()=> {
+			CourseModel.decrementTutorCounts(classID);
+		});
+}
+
+/**
+ * Returns a session with the ID passed in.
+ *
+ * @param sessionID Id of the session.
+ * @return A promise that contains the session.
+ */
+TutorSessionController.getByID = function(sessionID) {
+	return TutorSessionModel.getByID(sessionID);
 }
 
 module.exports = TutorSessionController;

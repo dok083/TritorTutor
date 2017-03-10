@@ -118,18 +118,29 @@ function sessionFinish(req, res, user) {
         return res.status(400).json({message: 'unverififed user'});
     }
 
-    var userID = req.params.id;
-    var otherID = req.params.otherID;
-    var courseID = req.params.courseID;
+    var sessionID = req.params.tutorSessionID;
 
-    // Check if there is a session with the other user. Note that it does not
+ 	// Check if there is a session with the other user. Note that it does not
     // matter if the user is the tutor or student.
-
-    // If there is not one, then error.
-
-    // Otherwise, set the state to finished.
-
-    // Notify both users that the tutor session is over.
+    TutorSessionController.getByID(sessionID)
+    	.then((session)=> {
+    		// Otherwise, set the state to finished.
+    		if (session.length > 0 && session[0].status != 2) {
+    			TutorSessionController.update(session.tutorID, session.studentID, session.classID, 2)
+    				.then(()=> {
+							var tutor = "Your session with " + session.studentID + " for " 
+										+ session.classID + " has been canceled." 
+                            var student = "Your session with " + session.tutorID + " for " 
+                            			+ session.classID + " has been canceled."
+                            MessageController.send(0, session.studentID, 'Session Canceled', student);
+                            MessageController.send(0, session.tutorID, 'Session Canceled', tutor);
+    				});
+    		}
+    		// If there is not one, then error.
+    		else {
+    			return res.status(400).json({message: 'session does not exist'});
+    		}
+    	});
 }
 
 /**
@@ -148,7 +159,10 @@ function getSessionsWith(req, res, user) {
     // either pending or active sessions.
     TutorSessionController.getPair(userID, otherID)
         .then((sessions)=> {
-            
+        	var filterSessions = sessions
+        		.filter((sessions)=> {
+        			return sessions.status == 0 || sessions.status == 1;
+        		}); 
         });
 }
 

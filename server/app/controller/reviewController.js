@@ -8,6 +8,7 @@
 var ReviewController = {}
 
 var ReviewModel = require('../model/reviewModel.js');
+var ProfileModel = require('../model/profileModel.js');
 
 /**
  * This function adds a new review to the user that has the ID of userID. The
@@ -29,7 +30,10 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
         rating = 5;
     }
 
-    ReviewModel.create(userID, reviewerID, stars, comment);
+    ReviewModel.create(userID, reviewerID, stars, comment)
+        .then (()=> {
+	    ReviewController.updateProfile(userID);
+        });
 }
 
 /**
@@ -41,6 +45,18 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
  */
 ReviewController.get = function(userID) {
     return ReviewModel.get(userID);
+}
+
+ReviewController.getAvg = function(userID) {
+    return ReviewModel.getAvg(userID)
+}
+
+ReviewController.updateProfile = function(userID) {
+    ReviewController.getAvg(userID)
+	.then((userAvg)=>{
+    	    var data = {avgRating: userAvg}
+    	    return profileModel.updateRating(userID, data);
+	});
 }
 
 /**

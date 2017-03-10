@@ -1,14 +1,14 @@
 var TutorController = require('../../controller/tutorController.js');
 
 // Decorator that forces the user to be logged in.
-var requiresLoggedIn = require('../../userUtils.js');
+var requiresLoggedIn = require('../userUtils.js');
 
 
 /**
  * A view the returns the tutoring information (price, negotiable, etc...)
  * for the current user.
  */
-function getTutorInfo(req, res, user) {
+function getTutors(req, res, user) {
  	var courseID = req.params.courseID;
 
  	if(!courseID) {
@@ -17,7 +17,7 @@ function getTutorInfo(req, res, user) {
 
  	TutorController.get(courseID)
  		.then((listings) => {
- 			if(listings && listings.length() > 0) {
+ 			if (listings) {
  				return res.json(listings);
  			}
 
@@ -65,7 +65,7 @@ function deleteTutor(req, res) {
 
  module.exports = {
  	'/:id':  {
- 		get: requireLoggedIn(getTutors),
+ 		get: requiresLoggedIn(getTutors),
  		put: requiresLoggedIn(updateTutors),
         post: requiresLoggedIn(addTutor),
         delete: requiresLoggedIn(deleteTutor)

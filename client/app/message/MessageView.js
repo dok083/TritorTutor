@@ -3,18 +3,87 @@ import React from 'react'
 import { Media, Grid, Alert, FormControl, FormGroup, Modal, Button, Glyphicon } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
+import axios from 'axios'
 
 import MessageReply from './MessageReply'
 import ProfilePic from '../profile/ProfilePic'
 
 class MessageView extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      message: '',
+      messageType: '',
+      reply: '',
+      busy: false
+    };
+  }
+
   delete() {
     if (this.props.onDelete) {
       this.props.onDelete(this.props.message);
     }
   }
 
+  onReplyChange(e) {
+    this.setState({reply: e.target.value});
+  }
+
+  reply() {
+    if (!this.state.reply || this.state.reply.length == 0) {
+      this.setState({
+        message: 'Your reply cannot be empty.',
+        messageType: 'danger',
+      });
+
+      return;
+    }
+
+    this.setState({busy: true});
+
+    // Send the reply.
+    axios.post('/api/message/reply', {
+      id: this.props.message.id,
+      content: this.state.reply
+    }).then(() => {
+      // On success, indicate it.
+      this.setState({
+        message: 'Your reply has been sent.',
+        messageType: 'success',
+        reply: '',
+        busy: false
+      });
+    }).catch((error) => {
+      // Get the error message.
+      var message = error.response && error.response.data;
+
+      if (message.message) {
+        message = message.message;
+      } else {
+        message = error.toString();
+      }
+
+      // Display the error message.
+      this.setState({
+        message: message,
+        messageType: 'danger',
+        busy: false
+      });
+    });
+  }
+
   render() {
+    var messageAlert;
+
+    if (this.state.message.length > 0) {
+      messageAlert = (
+        <Alert bsStyle={this.state.messageType}>
+          {this.state.message}
+        </Alert>
+      );
+    }
+
     const message = this.props.message;
     const areaStyle = {
       resize: 'vertical'
@@ -32,7 +101,10 @@ class MessageView extends React.Component {
           </Media.Left>
           <Media.Body>
             <FormGroup>
-              <FormControl style={areaStyle} componentClass='textarea' placeholder='Reply to the message' />
+              <FormControl style={areaStyle}
+                           componentClass='textarea'
+                           placeholder='Reply to the message'
+                           onChange={this.onReplyChange.bind(this)} />
             </FormGroup>
           </Media.Body>
         </Media>
@@ -54,6 +126,7 @@ class MessageView extends React.Component {
           <Modal.Title>{message.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {messageAlert}
           <Media>
             {senderProfile}
             <Media.Body>
@@ -63,10 +136,13 @@ class MessageView extends React.Component {
           {reply}
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle='danger' onClick={this.delete.bind(this)}>
+          <Button bsStyle='danger' onClick={this.delete.bind(this)}
+                  disable={this.state.busy}>
             <Glyphicon glyph='trash' />
           </Button>
-          <Button bsStyle='primary' className='pull-right'>Reply</Button>
+          <Button bsStyle='primary' className='pull-right'
+                  disabled={this.state.busy}
+                  onClick={this.reply.bind(this)}>Reply</Button>
         </Modal.Footer>
       </Modal>
     );
