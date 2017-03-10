@@ -65,10 +65,7 @@ function updateTutors(req, res, user) {
     }
 
     // Validate the negotiable, if there is one
-    if (data.negotiable != undefined) {
-        return res.status(400).json({message: 'invalid negotiable'});
-    }
-    else if (data.negotiable != undefined)
+    if (data.negotiable != undefined)
     {
         change.negotiable = data.negotiable;
     }
