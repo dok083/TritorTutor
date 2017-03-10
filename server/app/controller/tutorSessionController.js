@@ -6,6 +6,7 @@
  */
 
 var TutorSessionModel = require('../model/tutorSessionModel.js');
+var CourseModel = require('../model/courseController.js');
 
 var TutorSessionController = {};
 
@@ -21,7 +22,10 @@ var TutorSessionController = {};
 TutorSessionController.add = function(tutorID, studentID, classID) {
 	var data = {status: 0}
 
-	return TutorSessionModel.create(tutorID, studentID, classID, data); 
+	return TutorSessionModel.create(tutorID, studentID, classID, data)
+		.then(()=> {
+			CourseModel.incrementTutorCounts(classID);
+		}); 
 }
 
 /**
@@ -103,7 +107,10 @@ TutorSessionController.getHistory = function(userID) {
 TutorSessionController.remove = function(tutorID, studentID, classID) {
 	var data = {status: -1};
 
-	return TutorSessionModel.update(tutorID, studentID, classID, data);
+	return TutorSessionModel.update(tutorID, studentID, classID, data)
+		.then(()=> {
+			CourseModel.decrementTutorCounts(classID);
+		});
 }
 
 /**
