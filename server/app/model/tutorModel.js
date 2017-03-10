@@ -69,6 +69,28 @@ TutorModel.get = function(course) {
 }
 
 /**
+ * Returns tutoring information for a specific user for a given course.
+ *
+ * @param userID The ID of the desired user.
+ * @param courseID The ID of the desired course.
+ * @return A promise that contains an object with tutoring information. If the
+ *         user is not a tutor for the given course, then this is null.
+ */
+TutorModel.getByUser = function(userID, courseID) {
+    const values = ['avgRating', 'description', 'price', 'negotiable'];
+    const conditions = 'tutorID=' + db.escape(userID) +
+                       ' AND classID=' + db.escape(courseID);
+
+    return db.select('tritor_tutorlist', values, conditions, 1).then((results) => {
+        if (results && results.length > 0) {
+            return results[0];
+        }
+
+        return null;
+    });
+}
+
+/**
  * Retrieves the top 10 tutors for Tritor. This is done by getting the top 10
  * rating users. Since ratings are only given to tutors, we can assume anyone
  * who has a rating has tutored. Hence, we do not need to check for the user

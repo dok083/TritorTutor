@@ -21,6 +21,18 @@ TutorController.get = function(course) {
 }
 
 /**
+ * Returns the tutoring information for a given tutor for a given course.
+ *
+ * @param userID The ID of the desired tutor.
+ * @param courseID The ID of the course the user is tutoring for.
+ * @return A promise that contains object with tutoring information. This may be
+ *         null if the user is not tutoring for the course.
+ */
+TutorController.getByUser = function(userID, courseID) {
+    return TutorModel.getByUser(userID, courseID);
+}
+
+/**
  * Add a tutor listing.
  *
  * @param course The course this listing is for.

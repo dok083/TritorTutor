@@ -1,59 +1,106 @@
-var TutorController = require('../../controller/tutorController.js');
-
-// Decorator that forces the user to be logged in.
-var requiresLoggedIn = require('../userUtils.js');
-
+"use strict"
 
 /**
- * A view the returns the tutoring information (price, negotiable, etc...)
- * for the current user.
+ * This file handles tutor listings.
  */
-function getTutors(req, res, user) {
- 	var courseID = req.params.courseID;
 
- 	if(!courseID) {
+var TutorController = require('../../controller/tutorController.js');
+var CourseController = require('../../controller/courseController.js');
+var requiresLoggedIn = require('../userUtils.js');
+
+/**
+ * Returns the tutoring information for the current user for the given course.
+ */
+function getTutorInfo(req, res, user) {
+ 	var courseID = req.params.id;
+
+ 	if (!courseID || courseID.length < 3) {
  		return res.status(400).json({message: 'invalid course'});
  	}
 
- 	TutorController.get(courseID)
- 		.then((listings) => {
- 			if (listings) {
- 				return res.json(listings);
- 			}
-
- 			return res.status(400).json({message: 'invalid course'});
- 		});
+    TutorController.getByUser(user.userID, courseID.toUpperCase())
+        .then((info) => {
+        res.json(info);
+    });
 }
 
 /**
  * Updates tutor listing when a new listing is made or deleted 
  * for a certain course
  */
-function updateTutors(req, res) {
+function updateTutors(req, res, user) {
+    if (!user.verified) {
+        return res.status(403).json({message: 'not verified'});
+    }
 
+    const courseID = req.body.courseID;
+    const data = req.body.data;
+
+    // TODO: Validate user changes. Expect an object containing changes.
+    // Error if the changes are not valid.
+
+    // TODO: Create a new change object that contains verified values. Add the
+    // values from the original changes to the new object with fixed values if
+    // needed.
+
+    // Update the tutor listing for the user.
 }
 
 /**
  * Adds a new tutor listing for the given course.
  */
-function addTutor(req, res) {
-    var courseId = req.params.courseID;
-    var userID = req.params.userID;
-    var desc = req.params.desc;
-    var price = req.params.price;
-    var nego = req.params.nego;
-
-    if (!courseID || !userID || !desc || !price || !nego) {
-        return res.status(400).json({message: 'invalid parameters'});
+function addTutor(req, res, user) {
+    // Make sure the user is verified.
+    if (!user.verified) {
+        return res.status(403).json({message: 'not verified'});
     }
 
-    TutorController.add(courseID, userID, desc, price, nego)
-        .then()
+    var courseID = req.body.courseID;
+    var desc = req.body.desc;
+    var price = req.body.price;
+    var nego = req.body.nego;
+
+    // Validate the course ID.
+    if (!courseID || courseID.length < 3) {
+        return res.status(400).json({message: 'invalid course'});
+    }
+
+    // Validae the price.
+    if (!price || price < 0) {
+        return res.status(400).json({message: 'invalid price'});
+    }
+
+    // Convert negotiable to a boolean type.
+    if (!nego) {
+        nego = false;
+    } else {
+        nego = true;
+    }
+
+    // Convert desc to a string type.
+    if (!desc) {
+        desc = '';
+    } else {
+        desc = desc.toString();
+    }
+
+    // Limit price to two decimal places.
+    price = price.toFixed(2);
+
+    // Check the given course actually exists.
+    CourseController.getCourseInfo(courseID.toUpperCase())
+        .then((course) => {
+            if (!course) {
+                return res.status(400).json({message: 'invalid course'});
+            }
+
+            // If it does exist, add the tutor.
+            TutorController.add(courseID, userID, desc, price, nego);
+        });
 }
 
-function deleteTutor(req, res) {
+function deleteTutor(req, res, use) {
     var courseID = req.params.courseID;
-    var userID = req.params.userID;
 
     if(!courseID || !userID) {
         return res.status(400).json({message: 'listing not found'});
@@ -65,7 +112,7 @@ function deleteTutor(req, res) {
 
  module.exports = {
  	'/:id':  {
- 		get: requiresLoggedIn(getTutors),
+ 		get: requiresLoggedIn(getTutorInfo),
  		put: requiresLoggedIn(updateTutors),
         post: requiresLoggedIn(addTutor),
         delete: requiresLoggedIn(deleteTutor)
