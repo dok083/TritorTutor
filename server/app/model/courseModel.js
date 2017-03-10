@@ -18,12 +18,11 @@ CourseModel.getByID = function(classID) {
 	//set condition to classID in order to retrieve one row
 	var condition = 'classID=' + db.escape(classID);
 
-	return db.select('tritor_classlist', ['classID', 'className', 'description', 'department'], condition, 1)
+	return db.select('tritor_classlist', ['className', 'description', 'department'], condition, 1)
 		.then((results) => {
 			if (results && results.length > 0) {
 				return {
-					classID: results[0].classID,
-					courseName: results[0].courseName,
+					courseName: results[0].className,
 					description: results[0].description,
 					department: results[0].department
 				};
