@@ -62,7 +62,7 @@ TutorModel.get = function(course) {
             return results.map( 
             ( listing ) =>
             {
-                listing.classID = course;
+                //listing.classID = course;
                 return listing;
             } );
 		});
