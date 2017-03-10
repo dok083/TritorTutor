@@ -40,6 +40,11 @@ ReviewModel.get = function(userID) {
                      'tutorID=' + userID);
 }
 
+ReviewModel.getAvg = function(userID) {
+    //TODO: is AVG a float?
+    return db.query('SELECT AVG(Cast(rating as Float) FROM tritor_reviews WHERE tutorID = ?', [userID]);
+}
+
 /**
  * Updates the fields of a specific review in the database. The review is the
  * review given to the user whose ID is userID from the user whose ID is
