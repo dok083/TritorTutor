@@ -6,7 +6,7 @@
  */
 
 var TutorSessionModel = require('../model/tutorSessionModel.js');
-var CourseModel = require('../model/courseController.js');
+var CourseModel = require('../model/courseModel.js');
 
 var TutorSessionController = {};
 

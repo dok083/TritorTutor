@@ -15,14 +15,12 @@ var CourseModel = {};
  * @return return a promise that retrieve course information by givin classID. 
  */
 CourseModel.getByID = function(classID) {
-	classID = classID.toUpperCase();
 	//set condition to classID in order to retrieve one row
-	condition = 'classID ' + classID;
+	var condition = 'classID=' + db.escape(classID);
 
-
-	return db.select('tritor_classlist', ['classID', 'courseName', 'description', 'department'], condition, 1)
+	return db.select('tritor_classlist', ['classID', 'className', 'description', 'department'], condition, 1)
 		.then((results) => {
-			if (results && results.length > 0) {
+			if (results) {
 				return {
 					classID: results[0].classID,
 					courseName: results[0].courseName,
@@ -30,6 +28,7 @@ CourseModel.getByID = function(classID) {
 					department: results[0].department
 				};
 			}
+
 			return null;
 		});
 }
@@ -40,9 +39,9 @@ CourseModel.getByID = function(classID) {
  * @return return a promise to increment a certain field of a certain row.
  */
 CourseModel.incrementTutorCounts = function(classID) {
-	classID = classID.toUpperCase();
 	value = 1; //tutorCount will be incremented by 1
 	condition = 'classID ' + classID;
+
 	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
 
@@ -75,7 +74,9 @@ CourseModel.getByTutorCounts = function() {
  * @return return a promise that retrieve all courses under a certain department
  */
 CourseModel.getByDepartment = function(department) {
-	var condition = 'department=' + department;
+	var condition = 'department=' + db.escape(department);
 	//select all courses under the department
 	return db.select('tritor_classlist', ['classID'], condition);
 }
+
+module.exports = CourseModel;

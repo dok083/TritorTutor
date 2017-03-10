@@ -7,29 +7,45 @@ var CourseController = require('../../controller/courseController.js');
 var requiresLoggedIn = require('../userUtils.js');
 
 function getCourseInfo(req, res) {
-	var classID = req.param.classID;
+	var classID = req.params.classID;
+
+    if (!classID) {
+        res.status(400).json({message: 'invalid course ID'});
+
+        return;
+    }
+
 	CourseController.getCourseInfo(classID)
-		.then((results)=> {
-			if (results && results.length > 0) {
+		.then((info)=> {
+			if (!info) {
 				res.status(400).json({message: "course not found"});
+
 				return;
 			}
-			return;
+
+            res.json(info);
 		});
 }
 
 function getPopularCourses(req, res) {
 	CourseController.getPopularCourses()
 		.then((results) => {
-			return results;
+            res.json(results);
 		});
 }
 
 function getByDepartment(req, res) {
 	var department = req.param.department;
-	CourseController.getByDepartment(department)
+
+    if (!department) {
+        res.status(400).json({message: 'invalid department'});
+
+        return;
+    }
+
+	CourseController.getByDepartment(department.toUpperCase())
 		.then((results) => {
-			return results;
+            res.json(results);
 		});
 }
 

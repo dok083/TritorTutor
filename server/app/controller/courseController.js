@@ -35,3 +35,5 @@ CourseController.getPopularCourses = function() {
 CourseController.getByDepartment = function(department) {
 	return CourseModel.getByDepartment(department);
 }
+
+module.exports = CourseController;
