@@ -56,6 +56,10 @@ class Profile extends React.Component {
     this.setState({ showModal: true });
   }
 
+  requestTutor() {
+
+  }
+
   componentWillReceiveProps(props) {
     var userID = parseInt(props.params.id);
 
@@ -87,7 +91,9 @@ class Profile extends React.Component {
         this.state.localUser.userID != this.state.user.userID) {
       options = (
         <Panel header="Options">
-          <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>Request Tutoring</Button>
+          <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>
+                  Request Tutoring
+          </Button>
         </Panel>
       );
     }
