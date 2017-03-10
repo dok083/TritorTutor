@@ -35,9 +35,10 @@ function getPopularCourses(req, res) {
 }
 
 function getByDepartment(req, res) {
-	var department = req.param.department;
+	var department = req.params.department;
 
-    if (!department) {
+    // Department lengths are usually 3+ characters.
+    if (!department || department.length < 3) {
         res.status(400).json({message: 'invalid department'});
 
         return;
@@ -56,9 +57,16 @@ function getByDepartment(req, res) {
 function getTutorListing(req, res) {
  	var courseID = req.params.classID;
 
- 	TutorController.get(courseID)
+    // Only allow courses with length at least 3.
+    if (!courseID || courseID.length < 3) {
+        res.status(400).json({message: 'invalid course'});
+
+        return;
+    }
+
+ 	TutorController.get(courseID.toUpperCase())
  		.then((listings) => {
- 			if(listings && listings.length > 0) {
+ 			if (listings) {
  				return res.json(listings);
  			}
 
@@ -69,9 +77,9 @@ function getTutorListing(req, res) {
 module.exports = {
 	'/view/:classID': {
 		get: getCourseInfo},
-	'/:classID/tutorListing': {
+	'/tutors/:classID': {
  		get: getTutorListing},
-	'/popularCourses': {
+	'/popular': {
 		get: getPopularCourses},
 	'/:department': {
 		get: getByDepartment}

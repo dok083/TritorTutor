@@ -20,7 +20,7 @@ CourseModel.getByID = function(classID) {
 
 	return db.select('tritor_classlist', ['classID', 'className', 'description', 'department'], condition, 1)
 		.then((results) => {
-			if (results) {
+			if (results && results.length > 0) {
 				return {
 					classID: results[0].classID,
 					courseName: results[0].courseName,
@@ -65,7 +65,15 @@ CourseModel.decrementTutorCounts = function(classID) {
  */
 CourseModel.getByTutorCounts = function() {
 	//retrun the first 10 courses with most tutors
-	return db.select('tritor_classlist', ['classID'], null, 10, 'DESC');
+    // TODO: Generate query that selects top 10 rows in tritor_classlist
+    // Need to somehow use a query that can ORDER BY the COUNT of classID
+    // in tritor_tutor_list
+	return db.select('tritor_classlist', ['classID'], null, 10/*, 'DESC'*/)
+        .then((results) => {
+            return results.map((result) => {
+                return result.classID;
+            });
+        });
 }
 
 /**
@@ -74,9 +82,18 @@ CourseModel.getByTutorCounts = function() {
  * @return return a promise that retrieve all courses under a certain department
  */
 CourseModel.getByDepartment = function(department) {
-	var condition = 'department=' + db.escape(department);
+    department = db.escape(department);
+
+    var condition = 'classID LIKE ' +
+                    department.substring(0, department.length - 1) + '%\'';
+
 	//select all courses under the department
-	return db.select('tritor_classlist', ['classID'], condition);
+	return db.select('tritor_classlist', ['classID'], condition)
+        .then((results) => {
+            return results.map((result) => {
+                return result.classID;
+            });
+        });
 }
 
 module.exports = CourseModel;
