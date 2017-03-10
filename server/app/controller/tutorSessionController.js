@@ -107,10 +107,7 @@ TutorSessionController.getHistory = function(userID) {
 TutorSessionController.remove = function(tutorID, studentID, classID) {
 	var data = {status: -1};
 
-	return TutorSessionModel.update(tutorID, studentID, classID, data)
-		.then(()=> {
-			CourseModel.decrementTutorCounts(classID);
-		});
+	return TutorSessionModel.update(tutorID, studentID, classID, data);
 }
 
 /**
