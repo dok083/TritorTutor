@@ -4,6 +4,11 @@ import { FormGroup, InputGroup, FormControl, Button, Glyphicon, Panel, Checkbox 
 
 class TutorRatingFilter extends React.Component {
   render() {
+    const style = {
+      marginBottom: '-10px',
+      marginTop: '-10px'
+    };
+
     var starOptions = [];
 
     // Get the multiple stars for option labels.
@@ -18,7 +23,7 @@ class TutorRatingFilter extends React.Component {
 
     return (
       <Panel header='Filter by Rating'>
-        <FormGroup>
+        <FormGroup style={style}>
           {ratingOptions}
         </FormGroup>
       </Panel>

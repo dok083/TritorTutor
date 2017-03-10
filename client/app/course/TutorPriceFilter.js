@@ -4,6 +4,10 @@ import { Form, FormGroup, InputGroup, FormControl, Button, Panel, Col, Grid, But
 
 class TutorPriceFilter extends React.Component {
   render() {
+    const style = {
+      marginBottom: '0px'
+    };
+
     return (
       <Panel header='Filter by Price'>
         <Form>
@@ -19,7 +23,7 @@ class TutorPriceFilter extends React.Component {
             <FormControl type='text' placeholder='To' />
             </InputGroup>
           </FormGroup>
-          <FormGroup>
+          <FormGroup style={style}>
           <Button>Filter</Button>
           </FormGroup>
         </Form>

@@ -5,21 +5,27 @@ import { Grid, Col, Row, Panel } from 'react-bootstrap'
 import CourseTutorComponent from './CourseTutorComponent'
 import TutorSearchContainer from './TutorSearchContainer'
 
+import axios from 'axios'
+
 class CourseTutorContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tutors: [
-        {userID: 0, name: 'Gary Gillespie', stars: 5, price: 25, negotiable: true, desc: 'Be tutored by a superstar!'},
-        {userID: 3, name: 'Rick Ord', stars: 5, price: 25, negotiable: false, desc: 'Simple boy from the midwest looking to tutor!'}
-      ]
+      tutors: []
     };
 
     // Have this set when the tutor state is finished.
     // This allows for the search box to keep a copy of the original data while
     // allowing the tutors state to change.
     this.search = <TutorSearchContainer onRefine={this.updateMatches} data={this.state.tutors} />
+  }
+
+  componentWillMount() {
+    axios.get('/api/course/tutors/' + this.props.course)
+      .then((results) => {
+        this.setState({tutors: results.data});
+      });
   }
 
   updateMatches(newMatches) {
@@ -32,16 +38,15 @@ class CourseTutorContainer extends React.Component {
 
     if(this.state.tutors.length == 0){
       tutors = <Panel>There are currently no tutors for this course.</Panel>
-    }
-    else {
+    } else {
       tutors = this.state.tutors.map((tutor) => {
         return (
           <CourseTutorComponent userID={tutor.userID}
-                                name={tutor.name}
-                                stars={tutor.stars}
+                                name={tutor.username}
+                                stars={tutor.avgRating}
                                 price={tutor.price}
                                 negotiable={tutor.negotiable}
-                                desc={tutor.desc} />
+                                desc={tutor.description} />
         );
       });
     }
@@ -62,4 +67,3 @@ class CourseTutorContainer extends React.Component {
 CourseTutorContainer.displayName = 'CourseTutorContainer';
 
 export default CourseTutorContainer
-
