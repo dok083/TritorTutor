@@ -39,7 +39,7 @@ CourseModel.getByID = function(classID) {
  */
 CourseModel.incrementTutorCounts = function(classID) {
 	value = 1; //tutorCount will be incremented by 1
-	condition = 'classID ' + classID;
+	var condition = 'classID=' + db.escape(classID);
 
 	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
@@ -53,7 +53,7 @@ CourseModel.incrementTutorCounts = function(classID) {
 CourseModel.decrementTutorCounts = function(classID) {
 	classID = classID.toUpperCase();
 	value = -1; //tutorCount will be decremented by 1
-	condition = 'classID ' + classID;
+	var condition = 'classID=' + db.escape(classID);
 	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }
 
