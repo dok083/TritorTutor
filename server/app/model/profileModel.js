@@ -68,6 +68,10 @@ ProfileModel.update = function(userID, values) {
     return db.update('tritor_users', values, 'userID=' + userID, 1);
 }
 
+ProfileModel.updateRating = function(userID, data){
+    return db.update('tritor_users', data, 'userID=' + userID, 1);
+}
+
 /**
  * Permanently removes a profile from existence.
  *
