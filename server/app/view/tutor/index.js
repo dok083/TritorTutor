@@ -36,14 +36,71 @@ function updateTutors(req, res, user) {
     const courseID = req.params.id;
     const data = req.body.data;
 
-    // TODO: Validate user changes. Expect an object containing changes.
+    // Validate user changes. Expect an object containing changes.
     // Error if the changes are not valid.
 
-    // TODO: Create a new change object that contains verified values. Add the
+    // Create a new change object that contains verified values. Add the
     // values from the original changes to the new object with fixed values if
     // needed.
+    var change = {};
 
-    // Update the tutor listing for the user.
+    // Validate the course ID, if there is one
+    if ((courseID != undefined)
+        && (!courseID || courseID.length < 3)) {
+        return res.status(400).json({message: 'invalid course'});
+    }
+    else if (courseID != undefined)
+    {
+        change.courseID = courseID;
+    }
+
+    // Validate the price, if there is one
+    if ((data.price != undefined)
+        && (!data.price || data.price < 0)) {
+        return res.status(400).json({message: 'invalid price'});
+    }
+    else if (data.price != undefined)
+    {
+        change.price = data.price;
+    }
+
+    // Validate the negotiable, if there is one
+    if (data.negotiable != undefined) {
+        return res.status(400).json({message: 'invalid negotiable'});
+    }
+    else if (data.negotiable != undefined)
+    {
+        change.negotiable = data.negotiable;
+    }
+
+    // Change the description, if there is one
+    if (data.description != undefined)
+    {
+        change.description = data.description;
+    }
+
+    // Check the given tutor for the given course actually exists.
+    TutorController.getByUser(user.userID, courseID)
+        .then(
+        (listing) => 
+        {
+            // validate that a listing for this tutor alrady exists
+            if (listing == null) {
+                return res.status(400).json({message: 'invalid user-course combination'});
+            }
+
+            // Update the tutor listing for the user.
+            TutorController.update(courseID, user.userID, change)
+                .then(
+                () => {
+                    console.log('woo')
+                    res.json({message: 'success'});
+                })
+                .catch((error) => {
+                    res.status(400).json({message: error.toString()});
+                });
+        });
+
 }
 
 /**

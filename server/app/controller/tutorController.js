@@ -92,15 +92,15 @@ TutorController.update = function(course, userID, data) {
     // Get a clean value for the desired changes.
     var changes = {};
 
-    if (data.avgRating) {
+    if (data.avgRating != undefined) {
         changes.avgRating = Math.min(Math.max(parseFloat(data.avgRating), 0.0), 5.0);
     }
 
-    if (data.desc) {
+    if (data.desc != undefined) {
         changes.desc = data.desc.substr(0, 500);
     }
 
-    if (data.price) {
+    if (data.price != undefined) {
         changes.price = Math.max(Math.ceil(data.price), 0);
     }
 
