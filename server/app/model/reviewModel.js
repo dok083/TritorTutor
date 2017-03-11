@@ -40,6 +40,12 @@ ReviewModel.get = function(userID) {
                      'tutorID=' + userID);
 }
 
+/**
+ * Returns the avg of the reviews rating from the database for the user whose ID is userID.
+ *
+ * @param userID The ID of the desired user.
+ * @return A promise that contains a float that is the avg rating for the user
+ */
 ReviewModel.getAvg = function(userID) {
     //TODO: is AVG a float?
     return db.query('SELECT AVG(Cast(rating as Float) FROM tritor_reviews WHERE tutorID = ?', [userID]);
