@@ -1,6 +1,8 @@
 var Controller = require( "../controller/courseController.js" );
 
-var testString = "CSE 100"
+var testString = "cse      100 "
+
+console.log( testString.replace(/\ /g, "").toUpperCase().trim() );
 
 Controller.getBySubstring( testString ).then(
 ( results ) =>
