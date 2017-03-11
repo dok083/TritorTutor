@@ -64,7 +64,7 @@ MessageModel.readMessage = function(msgID) {
 
     // return promise containing information about message
     return db.select('tritor_messages', ['sender','title','receiver','content'],
-            conditions, 1, 'creationTime DESC');
+            conditions, 1);
 }
 
 /**
@@ -78,8 +78,8 @@ MessageModel.readUser = function(userID) {
     var conditions = 'receiver=' + userID;
 
     // return promise containing information about messages
-    return db.select('tritor_messages', ['sender','title','receiver','content'],
-            conditions, 50, 'creationTime DESC');
+    return db.select('tritor_messages', ['sender','title','msgID','creationTime','content'],
+            conditions, 100);
 }
 
 module.exports = MessageModel;

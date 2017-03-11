@@ -4,44 +4,101 @@ import { Grid, Col, Row, Panel } from 'react-bootstrap'
 
 import CourseTutorComponent from './CourseTutorComponent'
 import TutorSearchContainer from './TutorSearchContainer'
+import Dispatch from '../Dispatch'
+
+import axios from 'axios'
 
 class CourseTutorContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tutors: [
-        {userID: 0, name: 'Gary Gillespie', stars: 5, price: 25, negotiable: true, desc: 'Be tutored by a superstar!'},
-        {userID: 3, name: 'Rick Ord', stars: 5, price: 25, negotiable: false, desc: 'Simple boy from the midwest looking to tutor!'}
-      ]
+      tutors: [],
+      filtered: []
     };
+
 
     // Have this set when the tutor state is finished.
     // This allows for the search box to keep a copy of the original data while
     // allowing the tutors state to change.
-    this.search = <TutorSearchContainer onRefine={this.updateMatches} data={this.state.tutors} />
+
+    /*
+    // maybe someday this will work. refresh for easy life.
+    Dispatch.addListener('updateTutor', (data) => {
+      this.updateTutor(data.tutor);
+    });
+
+    Dispatch.addListener('addTutor', (data) => {
+      this.addTutor(data.tutor);
+    });
+
+    Dispatch.addListener('deleteTutor', (data) => {
+      this.deleteTutor(data.tutor);
+    });
+    */
+  }
+
+  /*
+  addTutor(tutor) {
+    this.setState({tutors: this.state.tutors.concat([tutor])});
+  }
+
+  deleteTutor(tutorID) {
+    var newTutors = this.state.tutors.filter((other) => {
+      return other.userID != tutorID;
+    });
+
+    this.setState({tutors: newTutors});
+  }
+
+  updateTutor(tutor) {
+    var tutors = this.state.tutors;
+
+    for (var i = 0; i < tutors.length; i++) {
+      var other = tutors[i];
+
+      if (other.userID == tutor.userID) {
+        tutor.price = parseFloat(tutor.price) || 0.0;
+        tutors[i] = tutor;
+        console.log('new tutirs')
+        console.log(tutors)   
+        this.setState({tutors: tutors});
+
+        return;
+      }
+    }
+  }
+  */
+
+  componentWillMount() {
+    axios.get('/api/course/tutors/' + this.props.course)
+      .then((results) => {
+        this.setState({tutors: results.data, filtered: results.data});
+      });
   }
 
   updateMatches(newMatches) {
     // New matches = list of matching tutors
-    this.setState({tutors: newMatches});
+    this.setState({filtered: newMatches});
   }
 
   render() {
     var tutors;
 
-    if(this.state.tutors.length == 0){
-      tutors = <Panel>There are currently no tutors for this course.</Panel>
-    }
-    else {
-      tutors = this.state.tutors.map((tutor) => {
+    if(this.state.filtered.length == 0){
+      tutors = <Panel>No tutors found.</Panel>
+    } else {
+      this.state.filtered.sort((a,b)=> {
+        return ((a.avgRating || 0) < (b.avgRating || 0));
+      });
+      tutors = this.state.filtered.map((tutor) => {
         return (
           <CourseTutorComponent userID={tutor.userID}
-                                name={tutor.name}
-                                stars={tutor.stars}
+                                name={tutor.username}
+                                stars={tutor.avgRating}
                                 price={tutor.price}
                                 negotiable={tutor.negotiable}
-                                desc={tutor.desc} />
+                                desc={tutor.description} />
         );
       });
     }
@@ -49,7 +106,7 @@ class CourseTutorContainer extends React.Component {
     return (
       <Row>
         <Col xs={12} sm={3}>
-          {this.search}
+          <TutorSearchContainer onRefine={this.updateMatches.bind(this)} data={this.state.tutors} />
         </Col>
         <Col xs={12} sm={9}>
           {tutors}
@@ -62,4 +119,3 @@ class CourseTutorContainer extends React.Component {
 CourseTutorContainer.displayName = 'CourseTutorContainer';
 
 export default CourseTutorContainer
-

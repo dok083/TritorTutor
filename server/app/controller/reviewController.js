@@ -8,6 +8,7 @@
 var ReviewController = {}
 
 var ReviewModel = require('../model/reviewModel.js');
+var ProfileModel = require('../model/profileModel.js');
 
 /**
  * This function adds a new review to the user that has the ID of userID. The
@@ -29,7 +30,11 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
         rating = 5;
     }
 
-    ReviewModel.create(userID, reviewerID, stars, comment);
+    return ReviewModel.create(userID, reviewerID, rating, comment)
+        .then (()=> {
+        console.log('created')
+	    ReviewController.updateProfile(userID);
+        });
 }
 
 /**
@@ -40,9 +45,54 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
  * @return A promise that contains the list of all reviews for the user.
  */
 ReviewController.get = function(userID) {
-    return ReviewModel.get(userID);
+    return new Promise(function(resolve, reject) {
+        return ReviewModel.get(userID)
+            .then((results) => {
+                if (results.length == 0) {
+                    resolve([]);
+
+                    return;
+                }
+
+                var realResults = [];
+
+                results.forEach((result) => {
+                    var newResult = {
+                        userID: result.userID,
+                        stars: result.rating,
+                        comment: result.comment
+                    };
+
+                    ProfileModel.get(result.userID, 'username')
+                        .then((tutor) => {
+                            newResult.name = tutor.username;
+
+                            realResults.push(newResult);
+
+                            if (realResults.length == results.length) {
+                                resolve(realResults);
+                            }
+                        });
+                });
+            });
+    });
 }
 
+ReviewController.getAvg = function(userID) {
+    return ReviewModel.getAvg(userID)
+        .then((results) => {
+            return results[0]['AVG(rating)'];
+        });
+}
+
+ReviewController.updateProfile = function(userID) {
+    ReviewController.getAvg(userID)
+	.then((userAvg)=>{
+    	    var data = {avgRating: (parseFloat(userAvg) || 0.0).toFixed(3)}
+    	    return ProfileModel.updateRating(userID, data);
+	});
+}
+ReviewController.updateProfile(49)
 /**
  * Updates a specific review (the one created by reviewerID on userID's page).
  *

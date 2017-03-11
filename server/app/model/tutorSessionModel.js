@@ -44,8 +44,8 @@ TutorSessionModel.update = function(tutorID, studentID, classID, data) {
     studentID = db.escape(studentID);
     classID = db.escape(classID);
 
-    var conditions = 'tutorID=' + tutorID + 'AND studentID=' + studentID
-                     + 'AND classID=' + classID;
+    var conditions = 'tutorID=' + tutorID + ' AND studentID=' + studentID
+                     + ' AND classID=' + classID;
 
     return db.update('tritor_tutor_sessions', data, conditions, 1);
 }
@@ -139,5 +139,39 @@ TutorSessionModel.getBetween = function(studentID, tutorID, classID) {
             });            
         });
 }
+
+/**
+ * Returns a list of tutor sessions that contains the given user.
+ *
+ * @param userID The desired user to look for.
+ * @return A promise containing a list of matching tutor sessions.
+ */
+TutorSessionModel.getWithUser = function(userID) {
+    userID = db.escape(userID);
+
+    return db.select('tritor_tutor_sessions',
+                     ['classID', 'tutorID', 'studentID'],
+                     'studentID=' + userID + ' OR tutorID=' + userID);
+}
+
+/**
+ * Returns all tutoring sessions where the tutor corresponds to the given
+ * user ID.
+ *
+ * @param userID The user ID of the tutor.
+ * @return A promise containing a list of matching tutoring sessions.
+ */
+TutorSessionModel.getPair = function(userID, otherID) {
+    const fields = ['sessionID', 'studentID', 'tutorID', 'classID', 'status'];
+    const conditions = '(studentID='+ db.escape(userID) + 'AND tutorID=' + db.escape(otherID) 
+                        + ') OR (studentID=' + db.escape(otherID) + ' AND tutorID=' + db.escape(userID) + ')';
+    
+    return db.select('tritor_tutor_sessions', fields, conditions)
+        .then((results) => {
+            return results.map((session) => {
+                return session;
+            });            
+        });
+ }
 
 module.exports = TutorSessionModel;

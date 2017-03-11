@@ -6,6 +6,7 @@
  */
 
 var MessageModel = require('../model/messageModel.js');
+var ProfileModel = require('../model/profileModel.js');
 
 var MessageController = {};
 
@@ -37,23 +38,44 @@ MessageController.send = function(sender, recipient, title, content)
  */
 MessageController.getByUID = function(userID) {
     // retrieve data of all messages with userID
-    return MessageModel.readUser(userID).then(
+    return new Promise(function(resolve, reject) {
+        MessageModel.readUser(userID).then(
         (results) => {
-            // to hold each message
-        
-            if (results && results.length > 0){
-                // construct and return list of messages 
-                return results.map((result) => {
-                    // add this message to the list
-                    return {
-                        sender: result.sender,
-                        recipient: result.receiver,
-                        title: result.title,
-                        content: result.content
-                    };
-                })
+            // Do nothing if there are no messages to handle.
+            if (results.length == 0) {
+                resolve([]);
+
+                return;
+            }
+
+            var messages = [];
+            var done = 0;
+
+            // Load the sender for each message.
+            for (var i = 0; i < results.length; i++) {
+                const result = results[i];
+
+                ProfileModel.get(result.sender)
+                    .then((sender) => {
+                        // Add the message with the user to the message list.
+                        messages.push({
+                            id: result.msgID,
+                            sender: sender,
+                            title: result.title,
+                            time: result.creationTime,
+                            content: result.content
+                        });
+
+                        done++;
+
+                        // If we finished the last one, resolve the promise.
+                        if (done == results.length) {
+                            resolve(messages);
+                        }
+                    });
             }
         });
+    });
 }
 
 /**

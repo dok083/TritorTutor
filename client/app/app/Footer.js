@@ -3,7 +3,8 @@ import React from 'react'
 class Footer extends React.Component {
   render() {
     const style = {
-        marginTop: '2em'
+        marginTop: '2em',
+        marginBottom: '2em'
     };
 
     return (

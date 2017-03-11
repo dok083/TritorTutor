@@ -8,6 +8,7 @@
 var db = require('./database.js');
 
 var TutorModel = {};
+
 /**
  * Creates a tutor listing by inserting it into the database.
  *
@@ -19,12 +20,13 @@ var TutorModel = {};
  * @return A promise that contains nothing. 
  */
 TutorModel.create = function(course, userID, desc, price, nego) {
+    console.log(231)
 	// Create new listing by inserting to the table in the database.
 	return db.insert('tritor_tutorlist', {
 		classID: course,
 		tutorID: userID,
 		description: desc,
-		avgRating: -1,
+        // avgRating nullable in the database
 		price: price,
 		negotiable:	nego,
 	});
@@ -51,11 +53,67 @@ TutorModel.delete = function(course, userID) {
  */
 TutorModel.get = function(course) {
 	// Return tutor listing attributes
-	var columns = ['tutorID', 'description', 'avgRating', 'price', 'negotiable'];
+	var columns = ['tutorID', 'description', 'price', 'negotiable'];
+	
 	// Only find matching listings
-	var conditions = 'classID=' + course;
+	var conditions = 'classID=' + db.escape(course);
 
 	return db.select('tritor_tutorlist', columns, conditions);
+}
+
+/**
+ * Returns tutoring information for a specific user for a given course.
+ *
+ * @param userID The ID of the desired user.
+ * @param courseID The ID of the desired course.
+ * @return A promise that contains an object with tutoring information. If the
+ *         user is not a tutor for the given course, then this is null.
+ */
+TutorModel.getByUser = function(userID, courseID) {
+    const values = ['description', 'price', 'negotiable'];
+    const conditions = 'tutorID=' + db.escape(userID) +
+                       ' AND classID=' + db.escape(courseID);
+
+    return db.select('tritor_tutorlist', values, conditions, 1).then((results) => {
+        if (results && results.length > 0) {
+            return results[0];
+        }
+
+        return null;
+    });
+}
+
+/**
+ * Retrieves all of the courses a user tutors for.
+ *
+ * @param userID The ID of the desired user.
+ * @return A promise containing a list of the courses for the tutor.
+ */
+TutorModel.getAllByUser = function(userID) {
+    const values = ['price', 'negotiable', 'classID'];
+    const conditions = 'tutorID=' + db.escape(userID);
+
+    return db.select('tritor_tutorlist', values, conditions, null, 'classID');
+}
+
+/**
+ * Retrieves the top 10 tutors for Tritor. This is done by getting the top 10
+ * rating users. Since ratings are only given to tutors, we can assume anyone
+ * who has a rating has tutored. Hence, we do not need to check for the user
+ * actually tutoring for someone.
+ *
+ * @return A promise containing a list of the top 10 tutors.
+ */
+TutorModel.getPopular = function() {
+    return db.select('tritor_users', ['userID', 'username'], null, 10,
+                     'avgRating DESC').then((results) => {
+        return results.map((result) => {
+            return {
+                userID: result.userID,
+                username: result.username
+            };
+        });
+    })
 }
 
 /**
@@ -68,7 +126,7 @@ TutorModel.get = function(course) {
  * @return A promise that contains nothing.
  */
 TutorModel.update = function(course, userID, data) {
-	var conditions = 'classID=' + course + 'AND tutorID=' + userID;
+	var conditions = 'classID=' + db.escape(course) + ' AND tutorID=' + userID;
 
 	return db.update('tritor_tutorlist', data, conditions, 1);
 }

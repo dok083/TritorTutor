@@ -8,7 +8,7 @@ class PopularTutorsComponent extends React.Component {
       return (
         <LinkContainer to={'/profile/' + user.userID} key={index}>
           <ListGroupItem>
-            {index + 1}. {user.name}
+            {index + 1}. {user.username}
           </ListGroupItem>
         </LinkContainer>
       );

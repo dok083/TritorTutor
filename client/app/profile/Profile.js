@@ -6,15 +6,22 @@ import axios from 'axios'
 import ProfilePic from './ProfilePic'
 import ReviewContainer from './ReviewContainer'
 import RequestContainer from './RequestContainer'
+import MessageContainer from './MessageContainer'
+import LeaveReviewContainer from './LeaveReviewContainer'
+
+import Dispatch from '../Dispatch.js'
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = { 
+      localUser: null, // who you are logged in as
       showModal: false,
-      user: null,
-      courses: []
+      showMsgModal: false,
+      showRewModal: false,
+      user: null, // viewing this person's profile
+      courses: [],
     };
   }
 
@@ -23,12 +30,31 @@ class Profile extends React.Component {
    * profile corresponding to the given user ID.
    */
   componentWillMount() {
+    // Get who we are currently logged in as.
+    Dispatch.addListener('getUserInfo', (data) => {
+      if (data.component == this) {
+        this.setState({
+          localUser: data.user
+        });
+      }
+    });
+
+    var action = Dispatch.createAction('requestUserInfo');
+    action.set('component', this);
+    action.dispatch();
+
+    // Get the user for the profile page.\
     var userID = parseInt(this.props.params.id);
 
     axios.get('/api/profile/' + userID)
       .then((user) => {
         this.setState({user: user.data});
       });
+
+    axios.get('/api/tutor/' + userID + '/courses')
+      .then((courses) => {
+        this.setState({courses: courses.data});
+      })
   }
 
   close() {
@@ -38,6 +64,35 @@ class Profile extends React.Component {
   open() {
     this.setState({ showModal: true });
   }
+  
+  closeMsgModal() {
+    this.setState({ showMsgModal: false });
+  }
+
+  openMsgModal() {
+    this.setState({ showMsgModal: true });
+  }
+
+  closeRewModal(){
+    {/*
+    axios.post('/api/reviews/'+ userID,  {
+      userID: this.state.localUser,
+      reviewerID: this.state.user,
+      rating:
+      comment:
+
+    }*/}
+    this.setState({ showRewModal: false });
+    //window.location.reload();
+  }
+
+  openRewModal(){
+    this.setState({ showRewModal: true });
+  }
+
+  requestTutor() {
+
+  }
 
   componentWillReceiveProps(props) {
     var userID = parseInt(props.params.id);
@@ -46,14 +101,25 @@ class Profile extends React.Component {
       .then((user) => {
         this.setState({user: user.data});
       });
+
+    axios.get('/api/tutor/' + userID + '/courses')
+      .then((courses) => {
+        this.setState({courses: courses.data});
+      })
   }
 
   render() {
     var courseList = this.state.courses.map((course) => {
+      var negotiable;
+
+      if (course.negotiable) {
+        negotiable = <span> <Label bsStyle='info'>Price Negotiable</Label></span>;
+      }
+
       return (
-        <ListGroupItem>
+        <ListGroupItem key={course.classID}>
           <h4>
-            <Link to={'/course/' + course.id}>{course.name}</Link> <Label>${course.price} per lesson</Label>
+            <Link to={'/course/' + course.classID}>{course.classID}</Link> <Label>${parseFloat(course.price).toFixed(2)}</Label>{negotiable}
           </h4>
         </ListGroupItem>
       );        
@@ -66,13 +132,30 @@ class Profile extends React.Component {
     var options;
 
     // Eventually replace 0 with local user ID.
-    if (false) {
+    if (this.state.localUser && this.state.user &&
+        this.state.localUser.userID != this.state.user.userID) {
       options = (
         <Panel header="Options">
-          <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>Request Tutoring</Button>
+          <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>
+            Request Tutoring
+          </Button>
+          <Button bsStyle="default" bsSize="large" onClick={this.openMsgModal.bind(this)} block>
+            Send Message
+          </Button>
         </Panel>
       );
     }
+
+    
+    var reviewButton;
+    
+    if (this.state.localUser && this.state.user &&
+        this.state.localUser.userID != this.state.user.userID) {
+      reviewButton = (
+        <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
+      );
+    } 
+
 
     var content;
 
@@ -104,12 +187,14 @@ class Profile extends React.Component {
           </Col>
         </Grid>
         <Grid>
-          <Col xs={12} md={12}>
-          <h2>Reviews</h2>
+          <Col xs={12} md={4}>
+          <h2>Reviews {reviewButton}</h2>
             <ReviewContainer userID={this.state.user.userID} />
           </Col>
         </Grid>
         <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)} user={this.state.user}/>
+        <MessageContainer show={this.state.showMsgModal} onHide={this.closeMsgModal.bind(this)} user={this.state.user}/>
+        <LeaveReviewContainer show={this.state.showRewModal} onHide={this.closeRewModal.bind(this)} user={this.state.user}/>
         </div>
       );
     }

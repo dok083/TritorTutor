@@ -1,23 +1,24 @@
 import React from 'react'
 import PopularTutorsComponent from './PopularTutorsComponent'
+import axios from 'axios'
 
 class PopularTutorsContainer extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      tutors: [
-        {name: 'Gary Gillespie', userID: 0},
-        {name: 'Hope', userID: 0},
-        {name: 'Yiming', userID: 0},
-        {name: 'San', userID: 0},
-        {name: 'Ryan', userID: 0},
-        {name: 'David', userID: 0},
-        {name: 'Bonnie', userID: 0},
-        {name: 'Rish', userID: 0},
-        {name: 'Ro', userID: 0},
-        {name: 'Nat', userID: 0}
-      ]
+      tutors: []
     };
+  }
+
+  componentWillMount() {
+    axios.get('/api/popular-tutors')
+      .then((results) => {
+        this.setState({tutors: results.data});
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   }
 
   render() {

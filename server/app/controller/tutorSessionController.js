@@ -6,6 +6,8 @@
  */
 
 var TutorSessionModel = require('../model/tutorSessionModel.js');
+var ProfileModel = require('../model/profileModel.js');
+var CourseModel = require('../model/courseModel.js');
 
 var TutorSessionController = {};
 
@@ -18,8 +20,13 @@ var TutorSessionController = {};
  * @param status The session is usually pending on creation.
  * @return Promise containing nothing.
  */
-TutorSessionController.add = function(tutorID, studentID, classID, status) {
-	return TutorSessionModel.create(tutorID, studentID, classID, status); 
+TutorSessionController.add = function(tutorID, studentID, classID) {
+	var data = {status: 0}
+
+	return TutorSessionModel.create(tutorID, studentID, classID, data)
+		.then(()=> {
+			CourseModel.incrementTutorCounts(classID);
+		}); 
 }
 
 /**
@@ -38,37 +45,85 @@ TutorSessionController.update = function(tutorID, studentID, classID, status) {
 }
 
 /**
- * Get all sessions that meet the condition
+ * Returns all the sessions between a student and a tutor.
+ *
+ * @param studentID The user ID for the student.
+ * @param tutorID The user ID for the tutor.
+ * @return A promise that contains the list of all sessions between the two.
+ */
+TutorSessionController.getBetween = function(studentID, tutorID) {
+	return TutorSessionModel.getBetween(studentID, tutorID);
+}
+
+/**
+ * Returns all the sessions between a student and a tutor.
+ *
+ * @param studentID The user ID for the student.
+ * @param tutorID The user ID for the tutor.
+ * @return A promise that contains the list of all sessions between the two.
+ */
+TutorSessionController.getBetweenCourse = function(studentID, tutorID, classID) {
+	return TutorSessionModel.getBetween(studentID, tutorID, classID);
+}
+
+/**
+ * Returns all the sessions between a user and another.
+ *
+ * @param studentID The user ID for the student.
+ * @param tutorID The user ID for the tutor.
+ * @return A promise that contains the list of all sessions between the two.
+ */
+TutorSessionController.getPair = function(userID, otherID) {
+	return TutorSessionModel.getPair(userID, otherID);
+}
+
+
+/**
+ * Get all sessions that have the passed in user
  * 
- * @param tutorID The userID of the tutor.
- * @param studentID The userID of the student.
- * @param classID The course of the tutoring session.
- * @param status The session is either pending, ongoing, or complete
+ * @param userID The userID of the user.
  * @return A promise containing a list for all sessions that match the 
  *         condition.
  */
-TutorSessionController.get = function(tutorID, studentID, classID, status)  {
-	var conditions = [];
+TutorSessionController.getHistory = function(userID) {
+    return new Promise(function(resolve, reject) {
+        TutorSessionModel.getWithUser(userID)
+            .then((results) => {
+                if (results.length == 0) {
+                    return resolve([]);
+                }
 
-	if(tutorID) {
-		conditions.push('tutorID=' + tutorID);
-	}
+                var realResults = [];
 
-	if(studentID) {
-		conditions.push('studentID=' + studentID);	
-	}
+                results.forEach((result) => {
+                    var newResult = {
+                        classID: result.classID,
+                        tutorID: result.tutorID,
+                        studentID: result.studentID
+                    };
 
-	if(classID) {
-		conditions.push('classID=' + classID);
-	}
+                    console.log(result);
+                    ProfileModel.get(result.tutorID, 'username')
+                        .then((tutor) => {
+                            newResult.tutorName = tutor.username;
+                        })
+                        .then(() => {
+                            return ProfileModel.get(result.studentID,
+                                                    'username');
+                        })
+                        .then((student) => {
+                            newResult.studentName = student.username;
+                        })
+                        .then(() => {
+                            realResults.push(newResult);
 
-	if(status) {
-		conditions.push('status=' + status);	
-	}
-
-	var cond = conditions.join(" AND ");
-
-	return TutorSessionModel.get(cond);
+                            if (realResults.length == results.length) {
+                                resolve(realResults);
+                            }
+                        });
+                });
+            });
+    });
 }
 
 /**
@@ -84,6 +139,16 @@ TutorSessionController.remove = function(tutorID, studentID, classID) {
 	var data = {status: -1};
 
 	return TutorSessionModel.update(tutorID, studentID, classID, data);
+}
+
+/**
+ * Returns a session with the ID passed in.
+ *
+ * @param sessionID Id of the session.
+ * @return A promise that contains the session.
+ */
+TutorSessionController.getByID = function(sessionID) {
+	return TutorSessionModel.getByID(sessionID);
 }
 
 module.exports = TutorSessionController;

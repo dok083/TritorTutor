@@ -6,7 +6,7 @@
  */
 
 var TutorModel = require('../model/tutorModel.js');
-
+var ProfileModel = require('../model/profileModel.js');
 var TutorController = {};
 
 /**
@@ -17,7 +17,63 @@ var TutorController = {};
  *         description, price, and negotiable.
  */
 TutorController.get = function(course) {
-	return TutorModel.get(course);
+    return new Promise(function(resolve, reject) {
+        // Get all of the tutors for this course.
+        return TutorModel.get(course)
+            .then((results) => {
+                console.log(results)
+                // If there were no results, just return an empty list.
+                if (results.length == 0) {
+                    resolve([]);
+
+                    return;
+                }
+
+                var tutors = [];
+
+                // Otherwise, get the username for each tutor.
+                // This indentation is thiccccc
+                results.forEach((result) => {
+                    ProfileModel.get(result.tutorID, ['username', 'avgRating'])
+                        .then((user) => {
+                            result.userID = result.tutorID;
+                            result.tutorID = undefined;
+                            result.username = user.username;
+                            result.avgRating = user.avgRating;
+
+                            // Form a new list of tutors with their username.
+                            tutors.push(result);
+
+                            // Once the list is finished, resolve the promise.
+                            if (tutors.length == results.length) {
+                                resolve(tutors);
+                            }
+                        });
+                });
+            });
+    });
+}
+
+/**
+ * Returns the tutoring information for a given tutor for a given course.
+ *
+ * @param userID The ID of the desired tutor.
+ * @param courseID The ID of the course the user is tutoring for.
+ * @return A promise that contains object with tutoring information. This may be
+ *         null if the user is not tutoring for the course.
+ */
+TutorController.getByUser = function(userID, courseID) {
+    return TutorModel.getByUser(userID, courseID);
+}
+
+/**
+ * Returns a list of classes that a user tutors for.
+ *
+ * @param userID The ID of the desired user.
+ * @return A promise containing a list of classes the user tutors for.
+ */
+TutorController.getAllByUser = function(userID) {
+    return TutorModel.getAllByUser(userID);
 }
 
 /**
@@ -44,9 +100,36 @@ TutorController.remove = function(course, userID) {
 	return TutorModel.delete(course, userID);
 }
 
-TutorController.update = function(course, userID, avgRating, desc, price, nego) {
-	// TODO:data
-	return db.update(course, userID, data);
+TutorController.update = function(course, userID, data) {
+    // Get a clean value for the desired changes.
+    var changes = {};
+
+    if (data.avgRating != undefined) {
+        changes.avgRating = Math.min(Math.max(parseFloat(data.avgRating), 0.0), 5.0);
+    }
+
+    if (data.desc != undefined) {
+        changes.desc = data.desc.substr(0, 500);
+    }
+
+    if (data.price != undefined) {
+        changes.price = Math.max(Math.ceil(data.price), 0);
+    }
+
+    if (data.negotiable != undefined) {
+        changes.negotiable = data.negotiable ? true : false;
+    }
+
+	return TutorModel.update(course, userID, data);
+}
+
+/**
+ * Returns the top tutors on Tritor.
+ * 
+ * @return A promise containing a list of popular tutors.
+ */
+TutorController.getPopular = function() {
+    return TutorModel.getPopular();
 }
 
 module.exports = TutorController;
