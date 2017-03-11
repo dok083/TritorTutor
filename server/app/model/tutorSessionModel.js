@@ -163,7 +163,7 @@ TutorSessionModel.getWithUser = function(userID) {
  */
 TutorSessionModel.getPair = function(userID, otherID) {
     const fields = ['sessionID', 'studentID', 'tutorID', 'classID', 'status'];
-    const conditions = '(studentID='+ db.escape(userID) + 'AND tutorID=' + db.escape(otherID) 
+    const conditions = '(studentID='+ db.escape(userID) + ' AND tutorID=' + db.escape(otherID) 
                         + ') OR (studentID=' + db.escape(otherID) + ' AND tutorID=' + db.escape(userID) + ')';
     
     return db.select('tritor_tutor_sessions', fields, conditions)

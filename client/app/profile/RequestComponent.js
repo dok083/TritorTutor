@@ -14,7 +14,7 @@ class RequestComponent extends React.Component {
     };
   }
 
-  selected(e.target.value){
+  selected(e) {
     this.setState({selectedCourse: e.target.value});
   }
 
@@ -23,7 +23,9 @@ class RequestComponent extends React.Component {
     axios.post('/api/tutorSession/' + this.props.user, {
       courseID: this.state.selectedCourse
     }).then(()=> {
-        window.location.reload()
+        window.location.reload();   
+        this.setState({busy: false});
+
     }).catch((error) => {
       var message = error.response && error.response.data;
 
@@ -35,7 +37,8 @@ class RequestComponent extends React.Component {
 
       this.setState({
         message: message,
-        messageType: 'danger'
+        messageType: 'danger',
+        busy: false
       })
     });
   }
