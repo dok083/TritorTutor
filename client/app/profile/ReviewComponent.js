@@ -2,6 +2,7 @@ import React from 'react'
 import { Glyphicon, Media } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
+import ProfilePic from '../profile/ProfilePic'
 
 class ReviewComponent extends React.Component {
   render() {
@@ -24,7 +25,7 @@ class ReviewComponent extends React.Component {
       <Media>
         <Media.Left align="top">
           <Link to={'/profile/' + review.userID}>
-            <img width={64} height={64} src={'/profiles/' + review.userID + '.jpg'} />
+            <ProfilePic width={64} height={64} user={review.userID} />
           </Link>
         </Media.Left>
         <Media.Body>

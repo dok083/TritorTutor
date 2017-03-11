@@ -20,7 +20,7 @@ var db = require('./database.js');
  * @param comment A comment for the review.
  * @return A promise that is called after the review has been made.
  */
-ReviewModel.create = function(userID, tutorID, rating, comment) {
+ReviewModel.create = function(tutorID, userID, rating, comment) {
     return db.insert('tritor_reviews', {
         userID: userID,
         tutorID: tutorID,
@@ -48,7 +48,7 @@ ReviewModel.get = function(userID) {
  */
 ReviewModel.getAvg = function(userID) {
     //TODO: is AVG a float?
-    return db.query('SELECT AVG(Cast(rating as Float)) FROM tritor_reviews WHERE tutorID = ?', [userID]);
+    return db.query('SELECT AVG(rating) FROM tritor_reviews WHERE tutorID = ?', [userID]);
 }
 
 /**

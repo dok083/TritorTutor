@@ -45,7 +45,37 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
  * @return A promise that contains the list of all reviews for the user.
  */
 ReviewController.get = function(userID) {
-    return ReviewModel.get(userID);
+    return new Promise(function(resolve, reject) {
+        return ReviewModel.get(userID)
+            .then((results) => {
+                if (results.length == 0) {
+                    resolve([]);
+
+                    return;
+                }
+
+                var realResults = [];
+
+                results.forEach((result) => {
+                    var newResult = {
+                        userID: result.userID,
+                        stars: result.rating,
+                        comment: result.comment
+                    };
+
+                    ProfileModel.get(result.userID, 'username')
+                        .then((tutor) => {
+                            newResult.name = tutor.username;
+
+                            realResults.push(newResult);
+
+                            if (realResults.length == results.length) {
+                                resolve(realResults);
+                            }
+                        });
+                });
+            });
+    });
 }
 
 ReviewController.getAvg = function(userID) {
