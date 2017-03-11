@@ -21,7 +21,7 @@ class Profile extends React.Component {
       showMsgModal: false,
       showRewModal: false,
       user: null,
-      courses: []
+      courses: [],
     };
   }
 
@@ -69,6 +69,7 @@ class Profile extends React.Component {
   }
 
   closeRewModal(){
+    {/*axios.post('/api/reviews/'+ userID);*/} // Need to be done
     this.setState({ showRewModal: false });
   }
 
