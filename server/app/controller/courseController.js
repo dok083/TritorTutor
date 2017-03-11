@@ -45,11 +45,16 @@ CourseController.getByDepartment = function(department) {
  * substring
  */
 CourseController.getBySubstring = function(sub) {
-    // format substring - remove all spaces
-    // TODO more formatting
-    // if the string is lower case, make them all into uppercase letters
-    return CourseModel.getBySubstring(
-        sub.replace(/\ /g, "").toUpperCase().trim());
+    // get rid of all whitespaces, covert sub to uppercase
+    sub.replace(/\ /g, "").toUpperCase();
+
+    // matches the pattern <word><number>, e.g. CSE110CSED110CSE, grab CSE110 only
+    var matched = sub.match(/(\w)*+(\d)*/);
+    //if found pattern
+    if(matched)
+    	return CourseModel.getBySubString(matched);
+    else //otherwise pass the whole string
+    	return CourseModel.getBySubstring(sub);
 }
 
 module.exports = CourseController;
