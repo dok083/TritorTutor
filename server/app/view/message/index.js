@@ -84,7 +84,7 @@ function getMessages(req, res, user) {
  */
 function sendMessage(req, res, user) {
     var messageID = parseInt(req.params.id);
-
+    // this param might be wrong
     MessageController.send(user.userID, messageID, user.title, user.content)
         .then(() => {
             res.json({message: 'success'});
