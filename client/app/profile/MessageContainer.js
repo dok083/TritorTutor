@@ -5,6 +5,7 @@ import MessageComponent from './MessageComponent'
 class MessageContainer extends React.Component {
   render() {
     var hasActiveSession = false;
+    const sessions = this.props.sessions;
 
     // Check if any sessions are active.
     for (var i = 0; i < sessions.length; i++) {
@@ -19,7 +20,7 @@ class MessageContainer extends React.Component {
 
     // Do not render if there is no active session.
     if (!hasActiveSession) {
-      return;
+      return null;
     }
 
     return (

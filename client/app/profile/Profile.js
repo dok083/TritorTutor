@@ -11,6 +11,9 @@ import LeaveReviewContainer from './LeaveReviewContainer'
 
 import Dispatch from '../Dispatch.js'
 
+const SESSION_REJECTED = -1;
+const SESSION_PENDING = 0;
+const SESSION_ACTIVE = 1;
 const SESSION_DONE = 2;
 
 class Profile extends React.Component {
@@ -24,7 +27,7 @@ class Profile extends React.Component {
       showRewModal: false,
       user: null, // viewing this person's profile
       courses: [],
-      sessions: null
+      sessions: []
     };
   }
 
@@ -142,43 +145,61 @@ class Profile extends React.Component {
       courseList = <em>This user is currently not tutoring for any courses.</em>;
     }
 
-    var options;
+    var options = [];
 
-    // Eventually replace 0 with local user ID.
-    if (this.state.localUser && this.state.user &&
-        this.state.localUser.userID != this.state.user.userID) {
-      options = (
-        <Panel header="Options">
-          <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>
-            Request Tutoring
-          </Button>
-          <Button bsStyle="default" bsSize="large" onClick={this.openMsgModal.bind(this)} block>
-            Send Message
-          </Button>
-        </Panel>
-      );
-    }
-
-    
-    var reviewButton;
-    
+    // Get some information about the type of sessions between this user
+    // and the user on the profile page.
+    var hasActiveSession = false;
     var hasDoneSession = false;
 
     for (var i = 0; i < this.state.sessions.length; i++) {
-      if (this.state.sessions[i].status == SESSION_DONE) {
-        hasDoneSession = true;
-
-        break;
+      switch (this.state.sessions[i].status) {
+        case SESSION_ACTIVE:
+          hasActiveSession = true;
+          break;
+        case SESSION_DONE:
+          hasDoneSession = true;
+          break;
       }
     }
 
-    if (hasDoneSession && this.state.localUser && this.state.user &&
-        this.state.localUser.userID != this.state.user.userID) {
+    // Check if the user we are viewing is the same as the current user.
+    var notSameUser = false;
+
+    if (this.state.localUser && this.state.user) {
+      notSameUser = this.state.localUser.userID != this.state.user.userID;
+    }
+
+    // Add request button if there are no active sessions.
+    if (!hasActiveSession && notSameUser) {
+      options.push(
+        <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>
+          Request Tutoring
+        </Button>
+      );
+    } else if (hasActiveSession) {
+      options.push(
+        <Button bsStyle="default" bsSize="large" onClick={this.openMsgModal.bind(this)} block>
+          Send Message
+        </Button>
+      );
+    }
+
+    if (options.length > 0) {
+      options = (
+        <Panel header={"Options"}>
+          {options}
+        </Panel>
+      );
+    }
+    
+    var reviewButton;
+    
+    if (hasDoneSession) {
       reviewButton = (
         <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
       );
     } 
-
 
     var content;
 
@@ -225,8 +246,7 @@ class Profile extends React.Component {
                           sessions={this.state.sessions} />
         <LeaveReviewContainer show={this.state.showRewModal}
                               onHide={this.closeRewModal.bind(this)}
-                              user={this.state.user}
-                              sessions={this.state.sessions} />
+                              user={this.state.user} />
         </div>
       );
     }

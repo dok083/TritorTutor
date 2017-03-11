@@ -7,12 +7,14 @@ const SESSION_ACTIVE = 1;
 
 class RequestContainer extends React.Component {
   render() {
+    const sessions = this.props.sessions;
+
     // Do not render if there is an active session.
     for (var i = 0; i < sessions.length; i++) {
       const status = sessions[i].status;
 
       if (status == SESSION_PENDING || status == SESSION_ACTIVE) {
-        return;
+        return null;
       }
     }
 
