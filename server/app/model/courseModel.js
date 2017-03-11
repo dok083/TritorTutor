@@ -38,7 +38,7 @@ CourseModel.getByID = function(classID) {
  * @return return a promise to increment a certain field of a certain row.
  */
 CourseModel.incrementTutorCounts = function(classID) {
-	value = 1; //tutorCount will be incremented by 1
+	var value = 1; //tutorCount will be incremented by 1
 	var condition = 'classID=' + db.escape(classID);
 
 	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
@@ -52,7 +52,7 @@ CourseModel.incrementTutorCounts = function(classID) {
  */
 CourseModel.decrementTutorCounts = function(classID) {
 	classID = classID.toUpperCase();
-	value = -1; //tutorCount will be decremented by 1
+	var value = -1; //tutorCount will be decremented by 1
 	var condition = 'classID=' + db.escape(classID);
 	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
 }

@@ -37,6 +37,10 @@ function requestSession(req, res, user) {
     var tutorID = req.params.id;
     var studentID = user.userID;
 
+    console.log('courseID: '+ courseID);
+    console.log('tutorID: '+ tutorID);
+    console.log('studentID: '+ studentID);
+
     // Check if there is a session that is active/pending from this user to
     // the tutor. If so, do not allow this request.
     TutorSessionController.getBetweenCourse(tutorID, studentID, courseID)

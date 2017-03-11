@@ -121,8 +121,8 @@ TutorSessionModel.getByTutor = function(userID) {
  * @return A promise that contains a list of all matching tutoring sessions.
  */
 TutorSessionModel.getBetween = function(studentID, tutorID, classID) {
-    const fields = ['sessionID', 'classID', 'status'];
-    const conditions = 'studentID=' + db.escape(studentID)
+    var fields = ['sessionID', 'classID', 'status'];
+    var conditions = 'studentID=' + db.escape(studentID)
                        + ' AND tutorID=' + db.escape(tutorID);
 
     if (classID) {
