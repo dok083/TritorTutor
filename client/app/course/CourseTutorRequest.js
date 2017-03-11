@@ -49,7 +49,7 @@ class CourseTutorRequest extends React.Component {
   }
 
   onPriceChange(e) {
-    this.setState({price: e.target.value});
+    this.setState({price: parseFloat(e.target.value) || 0});
   }
 
   onNegotiableChange() {
@@ -67,13 +67,11 @@ class CourseTutorRequest extends React.Component {
 
       return;
     }
-
-    this.setState({busy: true});
-
+    
     return {
         desc: this.state.description,
-        price: this.state.price,
-        nego: this.state.negotiable
+        price: price,
+        nego: Boolean(this.state.negotiable)
     };
   }
 
@@ -84,6 +82,7 @@ class CourseTutorRequest extends React.Component {
       return;
     }
 
+    // Get what changes were actually made.
     var changes = {};
 
     Object.keys(listing).forEach((key) => {
@@ -101,6 +100,26 @@ class CourseTutorRequest extends React.Component {
       return;
     }
 
+    // Tell the tutor list to update the listing to reflect these changes.
+    var action = Dispatch.createAction('updateTutor');
+    action.set('tutor', {
+      userID: this.props.user.userID,
+      username: this.props.user.username,
+      avgRating: this.props.stars,
+      price: listing.price,
+      negotiable: listing.nego,
+      description: listing.desc
+    });
+    action.dispatch();
+
+    this.setState({
+      description: listing.desc,
+      price: listing.price,
+      negotiable: listing.nego,
+      busy: true
+    });
+
+    // Send the update to the server.
     axios.put('/api/tutor/' + this.props.course, changes)
       .then(() => {
         this.setState({
@@ -108,6 +127,8 @@ class CourseTutorRequest extends React.Component {
           messageType: 'success',
           busy: false
         });
+
+        window.location.reload();
       })
       .catch((error) => {
         var message = error.response && error.response.data;

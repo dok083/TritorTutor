@@ -4,6 +4,7 @@ import { Grid, Col, Row, Panel } from 'react-bootstrap'
 
 import CourseTutorComponent from './CourseTutorComponent'
 import TutorSearchContainer from './TutorSearchContainer'
+import Dispatch from '../Dispatch'
 
 import axios from 'axios'
 
@@ -19,10 +20,34 @@ class CourseTutorContainer extends React.Component {
     // This allows for the search box to keep a copy of the original data while
     // allowing the tutors state to change.
     this.search = <TutorSearchContainer onRefine={this.updateMatches} data={this.state.tutors} />
+
+    /*
+    // maybe someday this will work. refresh for easy life.
+    Dispatch.addListener('updateTutor', (data) => {
+      this.updateTutor(data.tutor);
+    });
+
+    Dispatch.addListener('addTutor', (data) => {
+      this.addTutor(data.tutor);
+    });
+
+    Dispatch.addListener('deleteTutor', (data) => {
+      this.deleteTutor(data.tutor);
+    });
+    */
   }
 
+  /*
   addTutor(tutor) {
     this.setState({tutors: this.state.tutors.concat([tutor])});
+  }
+
+  deleteTutor(tutorID) {
+    var newTutors = this.state.tutors.filter((other) => {
+      return other.userID != tutorID;
+    });
+
+    this.setState({tutors: newTutors});
   }
 
   updateTutor(tutor) {
@@ -31,9 +56,18 @@ class CourseTutorContainer extends React.Component {
     for (var i = 0; i < tutors.length; i++) {
       var other = tutors[i];
 
-      //if (other.
+      if (other.userID == tutor.userID) {
+        tutor.price = parseFloat(tutor.price) || 0.0;
+        tutors[i] = tutor;
+        console.log('new tutirs')
+        console.log(tutors)   
+        this.setState({tutors: tutors});
+
+        return;
+      }
     }
   }
+  */
 
   componentWillMount() {
     axios.get('/api/course/tutors/' + this.props.course)
@@ -57,7 +91,7 @@ class CourseTutorContainer extends React.Component {
         return (
           <CourseTutorComponent userID={tutor.userID}
                                 name={tutor.username}
-                                stars={tutor.avgRatig}
+                                stars={tutor.avgRating}
                                 price={tutor.price}
                                 negotiable={tutor.negotiable}
                                 desc={tutor.description} />
