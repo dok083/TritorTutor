@@ -6,6 +6,7 @@
  */
 
 var TutorSessionModel = require('../model/tutorSessionModel.js');
+var ProfileModel = require('../model/profileModel.js');
 var CourseModel = require('../model/courseModel.js');
 
 var TutorSessionController = {};
@@ -85,14 +86,44 @@ TutorSessionController.getPair = function(userID, otherID) {
  *         condition.
  */
 TutorSessionController.getHistory = function(userID) {
-	TutorSessionModel.getByStudent(userID)
-		.then((student)=> {
-			return TutorSessionModel.getByTutor(userID)
-				.then((tutor)=> {
-					var history = student.concat(tutor);
-					return history;
-				});
-		});
+    return new Promise(function(resolve, reject) {
+        TutorSessionModel.getWithUser(userID)
+            .then((results) => {
+                if (results.length == 0) {
+                    return resolve([]);
+                }
+
+                var realResults = [];
+
+                results.forEach((result) => {
+                    var newResult = {
+                        classID: result.classID,
+                        tutorID: result.tutorID,
+                        studentID: result.studentID
+                    };
+
+                    console.log(result);
+                    ProfileModel.get(result.tutorID, 'username')
+                        .then((tutor) => {
+                            newResult.tutorName = tutor.username;
+                        })
+                        .then(() => {
+                            return ProfileModel.get(result.studentID,
+                                                    'username');
+                        })
+                        .then((student) => {
+                            newResult.studentName = student.username;
+                        })
+                        .then(() => {
+                            realResults.push(newResult);
+
+                            if (realResults.length == results.length) {
+                                resolve(realResults);
+                            }
+                        });
+                });
+            });
+    });
 }
 
 /**
