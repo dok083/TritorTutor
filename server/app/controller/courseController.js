@@ -36,4 +36,18 @@ CourseController.getByDepartment = function(department) {
 	return CourseModel.getByDepartment(department);
 }
 
+/**
+ * Get course by substring.
+ *
+ * @param sub the substring to use to find the course
+ *
+ * @return return a promise to containing a list of courses with the matching
+ * substring
+ */
+CourseController.getBySubstring = function(sub) {
+    // format substring - remove all spaces
+    // TODO more formatting
+    return CourseModel.getBySubstring(sub.replace(" ", ""));
+}
+
 module.exports = CourseController;
