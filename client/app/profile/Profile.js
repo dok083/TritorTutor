@@ -11,6 +11,8 @@ import LeaveReviewContainer from './LeaveReviewContainer'
 
 import Dispatch from '../Dispatch.js'
 
+const SESSION_DONE = 2;
+
 class Profile extends React.Component {
   constructor(props) {
     super(props);
@@ -22,6 +24,7 @@ class Profile extends React.Component {
       showRewModal: false,
       user: null, // viewing this person's profile
       courses: [],
+      sessions: null
     };
   }
 
@@ -54,7 +57,12 @@ class Profile extends React.Component {
     axios.get('/api/tutor/' + userID + '/courses')
       .then((courses) => {
         this.setState({courses: courses.data});
-      })
+      });
+
+    axios.get('/api/tutorSessions/' + userID)
+      .then((results) => {
+        this.setState({sessions: results.data});
+      });
   }
 
   close() {
@@ -105,7 +113,12 @@ class Profile extends React.Component {
     axios.get('/api/tutor/' + userID + '/courses')
       .then((courses) => {
         this.setState({courses: courses.data});
-      })
+      });
+
+    axios.get('/api/tutorSessions/' + userID)
+      .then((results) => {
+        this.setState({sessions: results.data});
+      });
   }
 
   render() {
@@ -149,7 +162,17 @@ class Profile extends React.Component {
     
     var reviewButton;
     
-    if (this.state.localUser && this.state.user &&
+    var hasDoneSession = false;
+
+    for (var i = 0; i < this.state.sessions.length; i++) {
+      if (this.state.sessions[i].status == SESSION_DONE) {
+        hasDoneSession = true;
+
+        break;
+      }
+    }
+
+    if (hasDoneSession && this.state.localUser && this.state.user &&
         this.state.localUser.userID != this.state.user.userID) {
       reviewButton = (
         <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
@@ -192,9 +215,18 @@ class Profile extends React.Component {
             <ReviewContainer userID={this.state.user.userID} />
           </Col>
         </Grid>
-        <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)} user={this.state.user}/>
-        <MessageContainer show={this.state.showMsgModal} onHide={this.closeMsgModal.bind(this)} user={this.state.user}/>
-        <LeaveReviewContainer show={this.state.showRewModal} onHide={this.closeRewModal.bind(this)} user={this.state.user}/>
+        <RequestContainer show={this.state.showModal}
+                          onHide={this.close.bind(this)}
+                          user={this.state.user}
+                          sessions={this.state.sessions} />
+        <MessageContainer show={this.state.showMsgModal}
+                          onHide={this.closeMsgModal.bind(this)}
+                          user={this.state.user}
+                          sessions={this.state.sessions} />
+        <LeaveReviewContainer show={this.state.showRewModal}
+                              onHide={this.closeRewModal.bind(this)}
+                              user={this.state.user}
+                              sessions={this.state.sessions} />
         </div>
       );
     }
