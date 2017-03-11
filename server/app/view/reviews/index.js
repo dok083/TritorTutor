@@ -5,6 +5,7 @@
 "use strict"
 
 var ReviewController = require('../../controller/reviewController.js');
+var requiresLoggedIn = require('../userUtils.js');
 
 function getReviews(req, res) {
     var userID = parseInt(req.params.userID);
@@ -23,8 +24,32 @@ function getReviews(req, res) {
         });
 }
 
+function addReviews(req, res, user) {
+    if (!user.verified) {
+	return res.status(403).json({message: 'You are not verified'});
+    }
+
+    var userID = parseInt(req.params.userID);
+    var rating = parseInt(req.body.rating);
+    var comment = req.body.comment;
+
+    if (!userID.verified) {
+        return res.status(403).json({message: 'Profile does not exist'});
+    }
+
+    if (!content || content.length == 0) {
+        res.status(400).json({message: 'Your reply cannot be empty.'});
+    }
+
+   ReviewController.add(userID, user, rating, comment)
+	.then(() => {
+	    res.json({message: 'success'});
+	});
+}
+
 module.exports = {
     '/:userID': {
-        get: getReviews
+        get: getReviews,
+	post: requiresLoggedIn(addReviews)
     }
 };
