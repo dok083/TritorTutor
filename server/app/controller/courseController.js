@@ -47,7 +47,8 @@ CourseController.getByDepartment = function(department) {
 CourseController.getBySubstring = function(sub) {
     // format substring - remove all spaces
     // TODO more formatting
-    return CourseModel.getBySubstring(sub.replace(" ", ""));
+    // if the string is lower case, make them all into uppercase letters
+    return CourseModel.getBySubstring(sub.replace(" ", "").toUpperCase());
 }
 
 module.exports = CourseController;
