@@ -33,15 +33,16 @@ function addReviews(req, res, user) {
     var rating = parseInt(req.body.rating);
     var comment = req.body.comment;
 
-    if (!userID.verified) {
+
+    if (!userID || userID < 1) {
         return res.status(403).json({message: 'Profile does not exist'});
     }
 
-    if (!content || content.length == 0) {
-        res.status(400).json({message: 'Your reply cannot be empty.'});
+    if (!comment || comment.length == 0) {
+        return res.status(400).json({message: 'Your reply cannot be empty.'});
     }
-
-   ReviewController.add(userID, user, rating, comment)
+    console.log(userID, user.userID, rating, comment)
+   ReviewController.add(userID, user.userID, rating, comment)
 	.then(() => {
 	    res.json({message: 'success'});
 	});
