@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label } from 'react-bootstrap'
+import { Alert, Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label, Modal } from 'react-bootstrap'
 import { Link } from 'react-router'
 import axios from 'axios'
 
@@ -25,6 +25,9 @@ class Profile extends React.Component {
       showModal: false,
       showMsgModal: false,
       showRewModal: false,
+      showEndModal: false,
+      endBusy: false,
+      endMessage: '',
       user: null, // viewing this person's profile
       courses: [],
       sessions: []
@@ -75,7 +78,31 @@ class Profile extends React.Component {
   open() {
     this.setState({ showModal: true });
   }
-  
+ 
+  endSession() {
+    this.setState({endBusy: true});
+
+    axios.put('/api/tutorSessions/' + this.props.params.id)
+      .then(() => {
+        this.setState({endBusy: false});
+        window.location.reload();
+      })
+      .catch((error) => {
+        var message = error.response && error.response.data;
+
+        if (message.message) {
+          message = message.message;
+        } else {
+          message = error.toString();
+        }
+
+        this.setState({
+          endMessage: message,
+          endBusy: false
+        });
+      });
+  }
+
   closeMsgModal() {
     this.setState({ showMsgModal: false });
   }
@@ -97,8 +124,16 @@ class Profile extends React.Component {
     //window.location.reload();
   }
 
+  closeEndModal() {
+    this.setState({showEndModal: false, endMessage: ''});
+  }
+
   openRewModal(){
     this.setState({ showRewModal: true });
+  }
+
+  openEndModal() {
+    this.setState({showEndModal: true});
   }
 
   componentWillReceiveProps(props) {
@@ -179,6 +214,13 @@ class Profile extends React.Component {
           Send Message
         </Button>
       );
+
+      options.push(
+        <Button bsStyle="warning" bsSize="large"
+                onClick={this.openEndModal.bind(this)} block>
+                End Tutoring Session
+        </Button>
+      );
     }
 
     if (options.length > 0) {
@@ -236,22 +278,44 @@ class Profile extends React.Component {
                           onHide={this.close.bind(this)} 
                           user={this.state.user} 
                           courses={this.state.courses} 
-                          localUser={this.state.localUser}
-                          sessions={this.state.sessions}/>
+                          localUser={this.state.localUser} />
         <MessageContainer show={this.state.showMsgModal} 
                           onHide={this.closeMsgModal.bind(this)} 
-                          user={this.state.user}
-                          sessions={this.state.sessions}/>
+                          user={this.state.user} />
         <LeaveReviewContainer show={this.state.showRewModal} 
                               onHide={this.closeRewModal.bind(this)} 
-                              user={this.state.user}
-                              sessions={this.state.sessions}/>
+                              user={this.state.user} />
         </div>
       );
     }
 
+    var errorMessage;
+
+    if (this.state.endMessage.length > 0) {
+      errorMessage = <Alert bsStyle='danger'>{this.state.endMessage}</Alert>;
+    }
+
     return (
       <div id='container'>
+        <Modal show={this.state.showEndModal}
+               onHide={this.closeEndModal.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              End Tutor Session
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {errorMessage}
+            Are you sure you want to end your tutoring session with {this.state.user ? this.state.user.username : 'unknown'}?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.closeEndModal.bind(this)}
+                    disabled={this.state.endBusy}>No</Button>
+            <Button bsStyle='danger'
+                    onClick={this.endSession.bind(this)}
+                    disabled={this.state.endBusy}>Yes</Button>
+          </Modal.Footer>
+        </Modal>
         <Grid>
           {content}
         </Grid>
