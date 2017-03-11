@@ -147,8 +147,8 @@ TutorSessionController.remove = function(tutorID, studentID, classID) {
  * @param sessionID Id of the session.
  * @return A promise that contains the session.
  */
-TutorSessionController.getByID = function(sessionID) {
+/*TutorSessionController.getByID = function(sessionID) {
 	return TutorSessionModel.getByID(sessionID);
-}
+}*/
 
 module.exports = TutorSessionController;

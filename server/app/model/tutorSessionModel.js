@@ -57,7 +57,7 @@ TutorSessionModel.update = function(tutorID, studentID, classID, data) {
  * @return A promise containing the session corresponding to the given ID. If no
  *         session was found, the promise contains null.
  */
-TutorSessionModel.getByID = function(sessionID) {
+/*TutorSessionModel.getByID = function(sessionID) {
     const fields = ['tutorID', 'studentID', 'classID', 'status'];
 
     return db.select('tritor_tutor_sessions', fields,
@@ -68,7 +68,7 @@ TutorSessionModel.getByID = function(sessionID) {
             return null;
         }
     });
-}
+}*/
 
 /**
  * Returns all tutoring sessions where the user being tutored corresponds to the
@@ -78,7 +78,7 @@ TutorSessionModel.getByID = function(sessionID) {
  * @return A promise containing a list of matching tutoring sessions.
  */
 TutorSessionModel.getByStudent = function(userID) {
-    const fields = ['sessionID', 'tutorID', 'classID', 'status'];
+    const fields = ['tutorID', 'classID', 'status'];
 
     return db.select('tritor_tutor_sessions', fields,
                      'studentID=' + db.escape(userID)).then((results) => {
@@ -98,7 +98,7 @@ TutorSessionModel.getByStudent = function(userID) {
  * @return A promise containing a list of matching tutoring sessions.
  */
 TutorSessionModel.getByTutor = function(userID) {
-    const fields = ['sessionID', 'studentID', 'classID', 'status'];
+    const fields = ['studentID', 'classID', 'status'];
 
     return db.select('tritor_tutor_sessions', fields,
                      'tutorID=' + db.escape(userID)).then((results) => {
@@ -121,7 +121,7 @@ TutorSessionModel.getByTutor = function(userID) {
  * @return A promise that contains a list of all matching tutoring sessions.
  */
 TutorSessionModel.getBetween = function(studentID, tutorID, classID) {
-    const fields = ['sessionID', 'classID', 'status'];
+    const fields = ['classID', 'status'];
     const conditions = 'studentID=' + db.escape(studentID)
                        + ' AND tutorID=' + db.escape(tutorID);
 
@@ -162,7 +162,7 @@ TutorSessionModel.getWithUser = function(userID) {
  * @return A promise containing a list of matching tutoring sessions.
  */
 TutorSessionModel.getPair = function(userID, otherID) {
-    const fields = ['sessionID', 'studentID', 'tutorID', 'classID', 'status'];
+    const fields = ['studentID', 'tutorID', 'classID', 'status'];
     const conditions = '(studentID='+ userID + ' AND tutorID=' + otherID
                         + ') OR (studentID=' + otherID + ' AND tutorID=' + userID + ')';
     
