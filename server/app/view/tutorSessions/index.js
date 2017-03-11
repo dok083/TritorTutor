@@ -34,8 +34,8 @@ function requestSession(req, res, user) {
     }
 
     var courseID = req.body.courseID;
-    var tutorID = req.body.tutorID;
-    var studentID = req.body.id;
+    var tutorID = req.params.id;
+    var studentID = user.userID;
 
     // Check if there is a session that is active/pending from this user to
     // the tutor. If so, do not allow this request.
@@ -151,8 +151,8 @@ function getSessionsWith(req, res, user) {
         return res.status(400).json({message: 'unverififed user'});
     }
 
-    const userID = user.id;
-    const otherID = req.params.otherID;
+    const userID = user.userID;
+    const otherID = req.params.id;
 
     // Return all the sessions (does not matter if the user is tutor or student)
     // where the user corresponding to otherID is involved. Only include
