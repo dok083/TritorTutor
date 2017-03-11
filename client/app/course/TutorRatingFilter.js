@@ -3,6 +3,14 @@ import React from 'react'
 import { FormGroup, InputGroup, FormControl, Button, Glyphicon, Panel, Checkbox } from 'react-bootstrap'
 
 class TutorRatingFilter extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  onStarsChange(e){
+    this.props.filter(e.target.value).bind(this);
+  }
+
   render() {
     const style = {
       marginBottom: '-10px',
@@ -18,7 +26,8 @@ class TutorRatingFilter extends React.Component {
 
     // Create a checkbox for each option.
     var ratingOptions = starOptions.map((stars) => {
-      return <Checkbox checked>{stars}</Checkbox>
+      return <Checkbox onChange={this.onStarsChange.bind(this)}
+                       checked>{stars}</Checkbox>
     });
 
     return (

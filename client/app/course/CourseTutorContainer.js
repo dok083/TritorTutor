@@ -18,7 +18,7 @@ class CourseTutorContainer extends React.Component {
     // Have this set when the tutor state is finished.
     // This allows for the search box to keep a copy of the original data while
     // allowing the tutors state to change.
-    this.search = <TutorSearchContainer onRefine={this.updateMatches} data={this.state.tutors} />
+    this.search = <TutorSearchContainer onRefine={this.updateMatches.bind(this)} data={this.state.tutors} />
   }
 
   addTutor(tutor) {
@@ -51,13 +51,13 @@ class CourseTutorContainer extends React.Component {
     var tutors;
 
     if(this.state.tutors.length == 0){
-      tutors = <Panel>There are currently no tutors for this course.</Panel>
+      tutors = <Panel>No tutors found.</Panel>
     } else {
       tutors = this.state.tutors.map((tutor) => {
         return (
           <CourseTutorComponent userID={tutor.userID}
                                 name={tutor.username}
-                                stars={tutor.avgRatig}
+                                stars={tutor.avgRating}
                                 price={tutor.price}
                                 negotiable={tutor.negotiable}
                                 desc={tutor.description} />
