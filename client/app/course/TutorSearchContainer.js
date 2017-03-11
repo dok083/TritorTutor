@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
 
+import { Button } from 'react-bootstrap'
 import TutorNameFilter from './TutorNameFilter'
 import TutorPriceFilter from './TutorPriceFilter'
 import TutorRatingFilter from './TutorRatingFilter'
@@ -23,6 +24,20 @@ class TutorSearchContainer extends React.Component {
     	};
     }
 
+    clearFilter() {
+        this.setState({
+            nameFilter: "",
+            priceFrom: 0,
+            priceTo: 99999.99,
+            star0: true,
+            star1: true,
+            star2: true,
+            star3: true,
+            star4: true
+            },
+            this.filter.bind(this));
+    }
+
     filter() {
         var filtered = this.props.data.filter((tutor)=> {
             if (tutor.username.toLowerCase().indexOf(this.state.nameFilter) == -1) {
@@ -43,13 +58,11 @@ class TutorSearchContainer extends React.Component {
 
     onNameChange(name) {
     	this.setState({nameFilter: name.toLowerCase()}, this.filter.bind(this));
- 
     }
 
     onPriceChange(min, max) {
 
     	this.setState({priceFrom: min, priceTo: max}, this.filter.bind(this));
-
     }
 
     onStarsChange(key, value) {
@@ -65,6 +78,7 @@ class TutorSearchContainer extends React.Component {
                 <TutorNameFilter filter={this.onNameChange.bind(this)}/>
                 <TutorPriceFilter filter={this.onPriceChange.bind(this)}/>
                 <TutorRatingFilter filter={this.onStarsChange.bind(this)}/>
+                <Button onClick={this.clearFilter.bind(this)}>Clear Filter</Button>
             </div>
         );
     }
