@@ -104,7 +104,8 @@ class Course extends React.Component {
           <Panel header='Description'>{this.state.desc}</Panel>
 
           <h2>Available Tutors</h2>
-          <CourseTutorContainer course={this.props.params.id} />
+          <CourseTutorContainer course={this.props.params.id}
+                                 />
         </Grid>
       </div>
     );

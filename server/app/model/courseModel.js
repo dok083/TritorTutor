@@ -63,11 +63,8 @@ CourseModel.decrementTutorCounts = function(classID) {
  * @return return a promise that retrieve the top 10 courses by tutorCounts
  */
 CourseModel.getByTutorCounts = function() {
-	//retrun the first 10 courses with most tutors
-    // TODO: Generate query that selects top 10 rows in tritor_classlist
-    // Need to somehow use a query that can ORDER BY the COUNT of classID
-    // in tritor_tutor_list
-	return db.select('tritor_classlist', ['classID'], null, 10/*, 'DESC'*/)
+    //Select classID from tritor_classlist order by tutorCount desc limit 10
+    return db.select('tritor_classlist', ['classID'], null, 10, 'tutorCount DESC') 
         .then((results) => {
             return results.map((result) => {
                 return result.classID;

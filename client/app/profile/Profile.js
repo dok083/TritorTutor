@@ -16,11 +16,11 @@ class Profile extends React.Component {
     super(props);
 
     this.state = { 
-      localUser: null,
+      localUser: null, // who you are logged in as
       showModal: false,
       showMsgModal: false,
       showRewModal: false,
-      user: null,
+      user: null, // viewing this person's profile
       courses: [],
     };
   }
@@ -69,8 +69,16 @@ class Profile extends React.Component {
   }
 
   closeRewModal(){
-    {/*axios.post('/api/reviews/'+ userID);*/} // Need to be done
+    {/*
+    axios.post('/api/reviews/'+ userID,  {
+      userID: this.state.localUser,
+      reviewerID: this.state.user,
+      rating:
+      comment:
+
+    }*/}
     this.setState({ showRewModal: false });
+    //window.location.reload();
   }
 
   openRewModal(){
