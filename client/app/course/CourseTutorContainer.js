@@ -13,13 +13,14 @@ class CourseTutorContainer extends React.Component {
     super(props);
 
     this.state = {
-      tutors: []
+      tutors: [],
+      filtered: []
     };
+
 
     // Have this set when the tutor state is finished.
     // This allows for the search box to keep a copy of the original data while
     // allowing the tutors state to change.
-    this.search = <TutorSearchContainer onRefine={this.updateMatches.bind(this)} data={this.state.tutors} />
 
     /*
     // maybe someday this will work. refresh for easy life.
@@ -72,22 +73,25 @@ class CourseTutorContainer extends React.Component {
   componentWillMount() {
     axios.get('/api/course/tutors/' + this.props.course)
       .then((results) => {
-        this.setState({tutors: results.data});
+        this.setState({tutors: results.data, filtered: results.data});
       });
   }
 
   updateMatches(newMatches) {
     // New matches = list of matching tutors
-    this.setState({tutors: newMatches});
+    this.setState({filtered: newMatches});
   }
 
   render() {
     var tutors;
 
-    if(this.state.tutors.length == 0){
+    if(this.state.filtered.length == 0){
       tutors = <Panel>No tutors found.</Panel>
     } else {
-      tutors = this.state.tutors.map((tutor) => {
+      this.state.filtered.sort((a,b)=> {
+        return ((a.avgRating || 0) < (b.avgRating || 0));
+      });
+      tutors = this.state.filtered.map((tutor) => {
         return (
           <CourseTutorComponent userID={tutor.userID}
                                 name={tutor.username}
@@ -102,7 +106,7 @@ class CourseTutorContainer extends React.Component {
     return (
       <Row>
         <Col xs={12} sm={3}>
-          {this.search}
+          <TutorSearchContainer onRefine={this.updateMatches.bind(this)} data={this.state.tutors} />
         </Col>
         <Col xs={12} sm={9}>
           {tutors}

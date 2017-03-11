@@ -3,6 +3,7 @@ import React from 'react'
 import TutorNameFilter from './TutorNameFilter'
 import TutorPriceFilter from './TutorPriceFilter'
 import TutorRatingFilter from './TutorRatingFilter'
+import Dispatch from '../Dispatch'
 
 
 class TutorSearchContainer extends React.Component {
@@ -13,59 +14,48 @@ class TutorSearchContainer extends React.Component {
     		nameFilter: "",
     		priceFrom: 0,
     		priceTo: 99999.99,
-    		one: true,
-    		two: true,
-    		three: true,
-    		four: true,
-    		five: true 
+    		star0: true,
+    		star1: true,
+    		star2: true,
+    		star3: true,
+    		star4: true 
     	};
     }
 
-    checkFilters(tutor) {
-      console.log("priceFrom " + priceFrom);
-      console.log("priceTo " + priceTo);
-      console.log("tutor.price " + tutor.price);
-      // tutor name also converted to lowercase
-      var tutorName = tutor.username.toLowerCase();
+    filter() {
+        var filtered = this.props.data.filter((tutor)=> {
+            if (tutor.username.toLowerCase().indexOf(this.state.nameFilter) == -1) {
+                return false;
+            }
+            if (tutor.price < this.state.priceFrom || tutor.price > this.state.priceTo) {
+                return false;
+            }
+            for (var i = 4; i >= 0; i--) {
+                if (tutor.avgRating == null || this.state['star' + Math.ceil(tutor.avgRating)]) {
+                    return true;
+                }
+            }
 
-      // only returns negative if the tutor's name does not contain the term
-      var passedNameFilter = tutorName.indexOf(this.state.nameFilter) >= 0;
-      var passedMinPrice = tutor.price >= priceFrom;
-      var passedMaxPrice = tutor.price <= priceTo;
-      // rating ignored for now
-
-      return passedNameFilter && passedMinPrice && passedMaxPrice;
+            return false;
+        });
+        this.props.onRefine(filtered);
     }
 
     onNameChange(name) {
-      console.log("data");
-      console.log(this.props.data);
-      // nameFilter stored in lowercase for case-insensitive comparison
-    	this.setState({nameFilter: name.toLowerCase()});
-
-      this.props.onRefine(this.props.data.filter(this.checkFilters));
-      console.log("filtered data");
-      console.log(this.props.data.filter(this.checkFilters));
+    	this.setState({nameFilter: name.toLowerCase()}, this.filter.bind(this));
+ 
     }
 
     onPriceChange(min, max) {
-      console.log("price change");
-      console.log(this.props.data);
-    	this.setState({priceFrom: min, priceTo: max});
 
-      this.props.onRefine(this.props.data.filter(this.checkFilters));
-      console.log("filtered data");
-      console.log(this.props.data.filter(this.checkFilters));
+    	this.setState({priceFrom: min, priceTo: max}, this.filter.bind(this));
+
     }
 
-    onStarsChange(stars) {
+    onStarsChange(key, value) {
     	this.setState({
-    		one: stars[0],
-    		two: stars[1],
-    		three: stars[2],
-    		four: stars[3],
-    		five: stars[4]
-    	});
+    	   ['star' + key]: value
+    	}, this.filter.bind(this));
     }
 
     render() {
