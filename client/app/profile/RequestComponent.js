@@ -8,19 +8,21 @@ class RequestComponent extends React.Component {
 
     this.state = { 
       selectedCourse: '',
-      busy: false,
+      busy: true,
       message: '',
       messageType: 'danger'
     };
   }
 
   selected(e) {
-    this.setState({selectedCourse: e.target.value});
+    console.log(e.target.value);
+    this.setState({busy: false, selectedCourse: e.target.value})
+      .then(()=>{console.log(this.state.selectedCourse)});
   }
 
   requestTutor() {
     this.setState({busy: true});
-    axios.post('/api/tutorSession/' + this.props.user, {
+    axios.post('/api/tutorSessions/' + this.props.user.userID, {
       courseID: this.state.selectedCourse
     }).then(()=> {
         window.location.reload();   
@@ -46,7 +48,7 @@ class RequestComponent extends React.Component {
   render() {
     var list = this.props.courses.map((course)=> {
       var course = course.classID;
-      return <option value={course} onChange={this.selected.bind(this)}>{course}</option>
+      return <option value={course}>{course}</option>
     });
 
     var message;
@@ -61,7 +63,8 @@ class RequestComponent extends React.Component {
           {message}
           <p>Choose a course that you wanted to be tutored from {this.props.user.username}</p>
 
-          <FormControl componentClass="select">
+          <FormControl componentClass="select" onChange={this.selected.bind(this)}>
+            <option value={-1} disabled selected>Select Course</option>
             {list}
           </FormControl>
 
