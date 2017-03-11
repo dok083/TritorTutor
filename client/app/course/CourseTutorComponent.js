@@ -7,7 +7,7 @@ import ProfilePic from '../profile/ProfilePic'
 class CourseTutorComponent extends React.Component {
   render() {
     var stars;
-    console.log(this.props);
+
     if (this.props.stars) {
       stars = [];
 
