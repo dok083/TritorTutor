@@ -26,7 +26,7 @@ class TutorSearchContainer extends React.Component {
     	
     }
 
-    onPriceRangeChange(min, max) {
+    onPriceChange(min, max) {
     	this.setState({priceFrom: min, priceTo: max});
     }
 
