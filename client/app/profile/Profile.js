@@ -6,6 +6,7 @@ import axios from 'axios'
 import ProfilePic from './ProfilePic'
 import ReviewContainer from './ReviewContainer'
 import RequestContainer from './RequestContainer'
+import MessageContainer from './MessageContainer'
 
 import Dispatch from '../Dispatch.js'
 
@@ -16,6 +17,7 @@ class Profile extends React.Component {
     this.state = { 
       localUser: null,
       showModal: false,
+      showMsgModal: false,
       user: null,
       courses: []
     };
@@ -55,6 +57,14 @@ class Profile extends React.Component {
   open() {
     this.setState({ showModal: true });
   }
+  
+  closeMsgModal() {
+    this.setState({ showMsgModal: false });
+  }
+
+  openMsgModal() {
+    this.setState({ showMsgModal: true });
+  }
 
   requestTutor() {
 
@@ -92,7 +102,10 @@ class Profile extends React.Component {
       options = (
         <Panel header="Options">
           <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>
-                  Request Tutoring
+            Request Tutoring
+          </Button>
+          <Button bsStyle="default" bsSize="large" onClick={this.openMsgModal.bind(this)} block>
+            Send Message
           </Button>
         </Panel>
       );
@@ -134,6 +147,7 @@ class Profile extends React.Component {
           </Col>
         </Grid>
         <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)} user={this.state.user}/>
+        <MessageContainer show={this.state.showMsgModal} onHide={this.closeMsgModal.bind(this)} user={this.state.user}/>
         </div>
       );
     }
