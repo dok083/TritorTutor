@@ -79,10 +79,23 @@ function getMessages(req, res, user) {
         });
 }
 
+/**
+ *  Send message for a user
+ */
+function sendMessage(req, res, user) {
+    var messageID = parseInt(req.params.id);
+
+    MessageController.send(user.userID, messageID, user.title, user.content)
+        .then(() => {
+            res.json({message: 'success'});
+        });
+}
+
 module.exports = {
     '/:id': {
         get: requiresLoggedIn(viewMessage),
-        delete: requiresLoggedIn(deleteMessage)
+        delete: requiresLoggedIn(deleteMessage),
+        post: requiresLoggedIn(sendMessage)
     },
     '/': {
         get: requiresLoggedIn(getMessages)
