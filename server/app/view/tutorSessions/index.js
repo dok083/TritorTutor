@@ -18,7 +18,7 @@ function getHistory(req, res, user) {
     if (!user.verified) {
         return res.status(400).json({message: 'unverififed user'});
     }
-
+    console.log(user.userID);
     TutorSessionController.getHistory(user.userID)
         .then((results) => {
             res.json(results);
