@@ -21,7 +21,7 @@ class Profile extends React.Component {
       showMsgModal: false,
       showRewModal: false,
       user: null, // viewing this person's profile
-      courses: [],
+      courses: []
     };
   }
 
@@ -88,10 +88,6 @@ class Profile extends React.Component {
 
   openRewModal(){
     this.setState({ showRewModal: true });
-  }
-
-  requestTutor() {
-
   }
 
   componentWillReceiveProps(props) {
@@ -192,7 +188,7 @@ class Profile extends React.Component {
             <ReviewContainer userID={this.state.user.userID} />
           </Col>
         </Grid>
-        <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)} user={this.state.user}/>
+        <RequestContainer show={this.state.showModal} onHide={this.close.bind(this)} user={this.state.user} courses={this.state.courses} localUser={this.state.localUser}/>
         <MessageContainer show={this.state.showMsgModal} onHide={this.closeMsgModal.bind(this)} user={this.state.user}/>
         <LeaveReviewContainer show={this.state.showRewModal} onHide={this.closeRewModal.bind(this)} user={this.state.user}/>
         </div>
