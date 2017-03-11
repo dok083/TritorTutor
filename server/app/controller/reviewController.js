@@ -30,7 +30,7 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
         rating = 5;
     }
 
-    ReviewModel.create(userID, reviewerID, stars, comment)
+    ReviewModel.create(userID, reviewerID, rating, comment)
         .then (()=> {
 	    ReviewController.updateProfile(userID);
         });
