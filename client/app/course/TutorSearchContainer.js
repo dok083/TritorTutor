@@ -35,7 +35,7 @@ class TutorSearchContainer extends React.Component {
     		one: stars[0],
     		two: stars[1],
     		three: stars[2],
-    		four: stars[3]
+    		four: stars[3],
     		five: stars[4]
     	});
     }

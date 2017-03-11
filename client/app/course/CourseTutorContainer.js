@@ -21,6 +21,20 @@ class CourseTutorContainer extends React.Component {
     this.search = <TutorSearchContainer onRefine={this.updateMatches} data={this.state.tutors} />
   }
 
+  addTutor(tutor) {
+    this.setState({tutors: this.state.tutors.concat([tutor])});
+  }
+
+  updateTutor(tutor) {
+    var tutors = this.state.tutors;
+
+    for (var i = 0; i < tutors.length; i++) {
+      var other = tutors[i];
+
+      //if (other.
+    }
+  }
+
   componentWillMount() {
     axios.get('/api/course/tutors/' + this.props.course)
       .then((results) => {
