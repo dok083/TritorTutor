@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Select, FormControl, Button } from 'react-bootstrap'
+import { Modal, Select, FormControl, Button, FieldGroup } from 'react-bootstrap'
 
 class LeaveReviewComponent extends React.Component {
   render() {
@@ -14,7 +14,7 @@ class LeaveReviewComponent extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close} className="pull-right" bsStyle ="primary">
+          <Button onClick={this.props.onHide} className="pull-right" bsStyle ="primary">
             Submit
           </Button>
         </Modal.Footer>
@@ -23,6 +23,6 @@ class LeaveReviewComponent extends React.Component {
   }
 }
 
-RequestComponent.displayName = 'LeaveReviewComponent';
+LeaveReviewComponent.displayName = 'LeaveReviewComponent';
 
 export default LeaveReviewComponent
