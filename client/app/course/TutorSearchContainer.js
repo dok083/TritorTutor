@@ -1,7 +1,5 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
-
-import { Button } from 'react-bootstrap'
 import TutorNameFilter from './TutorNameFilter'
 import TutorPriceFilter from './TutorPriceFilter'
 import TutorRatingFilter from './TutorRatingFilter'
