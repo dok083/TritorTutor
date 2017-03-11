@@ -161,14 +161,15 @@ function getSessionsWith(req, res, user) {
         .then((sessions)=> {
         	var filterSessions = sessions
         		.filter((sessions)=> {
-        			return sessions.status == 0 || sessions.status == 1;
-        		}); 
+        			return sessions.status > -1;
+        		});
+		res.json(filterSessions);
         });
 }
 
 module.exports = {
 	'/:id': {
-		get: requiresLoggedIn(getSessionsWith),
+        get: requiresLoggedIn(getSessionsWith),
         post: requiresLoggedIn(requestSession),
         put: requiresLoggedIn(requestSessionResponse)
 	},
