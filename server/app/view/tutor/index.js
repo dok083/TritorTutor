@@ -25,6 +25,22 @@ function getTutorInfo(req, res, user) {
 }
 
 /**
+ * Returns a list of all courses a user tutors for.
+ */
+function getCourses(req, res) {
+    var userID = parseInt(req.params.id);
+
+    if (!userID || userID < 1) {
+        return res.status(400).json({message: 'invalid user'});
+    }
+
+    TutorController.getAllByUser(userID)
+        .then((results) => {
+            res.json(results);
+        });
+}
+
+/**
  * Updates tutor listing when a new listing is made or deleted 
  * for a certain course
  */
@@ -76,7 +92,6 @@ function updateTutors(req, res, user) {
         change.description = data.desc;
     }
 
-    console.log(change)
     // Check the given tutor for the given course actually exists.
     TutorController.getByUser(user.userID, courseID)
         .then(
@@ -91,7 +106,6 @@ function updateTutors(req, res, user) {
             TutorController.update(courseID, user.userID, change)
                 .then(
                 () => {
-                    console.log('woo')
                     res.json({message: 'success'});
                 })
                 .catch((error) => {
@@ -182,5 +196,8 @@ function deleteTutor(req, res, user) {
  		put: requiresLoggedIn(updateTutors),
         post: requiresLoggedIn(addTutor),
         delete: requiresLoggedIn(deleteTutor)
- 	} 
+ 	},
+    '/:id/courses': {
+        get: getCourses
+    }
  };

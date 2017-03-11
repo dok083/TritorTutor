@@ -50,6 +50,11 @@ class Profile extends React.Component {
       .then((user) => {
         this.setState({user: user.data});
       });
+
+    axios.get('/api/tutor/' + userID + '/courses')
+      .then((courses) => {
+        this.setState({courses: courses.data});
+      })
   }
 
   close() {
@@ -96,14 +101,25 @@ class Profile extends React.Component {
       .then((user) => {
         this.setState({user: user.data});
       });
+
+    axios.get('/api/tutor/' + userID + '/courses')
+      .then((courses) => {
+        this.setState({courses: courses.data});
+      })
   }
 
   render() {
     var courseList = this.state.courses.map((course) => {
+      var negotiable;
+
+      if (course.negotiable) {
+        negotiable = <span> <Label bsStyle='info'>Price Negotiable</Label></span>;
+      }
+
       return (
-        <ListGroupItem>
+        <ListGroupItem key={course.classID}>
           <h4>
-            <Link to={'/course/' + course.id}>{course.name}</Link> <Label>${course.price} per lesson</Label>
+            <Link to={'/course/' + course.classID}>{course.classID}</Link> <Label>${parseFloat(course.price).toFixed(2)}</Label>{negotiable}
           </h4>
         </ListGroupItem>
       );        

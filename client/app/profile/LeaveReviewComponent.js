@@ -45,7 +45,7 @@ class LeaveReviewComponent extends React.Component {
   }
 
   onRatingChanged(e) {
-    console.log(e.target.value);
+    this.setState({rating: e.target.value});
   }
 
   onContentChanged(e) {

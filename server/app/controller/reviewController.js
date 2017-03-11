@@ -80,16 +80,19 @@ ReviewController.get = function(userID) {
 
 ReviewController.getAvg = function(userID) {
     return ReviewModel.getAvg(userID)
+        .then((results) => {
+            return results[0]['AVG(rating)'];
+        });
 }
 
 ReviewController.updateProfile = function(userID) {
     ReviewController.getAvg(userID)
 	.then((userAvg)=>{
-    	    var data = {avgRating: userAvg}
-    	    return profileModel.updateRating(userID, data);
+    	    var data = {avgRating: (parseFloat(userAvg) || 0.0).toFixed(3)}
+    	    return ProfileModel.updateRating(userID, data);
 	});
 }
-
+ReviewController.updateProfile(49)
 /**
  * Updates a specific review (the one created by reviewerID on userID's page).
  *

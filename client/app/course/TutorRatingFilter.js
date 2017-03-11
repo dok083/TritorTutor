@@ -7,8 +7,8 @@ class TutorRatingFilter extends React.Component {
     super(props);
   }
 
-  onStarsChange(e){
-    this.props.filter(e.target.key, e.target.value);
+  onStarsChange(index, e){
+    this.props.filter(4 - index, e.target.checked);
   }
 
   render() {
@@ -26,7 +26,7 @@ class TutorRatingFilter extends React.Component {
 
     // Create a checkbox for each option.
     var ratingOptions = starOptions.map((stars, index) => {
-      return <Checkbox onChange={this.onStarsChange.bind(this)}
+      return <Checkbox onChange={this.onStarsChange.bind(this, index)}
                        key={index}
                        defaultChecked>{stars}</Checkbox>
     });

@@ -21,6 +21,7 @@ TutorController.get = function(course) {
         // Get all of the tutors for this course.
         return TutorModel.get(course)
             .then((results) => {
+                console.log(results)
                 // If there were no results, just return an empty list.
                 if (results.length == 0) {
                     resolve([]);
@@ -33,11 +34,12 @@ TutorController.get = function(course) {
                 // Otherwise, get the username for each tutor.
                 // This indentation is thiccccc
                 results.forEach((result) => {
-                    ProfileModel.get(result.tutorID, 'username')
+                    ProfileModel.get(result.tutorID, ['username', 'avgRating'])
                         .then((user) => {
                             result.userID = result.tutorID;
                             result.tutorID = undefined;
                             result.username = user.username;
+                            result.avgRating = user.avgRating;
 
                             // Form a new list of tutors with their username.
                             tutors.push(result);
@@ -62,6 +64,16 @@ TutorController.get = function(course) {
  */
 TutorController.getByUser = function(userID, courseID) {
     return TutorModel.getByUser(userID, courseID);
+}
+
+/**
+ * Returns a list of classes that a user tutors for.
+ *
+ * @param userID The ID of the desired user.
+ * @return A promise containing a list of classes the user tutors for.
+ */
+TutorController.getAllByUser = function(userID) {
+    return TutorModel.getAllByUser(userID);
 }
 
 /**

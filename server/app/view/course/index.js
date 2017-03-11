@@ -27,11 +27,6 @@ function searchCourse(req, res) {
 		});
 }
 
-
-
-
-
-
 function getCourseInfo(req, res) {
 	var classID = req.params.classID;
 

@@ -53,20 +53,12 @@ TutorModel.delete = function(course, userID) {
  */
 TutorModel.get = function(course) {
 	// Return tutor listing attributes
-	var columns = ['tutorID', 'description', 'avgRating', 'price', 'negotiable'];
+	var columns = ['tutorID', 'description', 'price', 'negotiable'];
 	
 	// Only find matching listings
 	var conditions = 'classID=' + db.escape(course);
 
-	return db.select('tritor_tutorlist', columns, conditions)
-		.then((results) => {
-            return results.map( 
-            ( listing ) =>
-            {
-                //listing.classID = course;
-                return listing;
-            } );
-		});
+	return db.select('tritor_tutorlist', columns, conditions);
 }
 
 /**
@@ -78,7 +70,7 @@ TutorModel.get = function(course) {
  *         user is not a tutor for the given course, then this is null.
  */
 TutorModel.getByUser = function(userID, courseID) {
-    const values = ['avgRating', 'description', 'price', 'negotiable'];
+    const values = ['description', 'price', 'negotiable'];
     const conditions = 'tutorID=' + db.escape(userID) +
                        ' AND classID=' + db.escape(courseID);
 
@@ -89,6 +81,19 @@ TutorModel.getByUser = function(userID, courseID) {
 
         return null;
     });
+}
+
+/**
+ * Retrieves all of the courses a user tutors for.
+ *
+ * @param userID The ID of the desired user.
+ * @return A promise containing a list of the courses for the tutor.
+ */
+TutorModel.getAllByUser = function(userID) {
+    const values = ['price', 'negotiable', 'classID'];
+    const conditions = 'tutorID=' + db.escape(userID);
+
+    return db.select('tritor_tutorlist', values, conditions, null, 'classID');
 }
 
 /**

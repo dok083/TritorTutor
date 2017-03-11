@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'react-bootstrap'
 
 import TutorNameFilter from './TutorNameFilter'
 import TutorPriceFilter from './TutorPriceFilter'
@@ -30,10 +31,9 @@ class TutorSearchContainer extends React.Component {
             if (tutor.price < this.state.priceFrom || tutor.price > this.state.priceTo) {
                 return false;
             }
-            for (var i = 4; i >= 0; i--) {
-                if (tutor.avgRating == null || this.state['star' + Math.ceil(tutor.avgRating)]) {
-                    return true;
-                }
+
+            if (tutor.avgRating == null || this.state['star' + Math.max(Math.floor(tutor.avgRating) - 1, 0)]) {
+                return true;
             }
 
             return false;
@@ -53,6 +53,7 @@ class TutorSearchContainer extends React.Component {
     }
 
     onStarsChange(key, value) {
+        console.log(key, value)
     	this.setState({
     	   ['star' + key]: value
     	}, this.filter.bind(this));
