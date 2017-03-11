@@ -3,6 +3,7 @@ import React from 'react'
 import { PageHeader, Grid, Col, Button, Panel } from 'react-bootstrap'
 import CourseTutorContainer from './CourseTutorContainer'
 import CourseTutorRequest from './CourseTutorRequest'
+import Dispatch from '../Dispatch.js'
 import axios from 'axios'
 
 class Course extends React.Component {
@@ -10,6 +11,7 @@ class Course extends React.Component {
     super(props);
 
     this.state = {
+      user: '',
       name: '',
       title: '',
       desc: '',
@@ -36,6 +38,30 @@ class Course extends React.Component {
            desc: info.description
          });
       });
+
+    // Get who we are currently logged in as.
+    Dispatch.addListener('getUserInfo', (data) => {
+      if (data.component == this) {
+        this.setState({
+          user: data.user,
+        });
+
+        this.setupTutorState();
+      }
+    });
+
+    var action = Dispatch.createAction('requestUserInfo');
+    action.set('component', this);
+    action.dispatch();
+  }
+
+  setupTutorState() {
+    const courseID = this.props.params.id.toUpperCase();
+
+    axios.get('/api/tutor/' + courseID)
+      .then((result) => {
+        this.setState({tutorInfo: result.data});
+      });
   }
 
   showTutorModal() {
@@ -54,20 +80,32 @@ class Course extends React.Component {
       return;
     }
 
+    var buttonText;
+
+    if (this.state.tutorInfo) {
+      buttonText = 'Edit Tutor Listing';
+    } else {
+      buttonText = 'Add Tutor Listing';
+    }
+
     return (
       <div id='container'>
         <CourseTutorRequest show={this.state.tutorModalVisible}
                             onHide={this.hideTutorModal.bind(this)}
+                            user={this.state.user}
+                            tutorInfo={this.state.tutorInfo}
                             course={this.props.params.id} />
         <Grid>
           <PageHeader>{this.state.name}
             <small> {this.state.title}</small> 
-          <Button className='pull-right' onClick={this.showTutorModal.bind(this)}>Tutor for this Course</Button>
+          <Button className='pull-right'
+          onClick={this.showTutorModal.bind(this)}>{buttonText}</Button>
           </PageHeader>
           <Panel header='Description'>{this.state.desc}</Panel>
 
           <h2>Available Tutors</h2>
-          <CourseTutorContainer course={this.props.params.id} />
+          <CourseTutorContainer course={this.props.params.id}
+                                 />
         </Grid>
       </div>
     );

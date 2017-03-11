@@ -7,7 +7,7 @@ import ProfilePic from '../profile/ProfilePic'
 class CourseTutorComponent extends React.Component {
   render() {
     var stars;
-    console.log(this.props);
+
     if (this.props.stars) {
       stars = [];
 
@@ -38,7 +38,9 @@ class CourseTutorComponent extends React.Component {
       <Panel>
       <Media>
         <Media.Left>
-          <ProfilePic width={64} height={64} user={this.props.userID} />
+          <Link to={profileURL}>
+            <ProfilePic width={64} height={64} user={this.props.userID} />
+          </Link>
         </Media.Left>
 
         <Media.Body>

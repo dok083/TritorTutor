@@ -6,6 +6,32 @@ var CourseController = require('../../controller/courseController.js');
 // Decorator that forces the user to be logged in.
 var requiresLoggedIn = require('../userUtils.js');
 
+function searchCourse(req, res) {
+	var subString = req.params.subString;
+
+	if(!subString || subString.trim == "") {
+		res.status(400).json({message: 'invalid search'})
+
+		return;
+	}
+
+	CourseController.getBySubstring(subString)
+		.then((results)=> {
+			if(!results) {
+				res.status(400).json({message: "no courses found"});
+
+				return;
+			}
+
+			res.json(results);
+		});
+}
+
+
+
+
+
+
 function getCourseInfo(req, res) {
 	var classID = req.params.classID;
 
@@ -82,5 +108,7 @@ module.exports = {
 	'/popular': {
 		get: getPopularCourses},
 	'/:department': {
-		get: getByDepartment}
+		get: getByDepartment},
+	'/search/:subString': {
+		get: searchCourse}
 }

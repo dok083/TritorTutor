@@ -92,4 +92,31 @@ CourseModel.getByDepartment = function(department) {
         });
 }
 
+/**
+ * Get a list of popular courses under a certain department
+ *
+ * @param sub the substring to use to find the course
+ *
+ * @return return a promise containing a list of courses with the matching
+ * substring
+ */
+CourseModel.getBySubstring = function(sub) {
+    var condition = 'classID like \'%' + sub + '%\'';
+
+	//select all courses under the department
+	return db.select('tritor_classlist', ['classID', 'className'], condition)
+        .then(
+        (results) => {
+            // convert the return value
+            return results.map((result) => {
+                // return an object with the classID and className strings of 
+                // this class
+                return {
+                    classID: result.classID,
+                    className: result.className
+                };
+            });
+        });
+}
+
 module.exports = CourseModel;

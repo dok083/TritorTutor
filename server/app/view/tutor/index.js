@@ -34,7 +34,7 @@ function updateTutors(req, res, user) {
     }
 
     const courseID = req.params.id;
-    const data = req.body.data;
+    const data = req.body;
 
     // Validate user changes. Expect an object containing changes.
     // Error if the changes are not valid.
@@ -51,7 +51,7 @@ function updateTutors(req, res, user) {
     }
     else if (courseID != undefined)
     {
-        change.courseID = courseID;
+        change.classID = courseID;
     }
 
     // Validate the price, if there is one
@@ -61,24 +61,22 @@ function updateTutors(req, res, user) {
     }
     else if (data.price != undefined)
     {
-        change.price = data.price;
+        change.price = parseFloat(data.price) || 0;
     }
 
     // Validate the negotiable, if there is one
-    if (data.negotiable != undefined) {
-        return res.status(400).json({message: 'invalid negotiable'});
-    }
-    else if (data.negotiable != undefined)
+    if (data.nego != undefined)
     {
-        change.negotiable = data.negotiable;
+        change.negotiable = Boolean(data.nego);
     }
 
     // Change the description, if there is one
-    if (data.description != undefined)
+    if (data.desc != undefined)
     {
-        change.description = data.description;
+        change.description = data.desc;
     }
 
+    console.log(change)
     // Check the given tutor for the given course actually exists.
     TutorController.getByUser(user.userID, courseID)
         .then(
@@ -122,8 +120,10 @@ function addTutor(req, res, user) {
         return res.status(400).json({message: 'invalid course'});
     }
 
+    price = parseFloat(price);
+
     // Validae the price.
-    if (!price || price < 0) {
+    if (price == NaN || price < 0) {
         return res.status(400).json({message: 'invalid price'});
     }
 
@@ -163,15 +163,17 @@ function addTutor(req, res, user) {
         });
 }
 
-function deleteTutor(req, res, use) {
+function deleteTutor(req, res, user) {
     var courseID = req.params.id;
 
-    if (!courseID || !userID) {
+    if (!courseID) {
         return res.status(400).json({message: 'listing not found'});
     }
 
-    TutorController.remove(courseID, userID)
-        .then();
+    TutorController.remove(courseID, user.userID)
+        .then(() => {
+            res.json({message: 'success'});
+        });
 }
 
  module.exports = {
