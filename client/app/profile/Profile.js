@@ -244,6 +244,10 @@ class Profile extends React.Component {
     if (!this.state.user) {
       content = <h2 className='text-center'>Sorry, this user does not exist.</h2>;
     } else {
+      const style = {
+        marginBottom: '0px'
+      };
+
       content = (
         <div>
         <Grid>
@@ -262,7 +266,7 @@ class Profile extends React.Component {
               {this.state.user.description}
             </Panel>
             <Panel header="Currently Tutoring">
-              <ListGroup>
+              <ListGroup style={style}>
                 {courseList}
               </ListGroup>
             </Panel>
