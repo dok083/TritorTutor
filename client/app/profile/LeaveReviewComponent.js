@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Select, FormControl, Button, FieldGroup } from 'react-bootstrap'
+import { Modal, Select, FormControl, Button, FieldGroup, FormGroup } from 'react-bootstrap'
 
 class LeaveReviewComponent extends React.Component {
   render() {
@@ -8,9 +8,26 @@ class LeaveReviewComponent extends React.Component {
         <Modal.Body>
           <p>Please leave a review for {this.props.user.username}</p>
 
-          <FieldGroup componentClass="input" placeholder="Name" />
-          <FieldGroup componentClass="textarea" />
+          <FormGroup>
+            <FormControl type="text" placeholder="Name" required />
+          </FormGroup>
+
+          <FormGroup>
+            <FormControl componentClass="select">
+              <option value="-1" disabled>--</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </FormControl>
+          </FormGroup>
+
+          <FormGroup>
+            <FormControl componentClass="textarea" placeholder="Review" rows={5}/>
+          </FormGroup>
           <br></br>
+
         </Modal.Body>
 
         <Modal.Footer>

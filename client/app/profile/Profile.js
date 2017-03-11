@@ -21,7 +21,7 @@ class Profile extends React.Component {
       showMsgModal: false,
       showRewModal: false,
       user: null,
-      courses: []
+      courses: [],
     };
   }
 
@@ -69,6 +69,7 @@ class Profile extends React.Component {
   }
 
   closeRewModal(){
+    {/*axios.post('/api/reviews/'+ userID);*/} // Need to be done
     this.setState({ showRewModal: false });
   }
 
@@ -121,6 +122,17 @@ class Profile extends React.Component {
       );
     }
 
+    
+    var reviewButton;
+    
+    if (this.state.localUser && this.state.user &&
+        this.state.localUser.userID != this.state.user.userID) {
+      reviewButton = (
+        <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
+      );
+    } 
+
+
     var content;
 
     if (!this.state.user) {
@@ -152,7 +164,7 @@ class Profile extends React.Component {
         </Grid>
         <Grid>
           <Col xs={12} md={4}>
-          <h2>Reviews <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button></h2>
+          <h2>Reviews {reviewButton}</h2>
             <ReviewContainer userID={this.state.user.userID} />
           </Col>
         </Grid>
