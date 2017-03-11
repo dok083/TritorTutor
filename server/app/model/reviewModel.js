@@ -42,7 +42,7 @@ ReviewModel.get = function(userID) {
 
 ReviewModel.getAvg = function(userID) {
     //TODO: is AVG a float?
-    return db.query('SELECT AVG(Cast(rating as Float) FROM tritor_reviews WHERE tutorID = ?', [userID]);
+    return db.query('SELECT AVG(Cast(rating as Float)) FROM tritor_reviews WHERE tutorID = ?', [userID]);
 }
 
 /**

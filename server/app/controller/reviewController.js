@@ -30,8 +30,9 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
         rating = 5;
     }
 
-    ReviewModel.create(userID, reviewerID, rating, comment)
+    return ReviewModel.create(userID, reviewerID, rating, comment)
         .then (()=> {
+        console.log('created')
 	    ReviewController.updateProfile(userID);
         });
 }

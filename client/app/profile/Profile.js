@@ -78,7 +78,7 @@ class Profile extends React.Component {
 
     }*/}
     this.setState({ showRewModal: false });
-    windows.location.reload();
+    //window.location.reload();
   }
 
   openRewModal(){
