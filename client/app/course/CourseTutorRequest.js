@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Modal, FormGroup, ControlLabel, FormControl, InputGroup, Checkbox, Button, Alert } from 'react-bootstrap'
+import { Modal, FormGroup, ControlLabel, FormControl, InputGroup, Checkbox, Button, Alert, Glyphicon } from 'react-bootstrap'
 import Dispatch from '../Dispatch'
 
 import axios from 'axios'
@@ -73,6 +73,30 @@ class CourseTutorRequest extends React.Component {
         price: price,
         nego: Boolean(this.state.negotiable)
     };
+  }
+
+  delete() {
+    this.setState({busy: true});
+
+    axios.delete('/api/tutor/' + this.props.course)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        var message = error.response && error.response.data;
+
+        if (message.message) {
+          message = message.message;
+        } else {
+          message = error.toString();
+        }
+
+        this.setState({
+          message: message,
+          messageType: 'danger',
+          busy: false
+        });
+      });
   }
 
   update() {
@@ -159,6 +183,7 @@ class CourseTutorRequest extends React.Component {
     axios.post('/api/tutor/' + this.props.course, listing)
       .then(() => {
           this.onHide();
+          window.location.reload();
       })
       .catch((error) => {
         var message = error.response;
@@ -195,6 +220,17 @@ class CourseTutorRequest extends React.Component {
 
     const buttonText = this.props.tutorInfo ? 'Update Listing' : 'Add Listing';
 
+    var deleteButton;
+
+    if (this.props.tutorInfo) {
+      deleteButton = (
+        <Button bsStyle='danger' onClick={this.delete.bind(this)}
+                disabled={this.state.busy}>
+          <Glyphicon glyph='trash' />
+        </Button>
+      );
+    }
+
     return (
       <Modal show={this.props.show} onHide={this.onHide.bind(this)}>
         <Modal.Header closeButton>
@@ -226,6 +262,7 @@ class CourseTutorRequest extends React.Component {
           </form>
         </Modal.Body>
         <Modal.Footer>
+          {deleteButton}
           <Button type='submit' bsStyle='primary'
                   onClick={this.props.tutorInfo ? this.update.bind(this) : this.submit.bind(this)}
                   disabled={this.state.busy}>{buttonText}</Button>

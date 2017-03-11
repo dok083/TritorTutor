@@ -120,8 +120,10 @@ function addTutor(req, res, user) {
         return res.status(400).json({message: 'invalid course'});
     }
 
+    price = parseFloat(price);
+
     // Validae the price.
-    if (!price || price < 0) {
+    if (price == NaN || price < 0) {
         return res.status(400).json({message: 'invalid price'});
     }
 
@@ -161,15 +163,17 @@ function addTutor(req, res, user) {
         });
 }
 
-function deleteTutor(req, res, use) {
+function deleteTutor(req, res, user) {
     var courseID = req.params.id;
 
-    if (!courseID || !userID) {
+    if (!courseID) {
         return res.status(400).json({message: 'listing not found'});
     }
 
-    TutorController.remove(courseID, userID)
-        .then();
+    TutorController.remove(courseID, user.userID)
+        .then(() => {
+            res.json({message: 'success'});
+        });
 }
 
  module.exports = {
