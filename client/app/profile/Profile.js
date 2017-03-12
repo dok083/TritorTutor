@@ -358,7 +358,7 @@ class Profile extends React.Component {
                           width={196}
                           height={196}
                           className='center-block' />
-              <h1 className='text-center'>{this.state.user.username}</h1>
+              <h3 className='text-center'>{this.state.user.username}</h3>
             </Well>
             {options}
           </Col>
