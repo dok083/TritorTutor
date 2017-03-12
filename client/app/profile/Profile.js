@@ -8,6 +8,7 @@ import ReviewContainer from './ReviewContainer'
 import RequestContainer from './RequestContainer'
 import MessageContainer from './MessageContainer'
 import LeaveReviewContainer from './LeaveReviewContainer'
+import UpdateReviewContainer from './UpdateReviewContainer'
 
 import Dispatch from '../Dispatch.js'
 
@@ -26,11 +27,13 @@ class Profile extends React.Component {
       showMsgModal: false,
       showRewModal: false,
       showEndModal: false,
+      showUpdateRewModal: false,
       busy: false,
       endMessage: '',
       user: null, // viewing this person's profile
       courses: [],
-      sessions: []
+      sessions: [],
+      reviews: []
     };
   }
 
@@ -69,6 +72,11 @@ class Profile extends React.Component {
       .then((results) => {
         this.setState({sessions: results.data});
       });
+
+    axios.get('/api/reviews/' + userID)
+    .then((results) => {
+        this.setState({reviews: results.data});
+    });
   }
 
   close() {
@@ -115,6 +123,14 @@ class Profile extends React.Component {
 
   openMsgModal() {
     this.setState({ showMsgModal: true });
+  }
+  
+  closeUpdateRewModal() {
+    this.setState({ showUpdateRewModal: false });
+  }
+
+  openUpdateRewModal() {
+    this.setState({ showUpdateRewModal: true });
   }
 
   closeRewModal(){
@@ -188,6 +204,8 @@ class Profile extends React.Component {
 
   componentWillReceiveProps(props) {
     var userID = parseInt(props.params.id);
+    
+    this.state.user.userID
 
     axios.get('/api/profile/' + userID)
       .then((user) => {
@@ -236,6 +254,14 @@ class Profile extends React.Component {
     var beingTutoredSession;
     var hasDoneSession = false;
     var hasPendingSession = false;
+    var reviewed = false;
+    var review;
+    
+    for (var i = 0; i < this.state.reviews.length; i++) {
+      if(this.state.reviews[i].userID == this.state.localUser.userID)
+        reviewed = true;
+        review = this.state.reviews[i];
+    }
 
     for (var i = 0; i < this.state.sessions.length; i++) {
       const session = this.state.sessions[i];
@@ -335,9 +361,15 @@ class Profile extends React.Component {
     var reviewButton;
     
     if (hasDoneSession) {
-      reviewButton = (
-        <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
-      );
+      if (reviewed) {
+        reviewButton = (
+          <Button bsStyle='primary' onClick={this.openUpdateRewModal.bind(this)}> Update Review</Button>
+        ); 
+      } else {
+        reviewButton = (
+          <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
+        );  
+      }
     } 
 
     var content;
@@ -358,7 +390,7 @@ class Profile extends React.Component {
                           width={196}
                           height={196}
                           className='center-block' />
-              <h1 className='text-center'>{this.state.user.username}</h1>
+              <h3 className='text-center'>{this.state.user.username}</h3>
             </Well>
             {options}
           </Col>
@@ -390,6 +422,10 @@ class Profile extends React.Component {
         <LeaveReviewContainer show={this.state.showRewModal} 
                               onHide={this.closeRewModal.bind(this)} 
                               user={this.state.user} />
+        <UpdateReviewContainer show={this.state.showUpdateRewModal} 
+                              onHide={this.closeUpdateRewModal.bind(this)} 
+                              user={this.state.user} 
+                              review={review}/>
         </div>
       );
     }
