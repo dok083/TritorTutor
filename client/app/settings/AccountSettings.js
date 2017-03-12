@@ -65,11 +65,6 @@ class AccountSettings extends React.Component {
       });
   }
 
-  eventHandle() {
-    confirm('Are you sure you want to deactivate your account?');
-    browserHistory.push('/');
-  }
-
   render() {
     var alert;
 
@@ -98,10 +93,6 @@ class AccountSettings extends React.Component {
           </Button>
         </Panel>
 
-
-        <Panel header="Deactivate Account">
-          <Button vertical block bsStyle ="danger" onClick={this.eventHandle}> DEACTIVATE ACCOUNT</Button>
-        </Panel>
       </div>
     )
   }
