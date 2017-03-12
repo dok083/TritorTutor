@@ -117,7 +117,7 @@ AccountModel.getHashedPassword = function(password) {
  * @return A promise that contains the user after inserting is done.
  */
 AccountModel.create = function(email, username, password) {
-    AccountModel.getHashedPassword(password)
+    return AccountModel.getHashedPassword(password)
         .then((encrypted_password) => {
             return db.insert('tritor_users', {
                 email: email.toLowerCase(),
