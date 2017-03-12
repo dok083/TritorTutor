@@ -51,23 +51,25 @@ export default class About extends React.Component {
               <h2>Meet The Team</h2>
               <Row className = "Team-1">
                 <Col xs={6} md={6}>
-                  <h3>Brian Minh Hang</h3>
+                  <h3><b>Brian Minh Hang</b></h3>
                   <img 
                     style = {imgStyle}
                     src ={img}
                   />
                   <p>
+                    <center><font size="5">Project Manager</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
                 <Col xs={6} md={6}>
-                  <h3>David Dinata</h3>
+                  <h3><b>David Dinata</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Senior System Analyst</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
@@ -75,23 +77,25 @@ export default class About extends React.Component {
 
               <Row className = "Team-2">
                 <Col xs={6} md={6}>
-                  <h3>San Kang</h3>
+                  <h3><b>San Kang</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Software Architect</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
                 <Col xs={6} md={6}>
-                  <h3>Rishiesh Hirendu Vaishnav</h3>
+                  <h3><b>Rishiesh Hirendu Vaishnav</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Software Architect</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
@@ -99,23 +103,25 @@ export default class About extends React.Component {
 
               <Row className = "Team-3">
                 <Col xs={6} md={6}>
-                  <h3>Doyoung Kim</h3>
+                  <h3><b>Doyoung Kim</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Software Development Lead</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
                 <Col xs={6} md={6}>
-                  <h3>Yiming Chen</h3>
+                  <h3><b>Yiming Chen</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Algorithm Specialist</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
@@ -123,23 +129,25 @@ export default class About extends React.Component {
 
               <Row className = "Team-4">
                 <Col xs={6} md={6}>
-                  <h3>Amal Alhaidari</h3>
+                  <h3><b>Amal Alhaidari</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Database Specialist</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
                 <Col xs={6} md={6}>
-                  <h3>Seonghyun Hong</h3>
+                  <h3><b>Seonghyun Hong</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Business Analyst</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
@@ -147,23 +155,25 @@ export default class About extends React.Component {
 
               <Row className = "Team-5">
                 <Col xs={6} md={6}>
-                  <h3>Bonnie Chen</h3>
+                  <h3><b>Bonnie Chen</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">User Interface Specialist</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
                 <Col xs={6} md={6}>
-                  <h3>Natchuta Wattanapenpaiboon</h3>
+                  <h3><b>Natchuta Wattanapenpaiboon</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
+                    <center><font size="5">Quality Assurance Lead</font></center>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
