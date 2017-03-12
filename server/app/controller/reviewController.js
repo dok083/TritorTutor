@@ -31,7 +31,7 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
         rating = 5;
     }
     
-    //check if there is a session between the users from get pairs
+    //check if there is a session between the users
     return TutorSessionModel.getBetween(userID, reviewerID)
 	.then ((results)=> {
 	    //no session between users; can't leave review
@@ -41,13 +41,7 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
 	    
 	    //create review
 	    return ReviewModel.create(userID, reviewerID, rating, comment)
-		.then ((results)=> {
-		    //review by user already exists so don't create, else created
-	    	     if (!results) {
-			return null;
-			console.log('not created');
-	    	    }
-		    
+		.then (()=> {
 		    console.log('created');
 		    //update profile view with new review added
 		    return ReviewController.updateProfile(userID);

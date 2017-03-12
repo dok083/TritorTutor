@@ -22,8 +22,8 @@ var db = require('./database.js');
  */
 ReviewModel.create = function(tutorID, userID, rating, comment) {
     //add review and update it if user already wrote a review
-    return db.query('INSERT INTO tritor_reviews(userID, reviewerID, rating, comment) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = ?, comment = ?',
-		    [tutorID, userID, rating, comment, rating, comment]);
+    return db.query('INSERT INTO tritor_reviews(userID, tutorID, rating, comment) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = ?, comment = ?',
+		    [userID, tutorID, rating, comment, rating, comment]);
 }
 
 /**
