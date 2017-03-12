@@ -34,7 +34,7 @@ export default class About extends React.Component {
               <p>
               <font size="4">
                 Some subjects don't come easily and that can be a barrier for you to moving 
-                forward with your carrier. Maybe you're not feeling so confident on your 
+                forward with your career. Maybe you're not feeling so confident on your 
                 academic courses that you currently enrolled. We acknowlege that studying college courses
                 are challenging so we wanted to encourage students by providing the private tutoring service.
                 <b> Our mission</b> is to give a bridge between UCSD students and private tutors, 
