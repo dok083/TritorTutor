@@ -33,7 +33,7 @@ function addReviews(req, res, user) {
     var rating = parseInt(req.body.rating);
     var comment = req.body.comment;
 
-
+    //basic checks
     if (!userID || userID < 1) {
         return res.status(403).json({message: 'Profile does not exist'});
     }
@@ -41,12 +41,16 @@ function addReviews(req, res, user) {
     if (!comment || comment.length == 0) {
         return res.status(400).json({message: 'Your reply cannot be empty.'});
     }
+
     console.log(userID, user.userID, rating, comment)
+    //add review
     ReviewController.add(userID, user.userID, rating, comment)
 	.then((results) => {
+	    //results is false
 	    if(!results){
-	        res.status(400).json({message: 'You do not have a completed session with this user'});
+	        res.status(400).json({message: 'You do not have a completed session with this tutor'});
 	    }
+	    //results is true
 	    else{
 	        res.json({message: 'success'});
 	    }
