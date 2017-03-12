@@ -5,7 +5,6 @@ import TutorPriceFilter from './TutorPriceFilter'
 import TutorRatingFilter from './TutorRatingFilter'
 import Dispatch from '../Dispatch'
 
-
 class TutorSearchContainer extends React.Component {
     constructor(props) {
     	super(props);
@@ -59,7 +58,6 @@ class TutorSearchContainer extends React.Component {
     }
 
     onPriceChange(min, max) {
-
     	this.setState({priceFrom: min, priceTo: max}, this.filter.bind(this));
     }
 
