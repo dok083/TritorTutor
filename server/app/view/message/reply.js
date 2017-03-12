@@ -20,7 +20,7 @@ function replyToMessage(req, res, user) {
     }
 
     console.log(req.body)
-    const msgID = parseInt(req.body.id);
+    const msgID = parseInt(req.params.id);
     const content = req.body.content;
 
     // Make sure the user is allowed to access this message.
@@ -52,7 +52,7 @@ function replyToMessage(req, res, user) {
 }
 
 module.exports = {
-    '/reply': {
+    '/:id/reply': {
         post: requiresLoggedIn(replyToMessage)
     }
 }

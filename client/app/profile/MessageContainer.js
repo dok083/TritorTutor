@@ -9,7 +9,7 @@ class MessageContainer extends React.Component {
         <Modal.Header closeButton>
           <Modal.Title>Send Message to {this.props.user.username}</Modal.Title>
         </Modal.Header>
-        <MessageComponent/>
+        <MessageComponent user={this.props.user} />
       </Modal>
     );
   }

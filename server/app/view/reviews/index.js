@@ -42,9 +42,14 @@ function addReviews(req, res, user) {
         return res.status(400).json({message: 'Your reply cannot be empty.'});
     }
     console.log(userID, user.userID, rating, comment)
-   ReviewController.add(userID, user.userID, rating, comment)
-	.then(() => {
-	    res.json({message: 'success'});
+    ReviewController.add(userID, user.userID, rating, comment)
+	.then((results) => {
+	    if(!results){
+	        res.status(400).json({message: 'You do not have a completed session with this user'});
+	    }
+	    else{
+	        res.json({message: 'success'});
+	    }
 	});
 }
 

@@ -10,8 +10,8 @@ class LeaveReviewComponent extends React.Component {
       message: '',
       messageType: '',
       busy: false,
-      rating: 5,
-      comment: ''
+      rating: this.props.review == [] ? 5 : this.props.review.stars,
+      comment: this.props.review == [] ? '' : this.props.review.comment
     };
   }
 
@@ -68,7 +68,7 @@ class LeaveReviewComponent extends React.Component {
           <FormGroup key='stars'>
             <FormControl componentClass="select"
                          onChange={this.onRatingChanged.bind(this)}
-                         defaultValue={5}>
+                         defaultValue={this.props.review == [] ? 5 : this.props.review.stars}>
               <option value="-1" disabled>--</option>
               <option value={1}>1</option>
               <option value={2}>2</option>
@@ -80,7 +80,8 @@ class LeaveReviewComponent extends React.Component {
 
           <FormGroup key='content'>
             <FormControl componentClass="textarea" placeholder="Review" rows={5}
-                         onChange={this.onContentChanged.bind(this)} />
+                         onChange={this.onContentChanged.bind(this)} 
+                         defaultValue={this.props.review == [] ? "" : this.props.review.comment}/>
           </FormGroup>
 
         </Modal.Body>
