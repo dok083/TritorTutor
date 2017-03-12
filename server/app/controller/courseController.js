@@ -49,7 +49,7 @@ CourseController.getBySubstring = function(sub) {
     sub.replace(/\ /g, "").toUpperCase();
 
     // matches the pattern <word><number>, e.g. CSE110CSED110CSE, grab CSE110 only
-    var matched = sub.match(/(\w)*+(\d)*/);
+    var matched = sub.match(/(\D)*+(\d)*/);
     //if found pattern
     if(matched)
     	return CourseModel.getBySubString(matched);
