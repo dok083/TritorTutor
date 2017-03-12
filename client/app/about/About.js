@@ -21,10 +21,10 @@ export default class About extends React.Component {
             <Col xs={12} md={12}>
 
             <Row className = "about-us">
-              <h1>About US</h1>
+              <h1>About Us</h1>
               <p>
               <font size="4">
-                 We are OKAY Software.
+                 We started from the bottom now we are here.
               </font>
               </p>
 
@@ -34,10 +34,11 @@ export default class About extends React.Component {
               <p>
               <font size="4">
                 Some subjects don't come easily and that can be a barrier for you to moving 
-                forward with your carrier. Maybe yoy're not feeling so confident on your 
-                academic courses that you are taking. <b>Our mission</b> is to give a bridge between 
-                UCSD students and private tutors, so the students can feel more confident at 
-                college courses.
+                forward with your carrier. Maybe you're not feeling so confident on your 
+                academic courses that you currently enrolled. We acknowlege that studying college courses
+                are challenging so we wanted to encourage students by providing the private tutoring service.
+                <b> Our mission</b> is to give a bridge between UCSD students and private tutors, 
+                so the students can feel more confident at college courses. 
               </font>
               </p>
               </Col>
