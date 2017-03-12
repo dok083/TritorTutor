@@ -16,8 +16,7 @@ class RequestComponent extends React.Component {
 
   selected(e) {
     console.log(e.target.value);
-    this.setState({busy: false, selectedCourse: e.target.value})
-      .then(()=>{console.log(this.state.selectedCourse)});
+    this.setState({busy: false, selectedCourse: e.target.value});
   }
 
   requestTutor() {

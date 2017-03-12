@@ -38,10 +38,8 @@ CourseModel.getByID = function(classID) {
  * @return return a promise to increment a certain field of a certain row.
  */
 CourseModel.incrementTutorCounts = function(classID) {
-	var value = 1; //tutorCount will be incremented by 1
-	var condition = 'classID=' + db.escape(classID);
-
-	return db.increment('tritor_classlist', 'tutorCount', 1, condition);
+    return db.query('UPDATE tritor_classlist SET tutorCount = tutorCount + 1' +
+                    ' WHERE classID=' + db.escape(classID)); 
 }
 
 
