@@ -43,8 +43,7 @@ class MessageView extends React.Component {
     this.setState({busy: true});
 
     // Send the reply.
-    axios.post('/api/message/reply', {
-      id: this.props.message.id,
+    axios.post('/api/message/' + this.props.message.id + '/reply', {
       content: this.state.reply
     }).then(() => {
       // On success, indicate it.
@@ -144,7 +143,7 @@ class MessageView extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           <Button bsStyle='danger' onClick={this.delete.bind(this)}
-                  disable={this.state.busy}>
+                  disabled={this.state.busy}>
             <Glyphicon glyph='trash' />
           </Button>
           {replySubmit}
