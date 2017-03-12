@@ -119,6 +119,28 @@ TutorSessionModel.getPair = function(userID, otherID) {
 }
 
 /**
+ * Returns a tutor session from a given session ID.
+ *
+ * @param sessionID The ID of the desired session.
+ * @return A promise that contains the tutor session, or null if not found.
+ */
+TutorSessionModel.getByID = function(sessionID) {
+    const fields = ['studentID', 'tutorID', 'classID', 'status'];
+    const conditions = 'sessionID=' + sessionID;
+
+    return db.select('tritor_tutor_sessions', fields, conditions)
+        .then((results) => {
+            var result = results[0];
+
+            if (result) {
+                result.sessionID = sessionID;
+            }
+
+            return result;
+        });
+}
+
+/**
  * Returns all tutoring sessions between a given student and a given tutor.
  * 
  * @param studentID The ID of the desired student.
