@@ -15,13 +15,9 @@ class TutorSettings extends React.Component {
   }
 
   componentWillMount() {
-    console.log('herro');
     // Get who we are currently logged in as.
     Dispatch.addListener('getUserInfo', (data) => {
-      console.log(data)
       if (data.component == this) {
-        console.log("Im inside the listner");
-        console.log(data.user.userID);
         this.setState({ userID: data.user.userID })
 
         axios.get('/api/tutor/' + data.user.userID + '/courses')
@@ -36,6 +32,15 @@ class TutorSettings extends React.Component {
     action.dispatch();
   }
 
+  delete(classID) {
+    console.log("Inside delete");
+    console.log(classID);
+    axios.delete('/api/tutor/' + classID)
+      .then(() => {
+        window.location.reload();
+      })
+  }
+
   render() {
     var courseList;
     var courses = this.state.courses;
@@ -45,7 +50,6 @@ class TutorSettings extends React.Component {
       courseList = <em>Currently you are tutoring no class.</em>;
     } else {
         courseList = courses.map((course) => {
-          console.log(course.negotiable);
           if (course.negotiable) {
             negotiable = <Label bsStyle='info'>Price Negotiable</Label>
           } else {
@@ -54,9 +58,11 @@ class TutorSettings extends React.Component {
 
           return (<ListGroupItem>
             <h4>
-              <Link to={'/course/' + course.classID}>{course.classID}</Link> <Label>${parseFloat(course.price).toFixed(2)}</Label>
+              <Link to={'/course/' + course.classID}>{course.classID}</Link> 
+              <Label>${parseFloat(course.price).toFixed(2)}</Label>
               {negotiable}
-              <Button className="pull-right" bsStyle ="danger" bsSize = "small"><Glyphicon glyph="remove"/></Button>
+              <Button className="pull-right" bsStyle ="danger" bsSize = "small" onClick={this.delete.bind(this,course.classID)}>
+              <Glyphicon glyph="remove"/></Button>
             </h4>
           </ListGroupItem>);       
       });
