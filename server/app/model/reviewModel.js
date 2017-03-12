@@ -21,12 +21,22 @@ var db = require('./database.js');
  * @return A promise that is called after the review has been made.
  */
 ReviewModel.create = function(tutorID, userID, rating, comment) {
-    return db.insert('tritor_reviews', {
-        userID: userID,
-        tutorID: tutorID,
-        rating: rating,
-        comment: comment
-    });
+    //check if there is already an existing review by the user
+    return db.select('tritor_reviews', ['userID', 'reviewerID', 'rating', 'comment'], 'reviewerID=' + db.escape(userID))
+	.then((results)=> {
+	    //a review already exists
+	    if (results.length > 0){
+		return null;
+	    }
+
+	    //review added
+            return db.insert('tritor_reviews', {
+                userID: userID,
+                tutorID: tutorID,
+                rating: rating,
+                comment: comment
+	    });
+        });
 }
 
 /**
@@ -47,7 +57,6 @@ ReviewModel.get = function(userID) {
  * @return A promise that contains a float that is the avg rating for the user
  */
 ReviewModel.getAvg = function(userID) {
-    //TODO: is AVG a float?
     return db.query('SELECT AVG(rating) FROM tritor_reviews WHERE tutorID = ?', [userID]);
 }
 

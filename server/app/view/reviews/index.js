@@ -43,8 +43,13 @@ function addReviews(req, res, user) {
     }
     console.log(userID, user.userID, rating, comment)
    ReviewController.add(userID, user.userID, rating, comment)
-	.then(() => {
-	    res.json({message: 'success'});
+	.then((results) => {
+	    if(!results){
+	        res.status(400).json({message: 'failed'});
+	    }
+	    else{
+	        res.json({message: 'success'});
+	    }
 	});
 }
 
