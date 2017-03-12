@@ -34,8 +34,20 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
     //check if there is a session between the users
     return TutorSessionModel.getBetween(userID, reviewerID)
 	.then ((results)=> {
+	    var session;
+
+	    for (var i = 0; i < results.length; i++) {
+                var thisSession = results[i];
+
+                if (thisSession.status == 2 && thisSession.studentID == reviewerID) {
+                    session = thisSession;
+
+                    break;
+                }
+            }
+
 	    //no session between users; can't leave review
-	    if (results.length == 0){
+	    if (!results){
 	        return null;
 	    }
 	    
@@ -44,7 +56,8 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
 		.then (()=> {
 		    console.log('created');
 		    //update profile view with new review added
-		    return ReviewController.updateProfile(userID);
+		    ReviewController.updateProfile(userID);
+		    return true;
         	});
 	});
 

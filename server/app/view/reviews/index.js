@@ -45,7 +45,7 @@ function addReviews(req, res, user) {
     ReviewController.add(userID, user.userID, rating, comment)
 	.then((results) => {
 	    if(!results){
-	        res.status(400).json({message: 'failed'});
+	        res.status(400).json({message: 'You do not have a completed session with this user'});
 	    }
 	    else{
 	        res.json({message: 'success'});
