@@ -58,8 +58,8 @@ class TutorSettings extends React.Component {
 
           return (<ListGroupItem>
             <h4>
-              <Link to={'/course/' + course.classID}>{course.classID}</Link> 
-              <Label>${parseFloat(course.price).toFixed(2)}</Label>
+              <Link to={'/course/' + course.classID}>{course.classID}</Link> {' '}
+              <Label>${parseFloat(course.price).toFixed(2)}</Label> {' '}
               {negotiable}
               <Button className="pull-right" bsStyle ="danger" bsSize = "small" onClick={this.delete.bind(this,course.classID)}>
               <Glyphicon glyph="remove"/></Button>
