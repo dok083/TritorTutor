@@ -80,15 +80,15 @@ class Profile extends React.Component {
   }
  
   endSession() {
-    const studentID = this.state.user && this.state.user.userID;
+    const session = this.state.endSession;
 
-    if (!studentID) {
+    if (!session) {
       return;
     }
 
     this.setState({busy: true});
 
-    axios.delete('/api/tutorSessions/' + studentID)
+    axios.delete('/api/tutorSessions/' + session.sessionID)
       .then(() => {
         this.setState({busy: false});
         window.location.reload();
@@ -130,16 +130,21 @@ class Profile extends React.Component {
     //window.location.reload();
   }
 
-  closeEndModal() {
-    this.setState({showEndModal: false, endMessage: ''});
+  closeEndModal(session) {
+    this.setState({
+      showEndModal: false,
+      endMessage: '',
+      endSession: null
+    });
   }
 
   openRewModal(){
     this.setState({ showRewModal: true });
   }
 
-  openEndModal() {
-    this.setState({showEndModal: true});
+  openEndModal(session) {
+    console.log(session)
+    this.setState({showEndModal: true, endSession: session});
   }
 
   accept() {
@@ -225,24 +230,39 @@ class Profile extends React.Component {
 
     // Get some information about the type of sessions between this user
     // and the user on the profile page.
-    var hasActiveSession = false;
+    var isTutoring = false;
+    var tutoringSession;
+    var isBeingTutored = false;
+    var beingTutoredSession;
     var hasDoneSession = false;
     var hasPendingSession = false;
 
-    console.log(this.state.sessions)
     for (var i = 0; i < this.state.sessions.length; i++) {
-      switch (this.state.sessions[i].status) {
+      const session = this.state.sessions[i];
+
+      switch (session.status) {
         case SESSION_ACTIVE:
-          hasActiveSession = true;
+          if (!this.state.localUser) {
+            break;
+          }
+
+          if (session.tutorID == this.state.localUser.userID) {
+            isTutoring = true;
+            tutoringSession = session;
+          } else if (session.studentID == this.state.localUser.userID) {
+            isBeingTutored = true;
+            beingTutoredSession = session;
+          }
+
           break;
         case SESSION_DONE:
           hasDoneSession = true;
+
           break;
         case SESSION_PENDING:
           if (this.state.localUser &&
               this.state.localUser.userID == this.state.sessions[i].tutorID) {
             hasPendingSession = true;
-            console.log('hasPending')
           }
 
           break;
@@ -257,23 +277,36 @@ class Profile extends React.Component {
     }
 
     // Add request button if there are no active sessions.
-    if (!hasActiveSession && notSameUser) {
+    if (!isBeingTutored && notSameUser) {
       options.push(
         <Button bsStyle="primary" bsSize="large" onClick={this.open.bind(this)} block>
           Request Tutoring
         </Button>
       );
-    } else if (hasActiveSession) {
+    }
+    
+    if (isBeingTutored || isTutoring) {
       options.push(
         <Button bsStyle="default" bsSize="large" onClick={this.openMsgModal.bind(this)} block>
           Send Message
         </Button>
       );
+    }
 
+    if (isTutoring) {
       options.push(
         <Button bsStyle="warning" bsSize="large"
-                onClick={this.openEndModal.bind(this)} block>
-                End Tutoring Session
+                onClick={this.openEndModal.bind(this, tutoringSession)} block>
+                Stop Tutoring
+        </Button>
+      );
+    }
+
+    if (isBeingTutored) {
+      options.push(
+        <Button bsStyle="warning" bsSize="large"
+                onClick={this.openEndModal.bind(this, beingTutoredSession)} block>
+                Stop Being Tutored
         </Button>
       );
     }

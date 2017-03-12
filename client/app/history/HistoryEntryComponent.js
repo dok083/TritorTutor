@@ -2,22 +2,22 @@ import React from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Table } from 'react-bootstrap'
 
+import ProfilePic from '../profile/ProfilePic'
+
 class HistoryEntryComponent extends React.Component {
   render() {
     var entry = this.props.entry;
 
-    var tutorPicture = <img src={'/profiles/' + entry.tutorID + '.jpg'}
-                        alt={entry.tutorName} width={20} height={20} />
-    var studentPicture = <img src={'/profiles/' + entry.studentID + '.jpg'}
-                          alt={entry.studentName} width={20} height={20} />
+    var tutorPicture = <ProfilePic width={20} height={20} user={entry.tutorID} />;
+    var studentPicture= <ProfilePic width={20} height={20} user={entry.studentID} />;
 
     var tutor = <span>{tutorPicture} {entry.tutorName}</span>
     var student = <span>{studentPicture} {entry.studentName}</span>
 
     return (
       <tr>
-        <LinkContainer to={'/course/' + entry.courseID}>
-          <td>{entry.course}</td>
+        <LinkContainer to={'/course/' + entry.classID}>
+          <td>{entry.classID}</td>
         </LinkContainer>
         <LinkContainer to={'/profile/' + entry.tutorID}>
           <td>{tutor}</td>
