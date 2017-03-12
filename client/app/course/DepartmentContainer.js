@@ -1,28 +1,33 @@
 import React from 'react'
-import { Table } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Table, Nav, NavItem } from 'react-bootstrap'
+import { IndexLinkContainer } from 'react-router-bootstrap'
 
 import DepartmentComponent from './DepartmentComponent'
- 
-class DepartmentContainer extends React.Component {
-  render() {
+import subjectList from '!json!./subjectList.json'
 
-    var departments = this.props.departments.map((department) => {
-      return <DepartmentComponent department={department} />
+class DepartmentContainer extends React.Component {
+  onSelect(courseID) {
+
+  }
+
+  render() {
+    var departments = subjectList.map((department, index) => {
+      return (
+        <IndexLinkContainer to={'/courses/' + department.id}>
+          <NavItem eventKey={index} key={index}>
+            {department.name}
+          </NavItem>
+        </IndexLinkContainer>
+      );
     });
 
     return(
-      <div id='container'>
-        <Table responsive hover>
-          <tbody>
-            {departments}
-          </tbody>
-        </Table>
-      </div>
+      <Nav bsStyle='pills' activeKey={0} stacked onSelect={this.onSelect.bind(this)}>
+        {departments}
+      </Nav>
     );
   }
 }
-
 
 DepartmentContainer.displayName = 'DepartmentContainer';
 

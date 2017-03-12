@@ -17,15 +17,15 @@ var TutorSessionController = {};
  * @param tutorID The userID of the tutor.
  * @param studentID The userID of the student.
  * @param classID The course of the tutoring session.
- * @param status The session is usually pending on creation.
  * @return Promise containing nothing.
  */
 TutorSessionController.add = function(tutorID, studentID, classID) {
-	var data = {status: 0}
-
-	return TutorSessionModel.create(tutorID, studentID, classID, data)
+    console.log('Adding')
+	return TutorSessionModel.create(tutorID, studentID, classID)
 		.then(()=> {
+            console.log("Added")
 			CourseModel.incrementTutorCounts(classID);
+            console.log('added2');
 		}); 
 }
 
@@ -38,32 +38,8 @@ TutorSessionController.add = function(tutorID, studentID, classID) {
  * @param status The session is either pending, ongoing, or complete
  * @return Promise containing nothing.
  */
-TutorSessionController.update = function(tutorID, studentID, classID, status) {
-	var data = {status: status};
-
-	return TutorSessionModel.update(tutorID, studentID, classID, data);
-}
-
-/**
- * Returns all the sessions between a student and a tutor.
- *
- * @param studentID The user ID for the student.
- * @param tutorID The user ID for the tutor.
- * @return A promise that contains the list of all sessions between the two.
- */
-TutorSessionController.getBetween = function(studentID, tutorID) {
-	return TutorSessionModel.getBetween(studentID, tutorID);
-}
-
-/**
- * Returns all the sessions between a student and a tutor.
- *
- * @param studentID The user ID for the student.
- * @param tutorID The user ID for the tutor.
- * @return A promise that contains the list of all sessions between the two.
- */
-TutorSessionController.getBetweenCourse = function(studentID, tutorID, classID) {
-	return TutorSessionModel.getBetween(studentID, tutorID, classID);
+TutorSessionController.update = function(sessionID, status) {
+	return TutorSessionModel.update(sessionID, status);
 }
 
 /**
@@ -77,6 +53,16 @@ TutorSessionController.getPair = function(userID, otherID) {
 	return TutorSessionModel.getPair(userID, otherID);
 }
 
+/**
+ * Returns all tutoring sessions between a given student and a given tutor.
+ * 
+ * @param studentID The ID of the desired student.
+ * @param tutorID The ID of the desired tutor.
+ * @return A promise containing a list of all sessions between the two.
+ */
+TutorSessionController.getBetween = function(studentID, tutorID) {
+    return TutorSessionModel.getBetween(studentID, tutorID);
+}
 
 /**
  * Get all sessions that have the passed in user
@@ -127,6 +113,16 @@ TutorSessionController.getHistory = function(userID) {
 }
 
 /**
+ * Returns a tutor session from a given session ID.
+ *
+ * @param sessionID The ID of the desired session.
+ * @return A promise that contains the tutor session, or null if not found.
+ */
+TutorSessionController.getByID = function(sessionID) {
+    return TutorSessionModel.getByID(sessionID);
+}
+
+/**
  * Removes a tutoring session when it is rejected by deleting it from the 
  * database.
  * 
@@ -135,10 +131,8 @@ TutorSessionController.getHistory = function(userID) {
  * @param classID The course of the tutoring session.
  * @return Promise containing nothing.
  */
-TutorSessionController.remove = function(tutorID, studentID, classID) {
-	var data = {status: -1};
-
-	return TutorSessionModel.update(tutorID, studentID, classID, data);
+TutorSessionController.remove = function(sessionID) {
+	return TutorSessionModel.update(sessionID, -1);
 }
 
 /**
@@ -147,8 +141,8 @@ TutorSessionController.remove = function(tutorID, studentID, classID) {
  * @param sessionID Id of the session.
  * @return A promise that contains the session.
  */
-TutorSessionController.getByID = function(sessionID) {
+/*TutorSessionController.getByID = function(sessionID) {
 	return TutorSessionModel.getByID(sessionID);
-}
+}*/
 
 module.exports = TutorSessionController;

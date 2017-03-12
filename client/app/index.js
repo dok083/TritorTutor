@@ -35,7 +35,10 @@ render((
       <Route path='about' component={About} />
       <Route path='profile/:id' component={Profile} />
       <Route path='profile' component={ProfileSettings} />
-      <Route path='courses' component={CourseList} />
+      <Route path='courses' component={CourseList}>
+        <IndexRedirect to='CSE' />
+        <Route path=':id' component={CourseList} />
+      </Route>
       <Route path='course/search/:query' component={CourseSearch} />
       <Route path='course/:id' component={Course} />
       <Route path='message' component={Message} />

@@ -177,34 +177,11 @@ function update(table, data, condition, limit) {
     return query(queryStr, values);
 }
 
-
-/**
- * Increment the value of a certain field of a single row
- *
- * @param table The table to increment values in 
- * @param field the field to increment/decrement
- * @param value increment/decrement by this value
- * @param condtion used to find a certain row for incrementation
- * @return A promise which contains results from the database. If the query was
- *         successful, then the promise is fulfilled with results from the
- *         database as an array and the associated fields. Otherwise, the
- *         promise is rejected with the associated error.
- */
-function increment(table, field, value, condition) {
-	var limit = 1; //only modify a single row which matches the condition
-
-	var queryStr = 'UPDATE ' + table + ' SET ' + field + ' = ' (field + value)
-		+ ' WHERE ' + condition + ' LIMIT ' + limit;
-    
-	return query(queryStr, values);
-}
-
 // Expose the database library to the public.
 module.exports = {
     query: query,
     escape: mysql.escape,
     insert: insert,
     select: select,
-    update: update,
-	increment: increment
+    update: update
 };

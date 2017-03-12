@@ -91,6 +91,7 @@ class MessageView extends React.Component {
 
     var reply;
     var senderProfile;
+    var replySubmit;
 
     // Only allow replying to non-automated messages.
     if (message.sender) {
@@ -118,6 +119,12 @@ class MessageView extends React.Component {
           </Link>
         </Media.Left>
       );
+
+      replySubmit = (
+        <Button bsStyle='primary' className='pull-right'
+                disabled={this.state.busy}
+                onClick={this.reply.bind(this)}>Reply</Button>
+      );
     }
 
     return (
@@ -140,9 +147,7 @@ class MessageView extends React.Component {
                   disable={this.state.busy}>
             <Glyphicon glyph='trash' />
           </Button>
-          <Button bsStyle='primary' className='pull-right'
-                  disabled={this.state.busy}
-                  onClick={this.reply.bind(this)}>Reply</Button>
+          {replySubmit}
         </Modal.Footer>
       </Modal>
     );

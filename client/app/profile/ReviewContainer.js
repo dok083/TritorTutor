@@ -29,6 +29,14 @@ class ReviewContainer extends React.Component {
     var reviews;
 
     if (this.state.reviews.length > 0) {
+      this.state.reviews.sort((a, b) => {
+        if (a.stars == b.stars) {
+          return a.name.localeCompare(b.name);
+        }
+
+        return a.stars < b.stars;
+      });
+
       reviews = this.state.reviews.map((review) => {
         return <ReviewComponent review={review} />
       });

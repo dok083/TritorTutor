@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Jumbotron, Grid, Col, Panel } from 'react-bootstrap'
-import CourseSearchContainer from './CourseSearchContainer'
+import CourseSearchComponent from './CourseSearchComponent'
 import PopularCoursesContainer from './PopularCoursesContainer'
 import PopularTutorsContainer from './PopularTutorsContainer'
 
@@ -27,7 +27,7 @@ class Home extends React.Component {
           <br />
           <Grid>
             <Col xs={10} xsOffset={1} md={8} mdOffset={2}>
-              <CourseSearchContainer />
+              <CourseSearchComponent />
             </Col>
           </Grid>
         </Jumbotron>

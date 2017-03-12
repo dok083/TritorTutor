@@ -9,6 +9,7 @@ var ReviewController = {}
 
 var ReviewModel = require('../model/reviewModel.js');
 var ProfileModel = require('../model/profileModel.js');
+var TutorSessionModel = require('../model/tutorSessionModel.js');
 
 /**
  * This function adds a new review to the user that has the ID of userID. The
@@ -29,12 +30,37 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
     } else if (rating > 5) {
         rating = 5;
     }
+    
+    //check if there is a session between the users
+    return TutorSessionModel.getBetween(userID, reviewerID)
+	.then ((results)=> {
+	    var session;
 
-    return ReviewModel.create(userID, reviewerID, rating, comment)
-        .then (()=> {
-        console.log('created')
-	    ReviewController.updateProfile(userID);
-        });
+	    for (var i = 0; i < results.length; i++) {
+                var thisSession = results[i];
+
+                if (thisSession.status == 2 && thisSession.studentID == reviewerID) {
+                    session = thisSession;
+
+                    break;
+                }
+            }
+
+	    //no session between users; can't leave review
+	    if (!results){
+	        return null;
+	    }
+	    
+	    //create review
+	    return ReviewModel.create(userID, reviewerID, rating, comment)
+		.then (()=> {
+		    console.log('created');
+		    //update profile view with new review added
+		    ReviewController.updateProfile(userID);
+		    return true;
+        	});
+	});
+
 }
 
 /**

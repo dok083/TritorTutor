@@ -3,6 +3,8 @@ node_modules
 *~
 *.swp
 *.pyc
+.project
+.settings/
 static
 .grunt
 _SpecRunner.html

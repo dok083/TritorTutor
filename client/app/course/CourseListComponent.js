@@ -8,9 +8,9 @@ class CourseListComponent extends React.Component {
     var course = this.props.course;
 
     return (
-        <LinkContainer to={'/course/' + course.id}>
+        <LinkContainer style={{cursor: 'pointer'}} to={'/course/' + course}>
             <Panel>
-                {course.name}
+                {course}
             </Panel>
         </LinkContainer>
     );
