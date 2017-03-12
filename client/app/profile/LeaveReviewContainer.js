@@ -7,7 +7,9 @@ class LeaveReviewContainer extends React.Component {
     return (
       <Modal show={this.props.show} onHide={this.props.onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Leave a Review</Modal.Title>
+          <Modal.Title>
+            {this.props.review == [] ? 'Leave a Review' : 'Update Review'}
+          </Modal.Title>
         </Modal.Header>
         <LeaveReviewComponent user={this.props.user} review={this.props.review}/>
       </Modal>
