@@ -18,14 +18,12 @@ var TutorSessionModel = {};
  * @param status The session is either pending, rejected, ongoing, or complete
  * @return Promise containing the ID of a tutor session.
  */
-TutorSessionModel.create = function(tutorID, studentID, classID, status) {
+TutorSessionModel.create = function(tutorID, studentID, classID) {
     return db.insert('tritor_tutor_sessions', {
         tutorID: tutorID,
         studentID: studentID,
         classID: classID,
-        status: status,
-    }).then((results) => {
-        return results.insertId;
+        status: 0
     });
 }
 
@@ -39,54 +37,35 @@ TutorSessionModel.create = function(tutorID, studentID, classID, status) {
  *        Most likely only the status is ever updated.
  * @return Promise containing nothing.
  */
-TutorSessionModel.update = function(tutorID, studentID, classID, data) {
-    tutorID = db.escape(tutorID);
-    studentID = db.escape(studentID);
-    classID = db.escape(classID);
-
-    var conditions = 'tutorID=' + tutorID + ' AND studentID=' + studentID
-                     + ' AND classID=' + classID;
+TutorSessionModel.update = function(sessionID, status) {
+    //var conditions = 'tutorID=' + tutorID + ' AND studentID=' + studentID;
+    var conditions = 'sessionID=' + sessionID;
+    var data = {
+      status: status
+    };
 
     return db.update('tritor_tutor_sessions', data, conditions, 1);
-}
-
-/**
- * Returns a specific tutor session from a given session ID.
- * 
- * @param sessionID The ID for the tutoring session.
- * @return A promise containing the session corresponding to the given ID. If no
- *         session was found, the promise contains null.
- */
-TutorSessionModel.getByID = function(sessionID) {
-    const fields = ['tutorID', 'studentID', 'classID', 'status'];
-
-    return db.select('tritor_tutor_sessions', fields,
-                     'sessionID=' + db.escape(sessionID)).then((results) => {
-        if (results.length > 0) {
-            return results[0];
-        } else {
-            return null;
-        }
-    });
 }
 
 /**
  * Returns all tutoring sessions where the user being tutored corresponds to the
  * given user ID.
  *
- * @param userID The ID of the user being tutored.
+ * @param studentID The ID of the user being tutored.
  * @return A promise containing a list of matching tutoring sessions.
  */
-TutorSessionModel.getByStudent = function(userID) {
-    const fields = ['sessionID', 'tutorID', 'classID', 'status'];
+TutorSessionModel.getByStudent = function(studentID) {
+    const fields = ['tutorID', 'classID', 'status', 'sessionID'];
 
     return db.select('tritor_tutor_sessions', fields,
-                     'studentID=' + db.escape(userID)).then((results) => {
-        return results.map((session) => {
-            session.studentID = userID;
+                     'studentID=' + db.escape(studentID), 1).then((results) => {
+        if (results && results.length > 0) {
+          results[0].studentID = studentID;
 
-            return session;
-        })
+          return results[0];
+        }
+
+        return null;
     });
 }
 
@@ -94,50 +73,20 @@ TutorSessionModel.getByStudent = function(userID) {
  * Returns all tutoring sessions where the tutor corresponds to the given
  * user ID.
  *
- * @param userID The user ID of the tutor.
+ * @param tutorID The user ID of the tutor.
  * @return A promise containing a list of matching tutoring sessions.
  */
-TutorSessionModel.getByTutor = function(userID) {
-    const fields = ['sessionID', 'studentID', 'classID', 'status'];
+TutorSessionModel.getByTutor = function(tutorID) {
+    const fields = ['studentID', 'classID', 'status', 'sessionID'];
 
     return db.select('tritor_tutor_sessions', fields,
-                     'tutorID=' + db.escape(userID)).then((results) => {
-        return results.map((session) => {
-            session.tutorID = userID;
+    'tutorID=' + db.escape(userID), 1).then((results) => {
+        return results.map((result) => {
+            result.tutorID = tutorID;
 
-            return session;
+            return result;
         });
     });
-}
-
-/**
- * Returns all of the tutoring sessions that were between a student
- * corresponding to the given studentID and a tutor corresponding to the
- * given tutorID. A class may be provided as well.
- *
- * @param studentID The user ID of the desired student.
- * @param tutorID The user ID of the desired tutor.
- * @param classID An optional ID for a class.
- * @return A promise that contains a list of all matching tutoring sessions.
- */
-TutorSessionModel.getBetween = function(studentID, tutorID, classID) {
-    var fields = ['sessionID', 'classID', 'status'];
-    var conditions = 'studentID=' + db.escape(studentID)
-                       + ' AND tutorID=' + db.escape(tutorID);
-
-    if (classID) {
-        conditions += ' AND classID=' + db.escape(classID);
-    }
-
-    return db.select('tritor_tutor_sessions', fields, conditions)
-        .then((results) => {
-            return results.map((session) => {
-                session.studentID = studentID;
-                session.tutorID = tutorID;
-
-                return session;
-            });            
-        });
 }
 
 /**
@@ -150,7 +99,7 @@ TutorSessionModel.getWithUser = function(userID) {
     userID = db.escape(userID);
 
     return db.select('tritor_tutor_sessions',
-                     ['classID', 'tutorID', 'studentID'],
+                     ['classID', 'tutorID', 'studentID', 'sessionID'],
                      'studentID=' + userID + ' OR tutorID=' + userID);
 }
 
@@ -163,15 +112,24 @@ TutorSessionModel.getWithUser = function(userID) {
  */
 TutorSessionModel.getPair = function(userID, otherID) {
     const fields = ['sessionID', 'studentID', 'tutorID', 'classID', 'status'];
-    const conditions = '(studentID='+ userID + ' AND tutorID=' + otherID
-                        + ') OR (studentID=' + otherID + ' AND tutorID=' + userID + ')';
+    const conditions = '(studentID='+ userID + ' AND tutorID=' + otherID + ')'
+                        + ' OR (studentID=' + otherID + ' AND tutorID=' + userID + ')';
     
-    return db.select('tritor_tutor_sessions', fields, conditions)
-        .then((results) => {
-            return results.map((session) => {
-                return session;
-            });            
-        });
- }
+    return db.select('tritor_tutor_sessions', fields, conditions);
+}
+
+/**
+ * Returns all tutoring sessions between a given student and a given tutor.
+ * 
+ * @param studentID The ID of the desired student.
+ * @param tutorID The ID of the desired tutor.
+ * @return A promise containing a list of all sessions between the two.
+ */
+TutorSessionModel.getBetween = function(studentID, tutorID) {
+    const fields = ['sessionID', 'studentID', 'tutorID', 'classID', 'status'];
+    const conditions = 'studentID='+ studentID + ' AND tutorID=' + tutorID;
+    
+    return db.select('tritor_tutor_sessions', fields, conditions);
+}
 
 module.exports = TutorSessionModel;
