@@ -1,5 +1,6 @@
 import React from 'react'
-import { Modal, Select, FormControl, Button, FormGroup, ControlLabel } from 'react-bootstrap'
+import { Modal, Select, FormControl, Button, FormGroup, ControlLabel, Alert } from 'react-bootstrap'
+import axios from 'axios'
 
 class MessageComponent extends React.Component {
   constructor(props) {
@@ -23,6 +24,15 @@ class MessageComponent extends React.Component {
   }
 
   send() {
+    if (this.state.subject.length == 0) {
+      this.setState({
+        message: 'Your subject cannot be empty.',
+        messageType: 'danger'
+      });
+
+      return;
+    }
+
     this.setState({busy: true});
     axios.post('/api/message/' + this.props.user.userID, {
       subject: this.state.subject,
@@ -51,9 +61,16 @@ class MessageComponent extends React.Component {
   }
 
   render() {
+    var alert;
+
+    if (this.state.message.length > 0) {
+      alert = <Alert bsStyle={this.state.messageType}>{this.state.message}</Alert>;
+    }
+
     return (    
       <div>
         <Modal.Body>
+          {alert}
           <FormGroup id="subject" key="subject">
             <ControlLabel>Subject</ControlLabel>
             <FormControl onChange={this.subjectChange.bind(this)} type="text" placeholder="Subject" required />
@@ -65,7 +82,7 @@ class MessageComponent extends React.Component {
         </Modal.Body>
                          
         <Modal.Footer>
-          <Button className="pull-right" onClick={this.bind.send.bind(this)} bsStyle ="primary" disable={this.state.busy}>
+          <Button className="pull-right" onClick={this. send.bind(this)} bsStyle ="primary" disabled={this.state.busy}>
             Send
           </Button>
         </Modal.Footer>
