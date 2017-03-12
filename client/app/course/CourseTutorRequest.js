@@ -49,7 +49,7 @@ class CourseTutorRequest extends React.Component {
   }
 
   onPriceChange(e) {
-    this.setState({price: parseFloat(e.target.value) || 0});
+    this.setState({price: parseFloat(e.target.value) || 'NaN'});
   }
 
   onNegotiableChange() {
@@ -100,6 +100,14 @@ class CourseTutorRequest extends React.Component {
   }
 
   update() {
+    if (this.state.price > 99999.99 || isNaN(this.state.price)) {
+      this.setState({
+          message: 'Please enter price between 0 and 99999.99',
+          messageType: 'danger',
+          busy: false
+        });
+      return;
+    }
     var listing = this.getValues();
 
     if (!listing) {
@@ -172,6 +180,15 @@ class CourseTutorRequest extends React.Component {
   }
 
   submit() {
+    if (this.state.price > 99999.99 || isNaN(this.state.price)) {
+      this.setState({
+          message: 'Please enter price between 0 and 99999.99',
+          messageType: 'danger',
+          busy: false
+        });
+      return;
+    }
+    
     this.setState({busy: true});
 
     var listing = this.getValues();
