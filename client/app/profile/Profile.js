@@ -8,7 +8,6 @@ import ReviewContainer from './ReviewContainer'
 import RequestContainer from './RequestContainer'
 import MessageContainer from './MessageContainer'
 import LeaveReviewContainer from './LeaveReviewContainer'
-import UpdateReviewContainer from './UpdateReviewContainer'
 
 import Dispatch from '../Dispatch.js'
 
@@ -27,7 +26,6 @@ class Profile extends React.Component {
       showMsgModal: false,
       showRewModal: false,
       showEndModal: false,
-      showUpdateRewModal: false,
       busy: false,
       endMessage: '',
       user: null, // viewing this person's profile
@@ -123,14 +121,6 @@ class Profile extends React.Component {
 
   openMsgModal() {
     this.setState({ showMsgModal: true });
-  }
-  
-  closeUpdateRewModal() {
-    this.setState({ showUpdateRewModal: false });
-  }
-
-  openUpdateRewModal() {
-    this.setState({ showUpdateRewModal: true });
   }
 
   closeRewModal(){
@@ -255,7 +245,7 @@ class Profile extends React.Component {
     var hasDoneSession = false;
     var hasPendingSession = false;
     var reviewed = false;
-    var review;
+    var review = [];
     
     for (var i = 0; i < this.state.reviews.length; i++) {
       if(this.state.reviews[i].userID == this.state.localUser.userID)
@@ -361,15 +351,11 @@ class Profile extends React.Component {
     var reviewButton;
     
     if (hasDoneSession) {
-      if (reviewed) {
-        reviewButton = (
-          <Button bsStyle='primary' onClick={this.openUpdateRewModal.bind(this)}> Update Review</Button>
-        ); 
-      } else {
-        reviewButton = (
-          <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}> Leave a Review</Button>
+      const buttonText = reviewed ? 'Update Review' : 'Leave a Review';
+      reviewButton = (
+          <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}>{buttonText}</Button>
         );  
-      }
+      
     } 
 
     var content;
@@ -421,10 +407,7 @@ class Profile extends React.Component {
                           user={this.state.user} />
         <LeaveReviewContainer show={this.state.showRewModal} 
                               onHide={this.closeRewModal.bind(this)} 
-                              user={this.state.user} />
-        <UpdateReviewContainer show={this.state.showUpdateRewModal} 
-                              onHide={this.closeUpdateRewModal.bind(this)} 
-                              user={this.state.user} 
+                              user={this.state.user}
                               review={review}/>
         </div>
       );
