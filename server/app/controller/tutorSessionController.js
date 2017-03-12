@@ -113,6 +113,16 @@ TutorSessionController.getHistory = function(userID) {
 }
 
 /**
+ * Returns a tutor session from a given session ID.
+ *
+ * @param sessionID The ID of the desired session.
+ * @return A promise that contains the tutor session, or null if not found.
+ */
+TutorSessionController.getByID = function(sessionID) {
+    return TutorSessionModel.getByID(sessionID);
+}
+
+/**
  * Removes a tutoring session when it is rejected by deleting it from the 
  * database.
  * 
