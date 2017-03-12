@@ -50,130 +50,130 @@ export default class About extends React.Component {
 
               <h2>Meet The Team</h2>
               <Row className = "Team-1">
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Brian Minh Hang</b></h3>
                   <img 
                     style = {imgStyle}
                     src ={img}
                   />
                   <p>
-                    <center><font size="5">Project Manager</font></center>
+                    <h4 className='text-center'>Project Manager</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>David Dinata</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Senior System Analyst</font></center>
+                    <h4 className='text-center'>Senior System Analyst</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
               </Row>
 
               <Row className = "Team-2">
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>San Kang</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Software Architect</font></center>
+                    <h4 className='text-center'>Software Architect</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Rishiesh Hirendu Vaishnav</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Software Architect</font></center>
+                    <h4 className='text-center'>Software Architect</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
               </Row>
 
               <Row className = "Team-3">
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Doyoung Kim</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Software Development Lead</font></center>
+                    <h4 className='text-center'>Software Development Lead</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Yiming Chen</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Algorithm Specialist</font></center>
+                    <h4 className='text-center'>Algorithm Specialist</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
               </Row>
 
               <Row className = "Team-4">
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Amal Alhaidari</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Database Specialist</font></center>
+                    <h4 className='text-center'>Database Specialist</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Seonghyun Hong</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Business Analyst</font></center>
+                    <h4 className='text-center'>Business Analyst</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
               </Row>
 
               <Row className = "Team-5">
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Bonnie Chen</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">User Interface Specialist</font></center>
+                    <h4 className='text-center'>User Interface Specialist</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
 
-                <Col xs={6} md={6}>
+                <Col xs={12} md={6}>
                   <h3><b>Natchuta Wattanapenpaiboon</b></h3>
                   <img 
                     style = {imgStyle}
                     src = {img}
                   />
                   <p>
-                    <center><font size="5">Quality Assurance Lead</font></center>
+                    <h4 className='text-center'>Quality Assurance Lead</h4>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis gravida facilisis. Mauris porttitor urna tortor, auctor elementum lacus congue at. Sed vestibulum interdum eros, et faucibus massa rutrum nec. Pellentesque eleifend consequat metus sed finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare elit in diam rutrum tempor. Aliquam condimentum eget purus ut scelerisque. Vestibulum ac facilisis ipsum, vel convallis ligula. 
                   </p>
                 </Col>
