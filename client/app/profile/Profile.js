@@ -2,6 +2,7 @@ import React from 'react'
 import { Alert, Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label, Modal } from 'react-bootstrap'
 import { Link } from 'react-router'
 import axios from 'axios'
+import ReactMarkdown from 'react-markdown'
 
 import ProfilePic from './ProfilePic'
 import ReviewContainer from './ReviewContainer'
@@ -241,6 +242,7 @@ class Profile extends React.Component {
     var isTutoring = false;
     var tutoringSession;
     var isBeingTutored = false;
+    var hasBeenTutored = false;
     var beingTutoredSession;
     var hasDoneSession = false;
     var hasPendingSession = false;
@@ -273,6 +275,9 @@ class Profile extends React.Component {
           break;
         case SESSION_DONE:
           hasDoneSession = true;
+          if(session.studentID == this.state.localUser.userID) {
+            hasBeenTutored = true;
+          }
 
           break;
         case SESSION_PENDING:
@@ -350,7 +355,7 @@ class Profile extends React.Component {
     
     var reviewButton;
     
-    if (hasDoneSession) {
+    if (hasDoneSession && hasBeenTutored) {
       const buttonText = reviewed ? 'Update Review' : 'Leave a Review';
       reviewButton = (
           <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}>{buttonText}</Button>
@@ -382,7 +387,7 @@ class Profile extends React.Component {
           </Col>
           <Col xs={12} md={8}>
             <Panel header="About Me">
-              {this.state.user.description}
+              <ReactMarkdown source={this.state.user.description} />
             </Panel>
             <Panel header="Currently Tutoring">
               <ListGroup style={style}>
