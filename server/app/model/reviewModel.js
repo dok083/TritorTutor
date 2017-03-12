@@ -21,22 +21,9 @@ var db = require('./database.js');
  * @return A promise that is called after the review has been made.
  */
 ReviewModel.create = function(tutorID, userID, rating, comment) {
-    //check if there is already an existing review by the user
-    return db.select('tritor_reviews', ['userID', 'reviewerID', 'rating', 'comment'], 'reviewerID=' + db.escape(userID))
-	.then((results)=> {
-	    //a review already exists
-	    if (results.length > 0){
-		return null;
-	    }
-
-	    //review added
-            return db.insert('tritor_reviews', {
-                userID: userID,
-                tutorID: tutorID,
-                rating: rating,
-                comment: comment
-	    });
-        });
+    //add review and update it if user already wrote a review
+    return db.query('INSERT INTO tritor_reviews(userID, reviewerID, rating, comment) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = ?, comment = ?',
+		    [tutorID, userID, rating, comment, rating, comment]);
 }
 
 /**
