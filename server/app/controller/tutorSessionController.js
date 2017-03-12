@@ -38,10 +38,8 @@ TutorSessionController.add = function(tutorID, studentID, classID) {
  * @param status The session is either pending, ongoing, or complete
  * @return Promise containing nothing.
  */
-TutorSessionController.update = function(tutorID, studentID, classID, status) {
-	var data = {status: status};
-
-	return TutorSessionModel.update(tutorID, studentID, classID, data);
+TutorSessionController.update = function(sessionID, status) {
+	return TutorSessionModel.update(sessionID, status);
 }
 
 /**
@@ -123,10 +121,8 @@ TutorSessionController.getHistory = function(userID) {
  * @param classID The course of the tutoring session.
  * @return Promise containing nothing.
  */
-TutorSessionController.remove = function(tutorID, studentID, classID) {
-	var data = {status: -1};
-
-	return TutorSessionModel.update(tutorID, studentID, classID, data);
+TutorSessionController.remove = function(sessionID) {
+	return TutorSessionModel.update(sessionID, -1);
 }
 
 /**

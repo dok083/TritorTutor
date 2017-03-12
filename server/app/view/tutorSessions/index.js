@@ -77,13 +77,13 @@ function requestSessionResponse(req, res, user) {
         return res.status(400).json({message: 'unverififed user'});
     }
 
-    var studentID = req.params.studentID;
-    var tutorID = req.params.id;
-    var accept = req.params.accept;
+    var studentID = req.params.id;
+    var tutorID = user.userID;
+    var accept = Boolean(req.body.accept);
 
     // Find a pending session with the studentID and courseID.
     // If one does not exist, then error.
-    TutorSessionController.getPair(tutorID, studentID)
+    TutorSessionController.getBetween(studentID, tutorID)
         .then((results)=> {
             var session;
 
@@ -98,26 +98,30 @@ function requestSessionResponse(req, res, user) {
             if (!session) {
                 return res.status(400).json({message: 'pending session does not exist'});
             }
-
+            console.log(session)
             // Otherwise, set the session state to active if accept is true or
             // delete the request if false.
             // Send a message to the student with the result of the response.
             // Send a message to the tutor indicate the response.
             if (accept) {
-                TutorSessionController.update(tutorID, studentID, courseID, 1)
+                TutorSessionController.update(session.sessionID, 1)
                     .then(()=> {
                         var tutor = "Hey dood, It's me Tritor. You just accepted a request for tutoring."
                         var student = "hey dood, It's me Tritor. Your request to " + user.username + " was accepted." 
                         MessageController.send(0, studentID, user.username + ' accepted your request', student);
                         MessageController.send(0, tutorID, 'You accepted a request', tutor);
+
+                        res.json({message: 'success'});
                     });
             } else {
-                TutorSessionController.remove(tutorID, studentID, courseID)
+                TutorSessionController.remove(session.sessionID)
                     .then(()=> {
                         var tutor = "Hey dood, It's me Tritor. You just rejected a request for tutoring."
                         var student = "hey dood, It's me Tritor. Your request to " + user.username + " was rejected." 
                         MessageController.send(0, studentID, user.username + ' rejected your request', student);
                         MessageController.send(0, tutorID, 'You rejected a request', tutor);
+
+                        res.json({message: 'success'});
                     });
             }
         });
@@ -131,27 +135,38 @@ function sessionFinish(req, res, user) {
         return res.status(400).json({message: 'unverififed user'});
     }
 
-    var otherID = req.params.otherID;
+    var otherID = req.params.id;
 
  	// Check if there is a session with the other user. Note that it does not
     // matter if the user is the tutor or student.
     TutorSessionController.getPair(user.userID, otherID)
-    	.then((session)=> {
-    		// Otherwise, set the state to finished.
-    		if (session && session.status != 2) {
-    			TutorSessionController.update(session.tutorID, session.studentID, session.classID, 2)
-    				.then(()=> {
-							var tutor = "Your session with " + session.studentID + " for " 
-										+ session.classID + " has been canceled." 
-                            var student = "Your session with " + session.tutorID + " for " 
-                            			+ session.classID + " has been canceled."
+    	.then((results) => {
+            var session;
 
-                            MessageController.send(0, session.studentID, 'Session Canceled', student);
-                            MessageController.send(0, session.tutorID, 'Session Canceled', tutor);
-    				});
-    		} else {
-    			return res.status(400).json({message: 'session does not exist'});
-    		}
+            for (var i = 0; i < results.length; i++) {
+              if (results[i].status == 1) {
+                session = results[i];
+
+                break;
+              }
+            }
+
+            if (!session) {
+                return res.status(400).json({message: 'pending session does not exist'});
+            }
+
+            TutorSessionController.update(session.sessionID, 2)
+                .then(()=> {
+                        var tutor = "Your session with " + session.studentID + " for " 
+                                    + session.classID + " has been canceled." 
+                        var student = "Your session with " + session.tutorID + " for " 
+                                    + session.classID + " has been canceled."
+
+                        MessageController.send(0, session.studentID, 'Session Canceled', student);
+                        MessageController.send(0, session.tutorID, 'Session Canceled', tutor);
+
+                        res.json({message: 'success'});
+                });
     	});
 }
 

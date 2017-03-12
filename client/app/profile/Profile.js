@@ -26,7 +26,7 @@ class Profile extends React.Component {
       showMsgModal: false,
       showRewModal: false,
       showEndModal: false,
-      endBusy: false,
+      busy: false,
       endMessage: '',
       user: null, // viewing this person's profile
       courses: [],
@@ -80,11 +80,17 @@ class Profile extends React.Component {
   }
  
   endSession() {
-    this.setState({endBusy: true});
+    const studentID = this.state.user && this.state.user.userID;
 
-    axios.put('/api/tutorSessions/' + this.props.params.id)
+    if (!studentID) {
+      return;
+    }
+
+    this.setState({busy: true});
+
+    axios.delete('/api/tutorSessions/' + studentID)
       .then(() => {
-        this.setState({endBusy: false});
+        this.setState({busy: false});
         window.location.reload();
       })
       .catch((error) => {
@@ -98,7 +104,7 @@ class Profile extends React.Component {
 
         this.setState({
           endMessage: message,
-          endBusy: false
+          busy: false
         });
       });
   }
@@ -134,6 +140,45 @@ class Profile extends React.Component {
 
   openEndModal() {
     this.setState({showEndModal: true});
+  }
+
+  accept() {
+    const studentID = this.state.user && this.state.user.userID;
+
+    if (!studentID) {
+      return;
+    }
+
+    this.setState({busy: true});
+
+    axios.put('/api/tutorSessions/' + studentID, {accept: true})
+      .then(() => {
+        window.location.reload();
+
+      })
+      .catch((error) => {
+        console.log(error.response);
+        this.setState({busy: false});
+      });
+  }
+
+  reject() {
+    const studentID = this.state.user && this.state.user.userID;
+
+    if (!studentID) {
+      return;
+    }
+
+    this.setState({busy: true});
+
+    axios.put('/api/tutorSessions/' + studentID, {accept: false})
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error.response);
+        this.setState({busy: false});
+      });
   }
 
   componentWillReceiveProps(props) {
@@ -182,7 +227,9 @@ class Profile extends React.Component {
     // and the user on the profile page.
     var hasActiveSession = false;
     var hasDoneSession = false;
+    var hasPendingSession = false;
 
+    console.log(this.state.sessions)
     for (var i = 0; i < this.state.sessions.length; i++) {
       switch (this.state.sessions[i].status) {
         case SESSION_ACTIVE:
@@ -190,6 +237,14 @@ class Profile extends React.Component {
           break;
         case SESSION_DONE:
           hasDoneSession = true;
+          break;
+        case SESSION_PENDING:
+          if (this.state.localUser &&
+              this.state.localUser.userID == this.state.sessions[i].tutorID) {
+            hasPendingSession = true;
+            console.log('hasPending')
+          }
+
           break;
       }
     }
@@ -219,6 +274,19 @@ class Profile extends React.Component {
         <Button bsStyle="warning" bsSize="large"
                 onClick={this.openEndModal.bind(this)} block>
                 End Tutoring Session
+        </Button>
+      );
+    }
+
+    if (hasPendingSession) {
+      options.push(
+        <Button bsStyle="success" bsSize="large"
+                onClick={this.accept.bind(this)} block>
+        Accept
+        </Button>,
+        <Button bsStyle="danger" bsSize="large"
+                onClick={this.reject.bind(this)} block>
+        Reject
         </Button>
       );
     }
@@ -314,10 +382,10 @@ class Profile extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.closeEndModal.bind(this)}
-                    disabled={this.state.endBusy}>No</Button>
+                    disabled={this.state.busy}>No</Button>
             <Button bsStyle='danger'
                     onClick={this.endSession.bind(this)}
-                    disabled={this.state.endBusy}>Yes</Button>
+                    disabled={this.state.busy}>Yes</Button>
           </Modal.Footer>
         </Modal>
         <Grid>
