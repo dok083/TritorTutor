@@ -9,7 +9,7 @@ class LeaveReviewContainer extends React.Component {
         <Modal.Header closeButton>
           <Modal.Title>Leave a Review</Modal.Title>
         </Modal.Header>
-        <LeaveReviewComponent user={this.props.user} />
+        <LeaveReviewComponent user={this.props.user} review={this.props.review}/>
       </Modal>
     );
   }
