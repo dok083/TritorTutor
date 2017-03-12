@@ -32,7 +32,7 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
     }
     
     //check if there is a session between the users
-    return TutorSessionModel.getBetween(userID, reviewerID)
+    return TutorSessionModel.getBetween(reviewerID, userID)
 	.then ((results)=> {
 	    var session;
 
@@ -47,16 +47,16 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
             }
 
 	    //no session between users; can't leave review
-	    if (!results){
-	        return null;
+	    if (!session){
+	        return false;
 	    }
 	    
-	    //create review
-	    return ReviewModel.create(userID, reviewerID, rating, comment)
+	    //create tutor review by student
+	    return ReviewModel.create(session.tutorID, session.studentID, rating, comment)
 		.then (()=> {
 		    console.log('created');
 		    //update profile view with new review added
-		    ReviewController.updateProfile(userID);
+		    ReviewController.updateProfile(session.studentID);
 		    return true;
         	});
 	});
@@ -104,6 +104,9 @@ ReviewController.get = function(userID) {
     });
 }
 
+/**
+ * Gets avg of all reviews for user
+ */
 ReviewController.getAvg = function(userID) {
     return ReviewModel.getAvg(userID)
         .then((results) => {
@@ -111,6 +114,9 @@ ReviewController.getAvg = function(userID) {
         });
 }
 
+/**
+ * Updates profile to change avgRating when a review is added or updated
+ */
 ReviewController.updateProfile = function(userID) {
     ReviewController.getAvg(userID)
 	.then((userAvg)=>{
@@ -118,7 +124,8 @@ ReviewController.updateProfile = function(userID) {
     	    return ProfileModel.updateRating(userID, data);
 	});
 }
-ReviewController.updateProfile(49)
+//ReviewController.updateProfile(49)
+
 /**
  * Updates a specific review (the one created by reviewerID on userID's page).
  *
