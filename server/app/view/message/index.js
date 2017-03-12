@@ -6,6 +6,7 @@
 
 var MessageController = require('../../controller/messageController.js');
 var ProfileController = require('../../controller/profileController.js');
+var TutorSessionController = require('../../controller/tutorSessionController.js');
 var requiresLoggedIn = require('../userUtils.js');
 
 /**
@@ -83,11 +84,33 @@ function getMessages(req, res, user) {
  *  Send message for a user
  */
 function sendMessage(req, res, user) {
-    var messageID = parseInt(req.params.id);
-    // this param might be wrong
-    MessageController.send(user.userID, messageID, user.title, user.content)
-        .then(() => {
-            res.json({message: 'success'});
+    // Get who the message should be sent to.
+    var recipientID = parseInt(req.params.id);
+
+    if (!recipientID || recipientID < 1) {
+        return res.status(400).json({message: 'You have provided an invalid recipient.'});
+    }
+
+    // Get the details for the message.
+    var subject = req.body.subject;
+    var content = req.body.content;
+
+    if (!subject || !content || subject.length == 0 || content.length == 0) {
+        return res.status(400).json({message: 'The subject and message cannot be blank.'});
+    }
+
+    // Check if we are currently tutoring for this person.
+    TutorSessionController.getPair(user.userID, recipientID)
+        .then((session) => {
+            if (!session) {
+                res.status(400).json({message: 'You are not allowed to message this user.'});
+            }
+
+            // Send the message if allowed.
+            MessageController.send(user.userID, recipientID, subject, content)
+                .then(() => {
+                    res.json({message: 'success'});
+                });
         });
 }
 
