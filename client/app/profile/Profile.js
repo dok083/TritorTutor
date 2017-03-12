@@ -242,6 +242,7 @@ class Profile extends React.Component {
     var isTutoring = false;
     var tutoringSession;
     var isBeingTutored = false;
+    var hasBeenTutored = false;
     var beingTutoredSession;
     var hasDoneSession = false;
     var hasPendingSession = false;
@@ -274,6 +275,9 @@ class Profile extends React.Component {
           break;
         case SESSION_DONE:
           hasDoneSession = true;
+          if(session.studentID == this.state.localUser.userID) {
+            hasBeenTutored = true;
+          }
 
           break;
         case SESSION_PENDING:
@@ -351,7 +355,7 @@ class Profile extends React.Component {
     
     var reviewButton;
     
-    if (hasDoneSession) {
+    if (hasDoneSession && hasBeenTutored) {
       const buttonText = reviewed ? 'Update Review' : 'Leave a Review';
       reviewButton = (
           <Button bsStyle='primary' onClick={this.openRewModal.bind(this)}>{buttonText}</Button>
