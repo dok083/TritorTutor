@@ -2,6 +2,7 @@ import React from 'react'
 import { Alert, Grid, Col, Image, Well, Button, PanelGroup, Panel, ListGroup, ListGroupItem, Label, Modal } from 'react-bootstrap'
 import { Link } from 'react-router'
 import axios from 'axios'
+import ReactMarkdown from 'react-markdown'
 
 import ProfilePic from './ProfilePic'
 import ReviewContainer from './ReviewContainer'
@@ -382,7 +383,7 @@ class Profile extends React.Component {
           </Col>
           <Col xs={12} md={8}>
             <Panel header="About Me">
-              {this.state.user.description}
+              <ReactMarkdown source={this.state.user.description} />
             </Panel>
             <Panel header="Currently Tutoring">
               <ListGroup style={style}>

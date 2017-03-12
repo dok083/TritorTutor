@@ -4,6 +4,7 @@ import { Media, Grid, Alert, FormControl, FormGroup, Modal, Button, Glyphicon } 
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 import axios from 'axios'
+import ReactMarkdown from 'react-markdown'
 
 import MessageReply from './MessageReply'
 import ProfilePic from '../profile/ProfilePic'
@@ -136,7 +137,7 @@ class MessageView extends React.Component {
           <Media>
             {senderProfile}
             <Media.Body>
-              <p>{message.content}</p>
+              <ReactMarkdown source={message.content} />
             </Media.Body>
           </Media>
           {reply}
