@@ -2,6 +2,7 @@
 
 var TutorSessionController = require('../../controller/tutorSessionController.js');
 var MessageController = require('../../controller/messageController.js');
+var ProfileController = require('../../controller/profileController.js');
 var requiresLoggedIn = require('../userUtils.js');
 
 /**
@@ -37,36 +38,45 @@ function requestSession(req, res, user) {
     var tutorID = req.params.id;
     var studentID = user.userID;
 
-    // Check if there is a session that is active/pending from this user to
-    // the tutor. If so, do not allow this request.
-    TutorSessionController.getBetween(studentID, tutorID)
-        .then((results)=> {
-            var hasActiveSession = false;
+    ProfileController.get(tutorID)
+	.then((tutorProfile) => {
+	    var tutorUsername = tutorProfile.username;
+	    // Check if there is a session that is active/pending from this user to
+    	    // the tutor. If so, do not allow this request.
+    	    TutorSessionController.getBetween(studentID, tutorID)
+        	.then((results)=> {
+            	    var hasActiveSession = false;
 
-            for (var i = 0; i < results.length; i++) {
-                const status = results[i].status;
+            	    for (var i = 0; i < results.length; i++) {
+                	const status = results[i].status;
 
-                if (status == 0 || status == 1) {
-                    return res.status(400).json({message: 'You have already sent a request to this tutor.'});
-                }
-            }
+                	if (status == 0 || status == 1) {
+                    	    return res.status(400).json({message: 'You have already sent a request to this tutor.'});
+                	}
+            	    }
+            		
+		    // Otherwise, create a new session.
+            	    // Send a message to the tutor stating this user wants tutoring.
+            	    // Send a message to the student stating a request has been made.
+            	    // Respond with the tutor session ID.
+            	    TutorSessionController.add(tutorID, studentID, courseID)
+                	.then(()=> {
+                    	    console.log(3)
+                    	    var tutorMsg = "[" + user.username + "](https://tritontutor.com/profile/" + studentID  + ") has sent you a request to be tutored for ["
+					   + courseID + "](https://tritontutor.com/course/" + courseID  + "). Please go to their profile to accept or reject the request."
+                    		
+			    var studentMsg = "You have sent a request to be tutored by [" + tutorUsername + "](https://tritontutor.com/profile/"
+					     + tutorID + ") for [" + courseID + "](https://tritontutor.com/course/" + courseID + ")."
 
-            // Otherwise, create a new session.
-            // Send a message to the tutor stating this user wants tutoring.
-            // Send a message to the student stating a request has been made.
-            // Respond with the tutor session ID.
-            TutorSessionController.add(tutorID, studentID, courseID)
-                .then(()=> {
-                    console.log(3)
-                    var tutor = "Hey dood, It's me Tritor. Someone wants your help"
-                    var student = "hey dood, It's me Tritor. I sent your request."
-                    console.log(4)
-                    MessageController.send(0, tutorID, 'Tutor request from ' + user.username ,tutor);
-                    MessageController.send(0, studentID, 'Tutor request sent', student);
-                    console.log('yooo')
-                    res.json({message: 'success'});
-                });                
-        });
+                    	    console.log(4)
+
+                    	    MessageController.send(0, tutorID, 'Tutor request from ' + user.username, tutorMsg);
+                    	    MessageController.send(0, studentID, 'Tutor request to ' + tutorUsername + ' sent', studentMsg);
+                    	    console.log('yooo')
+                    	    res.json({message: 'success'});
+                	});
+        	});
+	});
 }
 
 /**
