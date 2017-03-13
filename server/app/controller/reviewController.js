@@ -56,7 +56,7 @@ ReviewController.add = function(userID, reviewerID, rating, comment) {
 		.then (()=> {
 		    console.log('created');
 		    //update profile view with new review added
-		    ReviewController.updateProfile(session.studentID);
+		    ReviewController.updateProfile(session.tutorID);
 		    return true;
         	});
 	});
@@ -164,7 +164,10 @@ ReviewController.update = function(userID, reviewerID, values) {
     return ReviewModel.update(userID, reviewerID, {
         rating: rating,
         comment: comment
+    }).then(()=> {
+	ReviewController.updateProfile(userID);
     });
+
 }
 
 module.exports = ReviewController;
