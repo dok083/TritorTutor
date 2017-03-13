@@ -194,8 +194,8 @@ function deleteTutor(req, res, user) {
  	'/:id':  {
  		get: requiresLoggedIn(getTutorInfo),
  		put: requiresLoggedIn(updateTutors),
-        post: requiresLoggedIn(addTutor),
-        delete: requiresLoggedIn(deleteTutor)
+        	post: requiresLoggedIn(addTutor),
+        	delete: requiresLoggedIn(deleteTutor)
  	},
     '/:id/courses': {
         get: getCourses
