@@ -212,6 +212,11 @@ class Profile extends React.Component {
       .then((results) => {
         this.setState({sessions: results.data});
       });
+
+    axios.get('/api/reviews/' + userID)
+    .then((results) => {
+        this.setState({reviews: results.data});
+    });
   }
 
   render() {
@@ -250,9 +255,10 @@ class Profile extends React.Component {
     var review = [];
     
     for (var i = 0; i < this.state.reviews.length; i++) {
-      if(this.state.reviews[i].userID == this.state.localUser.userID)
+      if(this.state.reviews[i].userID == this.state.localUser.userID) {
         reviewed = true;
         review = this.state.reviews[i];
+      }
     }
 
     for (var i = 0; i < this.state.sessions.length; i++) {
@@ -275,7 +281,8 @@ class Profile extends React.Component {
           break;
         case SESSION_DONE:
           hasDoneSession = true;
-          if(session.studentID == this.state.localUser.userID) {
+
+          if (session.studentID == this.state.localUser.userID) {
             hasBeenTutored = true;
           }
 
