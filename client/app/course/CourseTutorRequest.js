@@ -221,7 +221,7 @@ class CourseTutorRequest extends React.Component {
 
   render() {
     if (!this.props.user) {
-      return <p className='text-center'>Loading</p>;
+      return null;
     }
 
     // Show an error if the user is not verified.

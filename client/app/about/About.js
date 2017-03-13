@@ -22,12 +22,19 @@ export default class About extends React.Component {
 
             <Row className = "about-us">
               <h1>About Us</h1>
+              <Col xs={1} md={1}><p></p></Col>
+              <Col xs={10} md={10}>
               <p>
-              <font size="4">
-                 We started from the bottom now we are here.
+              <font size="5">
+                 Our team, <font color="red">OkaySoftware</font>, made a promise that we would make a practical and innovative
+                  solution to students who are struggling in college courses.
               </font>
               </p>
+              </Col>
+              <Col xs={1} md={1}><p></p></Col>
+            </Row>
 
+            <Row className = "our-mission">
               <h2>Our Mission</h2>
               <Col xs={2} md={2}><p></p></Col>
               <Col xs={8} md={8}>
@@ -37,7 +44,7 @@ export default class About extends React.Component {
                 forward with your career. Maybe you're not feeling so confident on your 
                 academic courses that you currently enrolled. We acknowlege that studying college courses
                 are challenging so we wanted to encourage students by providing the private tutoring service.
-                <b> Our mission</b> is to give a bridge between UCSD students and private tutors, 
+                <b><font color="red"> Our mission</font></b> is to give a bridge between UCSD students and private tutors, 
                 so the students can feel more confident at college courses. 
               </font>
               </p>
@@ -45,8 +52,8 @@ export default class About extends React.Component {
               <Col xs={2} md={2}><p></p></Col>
             </Row>
 
-            
-              <br></br>
+          
+              
 
               <h2>Meet The Team</h2>
               <Row className = "Team-1">
