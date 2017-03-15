@@ -31,6 +31,13 @@ class MessageComponent extends React.Component {
       });
 
       return;
+    } else if (this.state.content.length == 0) {
+      this.setState({
+        message: 'Your message content cannot be empty.',
+        messageType: 'danger'
+      });
+
+      return;
     }
 
     this.setState({busy: true});
