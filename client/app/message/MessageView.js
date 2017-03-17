@@ -52,7 +52,7 @@ class MessageView extends React.Component {
         message: 'Your reply has been sent.',
         messageType: 'success',
         reply: '',
-        busy: false
+        busy: true
       });
     }).catch((error) => {
       // Get the error message.
@@ -102,7 +102,8 @@ class MessageView extends React.Component {
           </Media.Left>
           <Media.Body>
             <FormGroup>
-              <FormControl style={areaStyle}
+              <FormControl disabled={this.state.busy}
+                           style={areaStyle}
                            componentClass='textarea'
                            placeholder='Reply to the message'
                            onChange={this.onReplyChange.bind(this)} />
