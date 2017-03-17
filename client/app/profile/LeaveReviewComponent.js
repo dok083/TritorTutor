@@ -5,14 +5,24 @@ import axios from 'axios'
 class LeaveReviewComponent extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      message: '',
-      messageType: '',
-      busy: false,
-      rating: this.props.review == [] ? 5 : this.props.review.stars,
-      comment: this.props.review == [] ? '' : this.props.review.comment
-    };
+    
+    if(this.props.review == []) {
+      this.state = {
+        message: '',
+        messageType: '',
+        busy: false,
+        rating: "-1",
+        comment: ''
+      };
+    } else {
+      this.state = {
+        message: '',
+        messageType: '',
+        busy: false,
+        rating: this.props.review.stars,
+        comment: this.props.review.comment
+      };
+    }
   }
 
   submit() {
@@ -68,8 +78,8 @@ class LeaveReviewComponent extends React.Component {
           <FormGroup key='stars'>
             <FormControl componentClass="select"
                          onChange={this.onRatingChanged.bind(this)}
-                         defaultValue={this.props.review == [] ? 5 : this.props.review.stars}>
-              <option value="-1" disabled>--</option>
+                         defaultValue={this.state.rating}>
+              <option value="-1" disabled selected>--</option>
               <option value={1}>1</option>
               <option value={2}>2</option>
               <option value={3}>3</option>
