@@ -39,7 +39,7 @@ function addReviews(req, res, user) {
     }
 
     if (!comment || comment.length == 0) {
-        return res.status(400).json({message: 'Your reply cannot be empty.'});
+        return res.status(400).json({message: 'Your review cannot be empty.'});
     }
 
     if (isNaN(rating)) {
