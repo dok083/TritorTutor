@@ -223,10 +223,10 @@ function sessionFinish(req, res, user) {
 			    .then((studentProfile)=>{
 				var studentUsername = studentProfile.username;
 
-				var tutorMsg = "Your session with [" + studentUsername + "](https://tritontutor.com/profile/" + session.tutorID  + ") for ["
+				var tutorMsg = "Your session with student [" + studentUsername + "](https://tritontutor.com/profile/" + session.studentID  + ") for ["
 						+ session.classID + "](https://tritontutor.com/course/" + session.classID + ") has been canceled."
 
-				var studentMsg = "Your session with [" + user.username + "](https://tritontutor.com/profile/" + session.tutorID  + ") for ["
+				var studentMsg = "Your session with tutor [" + user.username + "](https://tritontutor.com/profile/" + session.tutorID  + ") for ["
 						+ session.classID + "](https://tritontutor.com/course/" + session.classID + ") has been canceled."
 
 				MessageController.send(0, session.studentID, 'Session ended', studentMsg);
@@ -241,7 +241,7 @@ function sessionFinish(req, res, user) {
 				var tutorMsg = "Your session with student [" + user.username + "](https://tritontutor.com/profile/" + session.studentID  + ") for ["
 						+ session.classID + "](https://tritontutor.com/course/" + session.classID + ") has been canceled." 
 
-				var studentMsg = "Your session with [" + tutorUsername + "](https://tritontutor.com/profile/" + session.tutorID  + ") for ["
+				var studentMsg = "Your session with tutor [" + tutorUsername + "](https://tritontutor.com/profile/" + session.tutorID  + ") for ["
 						+ session.classID + "](https://tritontutor.com/course/" + session.classID + ") has been canceled."
 
 				MessageController.send(0, session.studentID, 'Session ended', studentMsg);
