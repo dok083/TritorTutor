@@ -31,6 +31,13 @@ class MessageComponent extends React.Component {
       });
 
       return;
+    } else if (this.state.content.length == 0) {
+      this.setState({
+        message: 'Your message content cannot be empty.',
+        messageType: 'danger'
+      });
+
+      return;
     }
 
     this.setState({busy: true});
@@ -73,11 +80,11 @@ class MessageComponent extends React.Component {
           {alert}
           <FormGroup id="subject" key="subject">
             <ControlLabel>Subject</ControlLabel>
-            <FormControl onChange={this.subjectChange.bind(this)} type="text" placeholder="Subject" required />
+            <FormControl disabled={this.state.busy} onChange={this.subjectChange.bind(this)} type="text" placeholder="Subject" required />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Content</ControlLabel>
-            <FormControl onChange={this.contentChange.bind(this)} componentClass="textarea" placeholder="Content" rows={5}/>
+            <FormControl disabled={this.state.busy} onChange={this.contentChange.bind(this)} componentClass="textarea" placeholder="Content" rows={5}/>
           </FormGroup>
         </Modal.Body>
                          

@@ -42,6 +42,10 @@ function addReviews(req, res, user) {
         return res.status(400).json({message: 'Your reply cannot be empty.'});
     }
 
+    if (isNaN(rating)) {
+	return res.status(400).json({message: 'Please insert a valid rating field.'});
+    }
+
     console.log(userID, user.userID, rating, comment)
     //add review
     ReviewController.add(userID, user.userID, rating, comment)
