@@ -6,7 +6,7 @@ class ProfilePic extends React.Component {
     return (
       <FallbackImage width={this.props.width}
                      height={this.props.height}
-                     src={'/profiles/' + this.props.user + '.jpg'}
+                     src={'/profiles/' + this.props.user + '.jpg?' + (new Date().getTime())}
                      fallbackImage='/profiles/default.jpg'
                      className={this.props.className} />
     );
